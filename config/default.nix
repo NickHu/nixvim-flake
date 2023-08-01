@@ -17,6 +17,7 @@
     plugins = {
       bufferline.enable = true;
       lualine.enable = true;
+      markdown-preview.enable = true;
     };
   };
 }
