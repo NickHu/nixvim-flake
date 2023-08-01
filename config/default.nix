@@ -27,6 +27,9 @@
         };
       };
       lualine.enable = true;
+      lsp = {
+        enable = true;
+      };
       markdown-preview.enable = true;
     };
   };
