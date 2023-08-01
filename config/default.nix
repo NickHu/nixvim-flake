@@ -16,6 +16,16 @@
     };
     plugins = {
       bufferline.enable = true;
+      copilot-lua = {
+        enable = true;
+        filetypes = {
+          "*" = true;
+        };
+        suggestion = {
+          autoTrigger = true;
+          keymap.accept = "<C-l>";
+        };
+      };
       lualine.enable = true;
       markdown-preview.enable = true;
     };
