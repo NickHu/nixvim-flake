@@ -1,7 +1,10 @@
 { pkgs, ... }:
 {
   config = {
-    extraPlugins = with pkgs.vimPlugins; [ nvim-solarized-lua ];
+    extraPlugins = with pkgs.vimPlugins; [
+      nvim-solarized-lua
+      vim-unimpaired
+    ];
     colorscheme = "solarized";
     options = {
       colorcolumn = "80";
