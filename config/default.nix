@@ -89,6 +89,12 @@
         useTreesitter = true;
         useTreesitterScope = true;
       };
+      rust-tools = {
+        enable = true;
+        server = {
+          check.command = "clippy";
+        };
+      };
       lsp = {
         enable = true;
         servers = {
