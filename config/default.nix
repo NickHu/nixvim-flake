@@ -20,6 +20,7 @@
     };
     plugins = {
       bufferline.enable = true;
+      comment-nvim.enable = true;
       copilot-lua = {
         enable = true;
         filetypes = {
