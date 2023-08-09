@@ -46,6 +46,7 @@
       tex_flavor = "latex";
     };
     options = {
+      clipboard = "unnamed";
       colorcolumn = "80";
       expandtab = true;
       linebreak = true;
