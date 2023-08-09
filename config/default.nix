@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   config = {
     extraPlugins = with pkgs.vimPlugins; [
       friendly-snippets
@@ -201,7 +200,7 @@
       };
       luasnip = {
         enable = true;
-        fromVscode = [{ }];
+        fromVscode = [{}];
       };
       markdown-preview.enable = true;
       nvim-autopairs = {
@@ -210,13 +209,13 @@
       };
       nvim-cmp = {
         enable = true;
-        mappingPresets = [ "insert" "cmdline" ];
+        mappingPresets = ["insert" "cmdline"];
         mapping = {
           "<C-b>" = "cmp.mapping.scroll_docs(-4)";
           "<C-f>" = "cmp.mapping.scroll_docs(4)";
           "<CR>" = "cmp.mapping.confirm({ select = true })";
           "<Tab>" = {
-            modes = [ "i" "s" ];
+            modes = ["i" "s"];
             action = ''
               function(fallback)
                 local has_words_before = function()
@@ -238,7 +237,7 @@
             '';
           };
           "<S-Tab>" = {
-            modes = [ "i" "s" ];
+            modes = ["i" "s"];
             action = ''
               function(fallback)
                 local luasnip = require("luasnip")
@@ -255,16 +254,46 @@
         };
         snippet.expand = "luasnip";
         sources = [
-          { name = "nvim_lsp"; groupIndex = 1; }
-          { name = "nvim_lsp_signature_help"; groupIndex = 1; }
-          { name = "luasnip"; groupIndex = 1; }
-          { name = "calc"; groupIndex = 1; }
-          { name = "path"; groupIndex = 1; }
-          { name = "buffer"; groupIndex = 2; }
-          { name = "treesitter"; groupIndex = 2; }
-          { name = "cmp_pandoc"; groupIndex = 1; }
-          { name = "latex_symbols"; groupIndex = 1; }
-          { name = "spell"; groupIndex = 1; }
+          {
+            name = "nvim_lsp";
+            groupIndex = 1;
+          }
+          {
+            name = "nvim_lsp_signature_help";
+            groupIndex = 1;
+          }
+          {
+            name = "luasnip";
+            groupIndex = 1;
+          }
+          {
+            name = "calc";
+            groupIndex = 1;
+          }
+          {
+            name = "path";
+            groupIndex = 1;
+          }
+          {
+            name = "buffer";
+            groupIndex = 2;
+          }
+          {
+            name = "treesitter";
+            groupIndex = 2;
+          }
+          {
+            name = "cmp_pandoc";
+            groupIndex = 1;
+          }
+          {
+            name = "latex_symbols";
+            groupIndex = 1;
+          }
+          {
+            name = "spell";
+            groupIndex = 1;
+          }
         ];
       };
       nvim-colorizer.enable = true;
