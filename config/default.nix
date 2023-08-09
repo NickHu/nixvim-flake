@@ -127,6 +127,7 @@
         navigation.enable = true;
         smartRename.enable = true;
       };
+      tmux-navigator.enable = true;
       vim-matchup = {
         enable = true;
         enableSurround = true;
