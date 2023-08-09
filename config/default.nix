@@ -60,6 +60,7 @@
       };
       lsp = {
         enable = true;
+      lsp-format.enable = true;
       lspkind = {
         enable = true;
         cmp = {
