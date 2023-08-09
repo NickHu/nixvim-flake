@@ -2,6 +2,7 @@
 {
   config = {
     extraPlugins = with pkgs.vimPlugins; [
+      friendly-snippets
       nvim-solarized-lua
       vim-unimpaired
     ];
