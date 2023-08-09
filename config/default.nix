@@ -26,6 +26,9 @@
       }
     ];
     colorscheme = "solarized";
+    globals = {
+      tex_flavor = "latex";
+    };
     options = {
       colorcolumn = "80";
       expandtab = true;
@@ -281,6 +284,17 @@
         treesitterIntegration.enable = true;
       };
       which-key.enable = true;
+      vimtex = {
+        enable = true;
+        extraConfig = {
+          compiler_latexmk = {
+            aux_dir = "build";
+            out_dir = "build";
+          };
+          view_method = "zathura";
+          view_use_temp_files = 2;
+        };
+      };
       # These cmp plugins aren't be auto-enabled (no detection in extraConfigLuaPost)
       cmp-cmdline.enable = true;
       cmp-dap.enable = true;
