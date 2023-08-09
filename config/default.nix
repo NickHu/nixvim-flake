@@ -127,6 +127,12 @@
         navigation.enable = true;
         smartRename.enable = true;
       };
+      vim-matchup = {
+        enable = true;
+        enableSurround = true;
+        enableTransmute = true;
+        treesitterIntegration.enable = true;
+      };
       # These cmp plugins aren't be auto-enabled (no detection in extraConfigLuaPost)
       cmp-cmdline.enable = true;
       cmp-dap.enable = true;
