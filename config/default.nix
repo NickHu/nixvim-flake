@@ -24,6 +24,7 @@
           let g:pandoc#syntax#use_definition_lists=0
         '';
       }
+      vim-pandoc-syntax
       vim-repeat
       vim-rhubarb
       vim-sleuth
