@@ -12,6 +12,12 @@
       vim-speeddating
       vim-surround
       vim-unimpaired
+      {
+        plugin = telescope-ui-select-nvim;
+        config = ''
+          lua require("telescope").load_extension("ui-select")
+        '';
+      }
     ];
     colorscheme = "solarized";
     options = {
