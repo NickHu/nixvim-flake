@@ -81,6 +81,7 @@
           keymap.accept = "<C-l>";
         };
       };
+      fidget.enable = true;
       fugitive.enable = true;
       gitsigns.enable = true;
       indent-blankline = {
