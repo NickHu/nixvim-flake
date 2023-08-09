@@ -51,6 +51,7 @@
       relativenumber = true;
       shiftwidth = 2;
       showbreak = "↳ ";
+      spelllang = "en_gb";
       undodir = "/home/nick/.cache/nvim/undo"; # TODO: make generic over home
       undofile = true;
       updatetime = 750;
@@ -91,6 +92,10 @@
       lsp = {
         enable = true;
         servers = {
+          ltex = {
+            enable = true;
+            settings.language = "en-GB";
+          };
           nil_ls.enable = true;
           texlab = {
             enable = true;
@@ -251,8 +256,8 @@
           { name = "buffer"; groupIndex = 2; }
           { name = "treesitter"; groupIndex = 2; }
           { name = "cmp_pandoc"; groupIndex = 1; }
-          { name = "spell"; groupIndex = 1; }
           { name = "latex_symbols"; groupIndex = 1; }
+          { name = "spell"; groupIndex = 1; }
         ];
       };
       nvim-colorizer.enable = true;
