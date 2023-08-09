@@ -110,6 +110,7 @@
           { name = "latex_symbols"; groupIndex = 1; }
         ];
       };
+      nvim-colorizer.enable = true;
       treesitter = {
         enable = true;
         folding = true;
