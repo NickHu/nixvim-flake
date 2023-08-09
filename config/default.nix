@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   config = {
     extraPlugins = with pkgs.vimPlugins; [
       friendly-snippets
@@ -61,6 +65,11 @@
           silent = true;
           noremap = true;
           action = ":UndotreeToggle<CR>";
+        };
+        "<leader>e" = {
+          action = "function () require('telescope.builtin').diagnostics({ bufnr = 0}) end";
+          lua = true;
+          silent = config.plugins.telescope.keymapsSilent;
         };
       };
     };
@@ -323,7 +332,6 @@
           "<leader>/" = "live_grep";
           "<leader>E" = "diagnostics";
           "<leader>b" = "buffers";
-          "<leader>e" = "diagnostics({ bufnr = 0})";
           "<leader>f" = "find_files";
         };
       };
