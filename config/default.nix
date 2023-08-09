@@ -118,6 +118,7 @@
         ];
       };
       nvim-colorizer.enable = true;
+      nvim-tree.enable = true;
       treesitter = {
         enable = true;
         folding = true;
