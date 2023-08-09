@@ -135,6 +135,19 @@
         navigation.enable = true;
         smartRename.enable = true;
       };
+      telescope = {
+        enable = true;
+        extensions = {
+          fzf-native.enable = true;
+        };
+        keymaps = {
+          "<leader>/" = "live_grep";
+          "<leader>E" = "diagnostics";
+          "<leader>b" = "buffers";
+          "<leader>e" = "diagnostics({ bufnr = 0})";
+          "<leader>f" = "find_files";
+        };
+      };
       tmux-navigator.enable = true;
       vim-matchup = {
         enable = true;
