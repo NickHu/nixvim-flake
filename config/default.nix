@@ -35,7 +35,18 @@
       relativenumber = true;
       shiftwidth = 2;
       showbreak = "↳ ";
+      undodir = "/home/nick/.cache/nvim/undo"; # TODO: make generic over home
+      undofile = true;
       updatetime = 750;
+    };
+    maps = {
+      normal = {
+        "<leader>u" = {
+          silent = true;
+          noremap = true;
+          action = ":UndotreeToggle<CR>";
+        };
+      };
     };
     plugins = {
       bufferline.enable = true;
@@ -184,6 +195,9 @@
         };
       };
       tmux-navigator.enable = true;
+      undotree = {
+        enable = true;
+      };
       vim-matchup = {
         enable = true;
         enableSurround = true;
