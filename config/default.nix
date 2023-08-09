@@ -50,7 +50,7 @@
           keymap.accept = "<C-l>";
         };
       };
-      lualine.enable = true;
+      fugitive.enable = true;
       gitsigns.enable = true;
       indent-blankline = {
         enable = true;
@@ -61,6 +61,7 @@
       lsp = {
         enable = true;
       };
+      lualine.enable = true;
       luasnip = {
         enable = true;
         fromVscode = [{ }];
