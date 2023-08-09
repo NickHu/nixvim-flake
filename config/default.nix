@@ -74,6 +74,34 @@
       };
       lsp = {
         enable = true;
+        keymaps = {
+          diagnostic = {
+            "<M-e>" = "open_float";
+            "<M-q>" = "setloclist";
+            "[d" = "goto_prev";
+            "]d" = "goto_next";
+          };
+          lspBuf = {
+            "<M-]>" = "definition";
+            "<M-f>" = "format";
+            "<M-k>" = "signature_help";
+            "<M-l>" = "code_action";
+            "<M-r>" = "rename";
+            "<M-w>a" = "add_workspace_folder";
+            "<M-w>d" = "remove_workspace_folder";
+            "<M-w>r" = "rename_workspace_folder";
+            "K" = "hover";
+            "g+" = "outgoing_calls";
+            "g-" = "incoming_calls";
+            "gD" = "document_symbol";
+            "gW" = "workspace_symbol";
+            "gd" = "declaration";
+            "gi" = "implementation";
+            "gr" = "references";
+            "gt" = "type_definition";
+          };
+        };
+      };
       lsp-format.enable = true;
       lspkind = {
         enable = true;
