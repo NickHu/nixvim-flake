@@ -33,6 +33,10 @@
       lsp = {
         enable = true;
       };
+      luasnip = {
+        enable = true;
+        fromVscode = [{ }];
+      };
       markdown-preview.enable = true;
       nvim-cmp = {
         enable = true;
@@ -50,8 +54,11 @@
                   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
                   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
                 end
+                local luasnip = require("luasnip")
                 if cmp.visible() then
                   cmp.select_next_item()
+                elseif luasnip.expand_or_locally_jumpable() then
+                  luasnip.expand_or_jump()
                 elseif has_words_before() then
                   cmp.complete()
                 else
@@ -64,8 +71,11 @@
             modes = [ "i" "s" ];
             action = ''
               function(fallback)
+                local luasnip = require("luasnip")
                 if cmp.visible() then
                   cmp.select_prev_item()
+                elseif luasnip.jumpable(-1) then
+                  luasnip.jump(-1)
                 else
                   fallback()
                 end
@@ -73,9 +83,11 @@
             '';
           };
         };
+        snippet.expand = "luasnip";
         sources = [
           { name = "nvim_lsp"; groupIndex = 1; }
           { name = "nvim_lsp_signature_help"; groupIndex = 1; }
+          { name = "luasnip"; groupIndex = 1; }
           { name = "calc"; groupIndex = 1; }
           { name = "path"; groupIndex = 1; }
           { name = "buffer"; groupIndex = 2; }
