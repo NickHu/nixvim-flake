@@ -94,7 +94,26 @@
           };
         };
       };
-      lualine.enable = true;
+      lualine = {
+        enable = true;
+        extensions = [
+          "fzf"
+          "nvim-dap-ui"
+          "nvim-tree"
+          "quickfix"
+          "symbols-outline"
+        ];
+        sections = {
+          lualine_c = [
+            {
+              name = "filename";
+              extraConfig = {
+                path = 1;
+              };
+            }
+          ];
+        };
+      };
       luasnip = {
         enable = true;
         fromVscode = [{ }];
