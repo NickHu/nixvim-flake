@@ -33,6 +33,12 @@
       };
       lualine.enable = true;
       gitsigns.enable = true;
+      indent-blankline = {
+        enable = true;
+        showCurrentContext = true;
+        useTreesitter = true;
+        useTreesitterScope = true;
+      };
       lsp = {
         enable = true;
       };
