@@ -6,6 +6,7 @@
       nvim-solarized-lua
       vim-eunuch
       vim-nix
+      vim-surround
       vim-unimpaired
     ];
     colorscheme = "solarized";
