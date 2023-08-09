@@ -84,6 +84,32 @@
           { name = "latex_symbols"; groupIndex = 1; }
         ];
       };
+      # These cmp plugins aren't be auto-enabled (no detection in extraConfigLuaPost)
+      cmp-cmdline.enable = true;
+      cmp-dap.enable = true;
+      cmp-nvim-lsp-document-symbol.enable = true;
     };
+    extraConfigLuaPost = ''
+      local cmp = require("cmp")
+      cmp.setup.cmdline('/', {
+        sources = cmp.config.sources({
+          { name = 'nvim_lsp_document_symbol' }
+        }, {
+          { name = 'buffer' }
+        })
+      })
+      cmp.setup.cmdline(':', {
+        sources = cmp.config.sources({
+          { name = 'path' }
+        }, {
+          { name = 'cmdline' }
+        })
+      })
+      cmp.setup.filetype({ "dap-repl", "dapui_watches" }, {
+        sources = {
+          { name = "dap" },
+        },
+      })
+    '';
   };
 }
