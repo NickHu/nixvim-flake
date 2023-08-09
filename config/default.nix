@@ -4,6 +4,7 @@
     extraPlugins = with pkgs.vimPlugins; [
       friendly-snippets
       nvim-solarized-lua
+      vim-eunuch
       vim-unimpaired
     ];
     colorscheme = "solarized";
