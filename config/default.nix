@@ -60,6 +60,27 @@
       };
       lsp = {
         enable = true;
+      lspkind = {
+        enable = true;
+        cmp = {
+          enable = true;
+          menu = {
+            buffer = "[Buffer]";
+            calc = "[Calc]";
+            cmdline = "[cmdline]";
+            cmp_pandoc = "[Pandoc]";
+            dap = "[DAP]";
+            latex_symbols = "[LaTeX]";
+            luasnip = "[LuaSnip]";
+            nvim_lsp = "[LSP]";
+            nvim_lsp_document_symbol = "[LSP doc]";
+            nvim_lsp_signature_help = "[LSP sig]";
+            nvim_lua = "[Lua]";
+            path = "[Path]";
+            spell = "[Spell]";
+            treesitter = "[TS]";
+          };
+        };
       };
       lualine.enable = true;
       luasnip = {
