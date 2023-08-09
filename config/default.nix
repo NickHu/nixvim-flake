@@ -32,6 +32,7 @@
         };
       };
       lualine.enable = true;
+      gitsigns.enable = true;
       lsp = {
         enable = true;
       };
