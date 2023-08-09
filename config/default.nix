@@ -6,6 +6,7 @@
       nvim-solarized-lua
       vim-eunuch
       vim-nix
+      vim-rhubarb
       vim-sleuth
       vim-speeddating
       vim-surround
