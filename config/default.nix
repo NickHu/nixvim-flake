@@ -92,10 +92,18 @@
           { name = "calc"; groupIndex = 1; }
           { name = "path"; groupIndex = 1; }
           { name = "buffer"; groupIndex = 2; }
+          { name = "treesitter"; groupIndex = 2; }
           { name = "cmp_pandoc"; groupIndex = 1; }
           { name = "spell"; groupIndex = 1; }
           { name = "latex_symbols"; groupIndex = 1; }
         ];
+      };
+      treesitter = {
+        enable = true;
+        folding = true;
+        incrementalSelection.enable = true;
+        indent = true;
+        nixvimInjections = true;
       };
       # These cmp plugins aren't be auto-enabled (no detection in extraConfigLuaPost)
       cmp-cmdline.enable = true;
