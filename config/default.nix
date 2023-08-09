@@ -76,6 +76,29 @@
         enable = true;
         servers = {
           nil_ls.enable = true;
+          texlab = {
+            enable = true;
+            extraOptions.settings.texlab = {
+              build = {
+                args = [
+                  "-pdf"
+                  "-interaction=nonstopmode"
+                  "-synctex=1"
+                  "%f"
+                  "-auxdir=texlab-build"
+                  "-outdir=texlab-build"
+                ];
+                auxDirectory = "texlab-build";
+                logDirectory = "texlab-build";
+              };
+              forwardSearch.executable = "zathura";
+              chktex = {
+                onOpenAndSave = true;
+                onEdit = true;
+              };
+              latexindent.modifyLineBreaks = true;
+            };
+          };
         };
         keymaps = {
           diagnostic = {
