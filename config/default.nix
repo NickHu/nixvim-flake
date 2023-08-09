@@ -49,7 +49,10 @@
       };
     };
     plugins = {
-      bufferline.enable = true;
+      bufferline = {
+        enable = true;
+        diagnostics = "nvim_lsp";
+      };
       comment-nvim.enable = true;
       copilot-lua = {
         enable = true;
