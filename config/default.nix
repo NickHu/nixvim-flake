@@ -4,6 +4,12 @@
     extraPlugins = with pkgs.vimPlugins; [
       friendly-snippets
       nvim-solarized-lua
+      {
+        plugin = nvim-web-devicons;
+        config = ''
+          lua require("nvim-web-devicons").setup()
+        '';
+      }
       vim-eunuch
       vim-nix
       vim-repeat
