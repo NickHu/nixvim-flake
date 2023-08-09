@@ -1,6 +1,11 @@
 {
   description = "A nixvim configuration";
 
+  nixConfig = {
+    extra-substituters = ["https://nickhu.cachix.org"];
+    extra-trusted-public-keys = ["nickhu.cachix.org-1:WWNzID27ud1BdPmaSFnkZZqNiu9k0uWgQRb5mTWxSjo="];
+  };
+
   inputs = {
     nixvim.url = "github:nix-community/nixvim";
     nixpkgs.follows = "nixvim/nixpkgs";
