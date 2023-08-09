@@ -47,6 +47,10 @@
         fromVscode = [{ }];
       };
       markdown-preview.enable = true;
+      nvim-autopairs = {
+        enable = true;
+        checkTs = true;
+      };
       nvim-cmp = {
         enable = true;
         mappingPresets = [ "insert" "cmdline" ];
