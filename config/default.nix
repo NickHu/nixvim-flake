@@ -134,6 +134,7 @@
         enableTransmute = true;
         treesitterIntegration.enable = true;
       };
+      which-key.enable = true;
       # These cmp plugins aren't be auto-enabled (no detection in extraConfigLuaPost)
       cmp-cmdline.enable = true;
       cmp-dap.enable = true;
