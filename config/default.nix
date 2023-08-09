@@ -5,6 +5,7 @@
       friendly-snippets
       nvim-solarized-lua
       vim-eunuch
+      vim-nix
       vim-unimpaired
     ];
     colorscheme = "solarized";
