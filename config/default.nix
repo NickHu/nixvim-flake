@@ -106,6 +106,7 @@
         nixvimInjections = true;
       };
       treesitter-context.enable = true;
+      treesitter-playground.enable = true;
       # These cmp plugins aren't be auto-enabled (no detection in extraConfigLuaPost)
       cmp-cmdline.enable = true;
       cmp-dap.enable = true;
