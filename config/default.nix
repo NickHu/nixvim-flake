@@ -316,7 +316,6 @@
         nixvimInjections = true;
       };
       treesitter-context.enable = true;
-      treesitter-playground.enable = true;
       treesitter-rainbow.enable = true;
       treesitter-refactor = {
         enable = true;
