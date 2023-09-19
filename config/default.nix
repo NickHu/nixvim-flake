@@ -308,6 +308,7 @@
       };
       nvim-colorizer.enable = true;
       nvim-tree.enable = true;
+      rainbow-delimiters.enable = true;
       treesitter = {
         enable = true;
         folding = true;
@@ -316,7 +317,6 @@
         nixvimInjections = true;
       };
       treesitter-context.enable = true;
-      treesitter-rainbow.enable = true;
       treesitter-refactor = {
         enable = true;
         highlightDefinitions.enable = true;
