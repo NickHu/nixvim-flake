@@ -44,6 +44,11 @@
       }
     ];
     colorscheme = "solarized";
+    filetype = {
+      extension = {
+        tree = "tree";
+      };
+    };
     globals = {
       tex_flavor = "latex";
     };
@@ -365,6 +370,11 @@
       cmp-cmdline.enable = true;
       cmp-dap.enable = true;
       cmp-nvim-lsp-document-symbol.enable = true;
+      zk = {
+        enable = true;
+        picker = "telescope";
+        lsp.autoAttach.filetypes = ["markdown" "tree"];
+      };
     };
     extraConfigLuaPost = ''
       local cmp = require("cmp")

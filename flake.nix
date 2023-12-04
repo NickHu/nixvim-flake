@@ -30,6 +30,31 @@
           module = import ./config;
         };
       in {
+        _module.args.pkgs = import inputs.nixpkgs {
+          inherit system;
+          overlays = [
+            (final: prev: {
+              zk = (prev.zk.overrideAttrs (oldAttrs: {
+            patches = pkgs.lib.optionals (oldAttrs ? patches) oldAttrs.patches ++ [ 
+              (builtins.toFile "tree-filetype.patch" ''
+diff --git a/internal/adapter/lsp/document.go b/internal/adapter/lsp/document.go
+index 05233fb..30d1558 100644
+--- a/internal/adapter/lsp/document.go
++++ b/internal/adapter/lsp/document.go
+@@ -32,7 +32,7 @@ func newDocumentStore(fs core.FileStorage, logger util.Logger) *documentStore {
+ 
+ func (s *documentStore) DidOpen(params protocol.DidOpenTextDocumentParams, notify glsp.NotifyFunc) (*document, error) {
+ 	langID := params.TextDocument.LanguageID
+-	if langID != "markdown" && langID != "vimwiki" && langID != "pandoc" {
++	if langID != "markdown" && langID != "vimwiki" && langID != "pandoc" && langID != "tree" {
+ 		return nil, nil
+ 	}
+               '')
+            ];
+          }));
+            })
+          ];
+        };
         checks = {
           # Run `nix flake check .` to verify that your config is not broken
           default = nixvimLib.check.mkTestDerivationFromNvim {
