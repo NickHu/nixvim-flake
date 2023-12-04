@@ -14,6 +14,7 @@
           lua require("nvim-web-devicons").setup()
         '';
       }
+      pest-vim
       vim-eunuch
       vim-nix
       {
@@ -115,6 +116,7 @@
             settings.language = "en-GB";
           };
           nil_ls.enable = true;
+          pest_ls.enable = true;
           texlab = {
             enable = true;
             extraOptions.settings.texlab = {
