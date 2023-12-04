@@ -4,6 +4,7 @@
   ...
 }: {
   config = {
+    enableMan = false;
     extraPlugins = with pkgs.vimPlugins; [
       friendly-snippets
       nvim-solarized-lua
