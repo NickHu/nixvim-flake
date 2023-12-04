@@ -60,20 +60,26 @@
       undofile = true;
       updatetime = 750;
     };
-    maps = {
-      normal = {
-        "<leader>u" = {
+    keymaps = [
+      {
+        mode = "n";
+        key = "<leader>u";
+        action = ":UndotreeToggle<CR>";
+        options = {
           silent = true;
           noremap = true;
-          action = ":UndotreeToggle<CR>";
         };
-        "<leader>e" = {
-          action = "function () require('telescope.builtin').diagnostics({ bufnr = 0}) end";
-          lua = true;
+      }
+      {
+        mode = "n";
+        key = "<leader>e";
+        action = "function () require('telescope.builtin').diagnostics({ bufnr = 0}) end";
+        lua = true;
+        options = {
           silent = config.plugins.telescope.keymapsSilent;
         };
-      };
-    };
+      }
+  ];
     plugins = {
       bufferline = {
         enable = true;
@@ -93,12 +99,7 @@
       fidget.enable = true;
       fugitive.enable = true;
       gitsigns.enable = true;
-      indent-blankline = {
-        enable = true;
-        showCurrentContext = true;
-        useTreesitter = true;
-        useTreesitterScope = true;
-      };
+      indent-blankline.enable = true;
       rust-tools = {
         enable = true;
         server = {
@@ -152,7 +153,6 @@
             "<M-r>" = "rename";
             "<M-w>a" = "add_workspace_folder";
             "<M-w>d" = "remove_workspace_folder";
-            "<M-w>r" = "rename_workspace_folder";
             "K" = "hover";
             "g+" = "outgoing_calls";
             "g-" = "incoming_calls";
