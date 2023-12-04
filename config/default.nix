@@ -117,6 +117,7 @@
           };
           nil_ls.enable = true;
           pest_ls.enable = true;
+          tailwindcss.enable = true;
           texlab = {
             enable = true;
             extraOptions.settings.texlab = {
