@@ -120,7 +120,7 @@
             enable = true;
             settings.language = "en-GB";
           };
-          nil_ls.enable = true;
+          nixd.enable = true;
           pest_ls.enable = true;
           tailwindcss.enable = true;
           texlab = {
