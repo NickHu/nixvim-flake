@@ -100,7 +100,7 @@
         };
         suggestion = {
           autoTrigger = true;
-          keymap.accept = "<C-l>";
+          keymap.accept = "<Right>";
         };
       };
       fidget.enable = true;
