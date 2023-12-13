@@ -1,5 +1,6 @@
 { config
 , pkgs
+, helpers
 , ...
 }: {
   config = {
@@ -117,7 +118,45 @@
         servers = {
           ltex = {
             enable = true;
-            settings.language = "en-GB";
+            settings = {
+              language = "en-GB";
+            };
+            extraOptions = {
+              get_language_id = helpers.mkRaw ''
+                function(_, filetype)
+                  local language_id_mapping = {
+                    bib = 'bibtex',
+                    plaintex = 'tex',
+                    rnoweb = 'sweave',
+                    rst = 'restructuredtext',
+                    tex = 'latex',
+                    xhtml = 'xhtml',
+                    pandoc = 'markdown',
+                    tree = 'latex',
+                  }
+                  local language_id = language_id_mapping[filetype]
+                  if language_id then
+                    return language_id
+                  else
+                    return filetype
+                  end
+                end
+              '';
+            };
+            filetypes = [
+              "bib"
+              "gitcommit"
+              "markdown"
+              "org"
+              "plaintex"
+              "rst"
+              "rnoweb"
+              "tex"
+              "pandoc"
+              "quarto"
+              "rmd"
+              "tree"
+            ];
           };
           nixd.enable = true;
           pest_ls.enable = true;
