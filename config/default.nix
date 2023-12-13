@@ -1,7 +1,6 @@
-{
-  config,
-  pkgs,
-  ...
+{ config
+, pkgs
+, ...
 }: {
   config = {
     enableMan = false;
@@ -86,7 +85,7 @@
           silent = config.plugins.telescope.keymapsSilent;
         };
       }
-  ];
+    ];
     plugins = {
       bufferline = {
         enable = true;
@@ -219,7 +218,7 @@
       };
       luasnip = {
         enable = true;
-        fromVscode = [{}];
+        fromVscode = [{ }];
       };
       markdown-preview.enable = true;
       nvim-autopairs = {
@@ -228,13 +227,13 @@
       };
       nvim-cmp = {
         enable = true;
-        mappingPresets = ["insert" "cmdline"];
+        mappingPresets = [ "insert" "cmdline" ];
         mapping = {
           "<C-b>" = "cmp.mapping.scroll_docs(-4)";
           "<C-f>" = "cmp.mapping.scroll_docs(4)";
           "<CR>" = "cmp.mapping.confirm({ select = true })";
           "<Tab>" = {
-            modes = ["i" "s"];
+            modes = [ "i" "s" ];
             action = ''
               function(fallback)
                 local has_words_before = function()
@@ -256,7 +255,7 @@
             '';
           };
           "<S-Tab>" = {
-            modes = ["i" "s"];
+            modes = [ "i" "s" ];
             action = ''
               function(fallback)
                 local luasnip = require("luasnip")
@@ -373,7 +372,7 @@
       zk = {
         enable = true;
         picker = "telescope";
-        lsp.autoAttach.filetypes = ["markdown" "tree"];
+        lsp.autoAttach.filetypes = [ "markdown" "tree" ];
       };
     };
     extraConfigLuaPost = ''
