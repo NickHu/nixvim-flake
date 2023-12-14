@@ -113,6 +113,9 @@
           check.command = "clippy";
         };
       };
+      leap = {
+        enable = true;
+      };
       lsp = {
         enable = true;
         servers = {
