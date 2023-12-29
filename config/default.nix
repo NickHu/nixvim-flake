@@ -251,11 +251,11 @@
       lualine = {
         enable = true;
         extensions = [
+          "fugitive"
           "fzf"
           "nvim-dap-ui"
           "nvim-tree"
           "quickfix"
-          "symbols-outline"
         ];
         sections = {
           lualine_c = [
