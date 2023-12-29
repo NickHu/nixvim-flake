@@ -37,12 +37,6 @@
       vim-speeddating
       vim-surround
       vim-unimpaired
-      {
-        plugin = telescope-ui-select-nvim;
-        config = ''
-          lua require("telescope").load_extension("ui-select")
-        '';
-      }
     ];
     colorscheme = "solarized";
     filetype = {
@@ -78,16 +72,32 @@
           noremap = true;
         };
       }
-      {
+    ] ++ pkgs.lib.attrsets.mapAttrsToList
+      (key: action: {
         mode = "n";
-        key = "<leader>e";
-        action = "function () require('telescope.builtin').diagnostics({ bufnr = 0}) end";
-        lua = true;
+        inherit key;
+        action = "<Cmd>Lspsaga " + action + "<CR>";
         options = {
-          silent = config.plugins.telescope.keymapsSilent;
+          silent = true;
         };
-      }
-    ];
+      })
+      {
+        "[d" = "diagnostic_jump_prev";
+        "]d" = "diagnostic_jump_next";
+        "<leader>e" = "show_buf_diagnostics";
+        "<leader>E" = "show_workspace_diagnostics";
+        "<leader>t" = "outline";
+        "<M-Enter>" = "term_toggle";
+        "<M-e>" = "show_cursor_diagnostics";
+        "<M-]>" = "goto_definition";
+        "<M-l>" = "code_action";
+        "<M-r>" = "rename";
+        "<M-p>" = "finder";
+        "K" = "hover_doc";
+        "g+" = "outgoing_calls";
+        "g-" = "incoming_calls";
+        "gt" = "goto_type_definition";
+      };
     plugins = {
       bufferline = {
         enable = true;
@@ -159,7 +169,6 @@
             filetypes = [
               "bib"
               "gitcommit"
-              "markdown"
               "org"
               "plaintex"
               "rst"
@@ -200,29 +209,20 @@
         };
         keymaps = {
           diagnostic = {
-            "<M-e>" = "open_float";
             "<M-q>" = "setloclist";
-            "[d" = "goto_prev";
-            "]d" = "goto_next";
           };
           lspBuf = {
-            "<M-]>" = "definition";
             "<M-f>" = "format";
             "<M-k>" = "signature_help";
-            "<M-l>" = "code_action";
-            "<M-r>" = "rename";
             "<M-w>a" = "add_workspace_folder";
             "<M-w>d" = "remove_workspace_folder";
-            "K" = "hover";
-            "g+" = "outgoing_calls";
-            "g-" = "incoming_calls";
             "gD" = "document_symbol";
             "gW" = "workspace_symbol";
             "gd" = "declaration";
             "gi" = "implementation";
             "gr" = "references";
-            "gt" = "type_definition";
           };
+          silent = true;
         };
       };
       lsp-format.enable = true;
@@ -247,6 +247,9 @@
             treesitter = "[TS]";
           };
         };
+      };
+      lspsaga = {
+        enable = true;
       };
       lualine = {
         enable = true;
