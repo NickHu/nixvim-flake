@@ -7,6 +7,7 @@
     enableMan = false;
     extraPlugins = with pkgs.vimPlugins; [
       friendly-snippets
+      ltex_extra-nvim
       nvim-solarized-lua
       {
         plugin = nvim-web-devicons;
@@ -118,6 +119,15 @@
       };
       lsp = {
         enable = true;
+        onAttach = ''
+          if client.name == "ltex" then
+            require("ltex_extra").setup {
+              load_langs = {
+                "en-GB"
+              }
+            }
+          end
+        '';
         servers = {
           ltex = {
             enable = true;
