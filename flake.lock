@@ -116,6 +116,22 @@
         "type": "github"
       }
     },
+    "lsp-progress-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1704942140,
+        "narHash": "sha256-njUl/TBjjuvcz8tPktQbuJuofe25X36hR+vzLWMqFl0=",
+        "owner": "linrongbin16",
+        "repo": "lsp-progress.nvim",
+        "rev": "36c84b33bed21f33e62e778b0567eb59ec21dc38",
+        "type": "github"
+      },
+      "original": {
+        "owner": "linrongbin16",
+        "repo": "lsp-progress.nvim",
+        "type": "github"
+      }
+    },
     "nix-darwin": {
       "inputs": {
         "nixpkgs": [
@@ -180,11 +196,11 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1706481554,
-        "narHash": "sha256-MRvzc4KwKoVf0jCfmuDfbvzY9QN3Zlo3YtZ9wxlqIzU=",
+        "lastModified": 1706514457,
+        "narHash": "sha256-rfdCFizftdKpkKzXB7HjopQAftHgNIyyTQPkuDgo5Os=",
         "owner": "nix-community",
         "repo": "nixvim",
-        "rev": "43f3cb7ab2bae6c27a92f306c27e053ef2cb0063",
+        "rev": "395836480995d418b96df527ebded1bc4b3134f0",
         "type": "github"
       },
       "original": {
@@ -224,6 +240,7 @@
     "root": {
       "inputs": {
         "flake-parts": "flake-parts",
+        "lsp-progress-nvim": "lsp-progress-nvim",
         "nixpkgs": [
           "nixvim",
           "nixpkgs"

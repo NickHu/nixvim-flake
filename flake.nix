@@ -10,6 +10,10 @@
     nixvim.url = "github:nix-community/nixvim";
     nixpkgs.follows = "nixvim/nixpkgs";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    lsp-progress-nvim = {
+      url = "github:linrongbin16/lsp-progress.nvim";
+      flake = false;
+    };
   };
 
   outputs = inputs @ { flake-parts, ... }:
@@ -38,6 +42,13 @@
             inherit system;
             overlays = [
               (final: prev: {
+                vimPlugins = prev.vimPlugins.extend (final': prev': {
+                  lsp-progress-nvim = final.vimUtils.buildVimPlugin {
+                    pname = "lsp-progress.nvim";
+                    version = "unstable-${inputs.lsp-progress-nvim.lastModifiedDate}";
+                    src = inputs.lsp-progress-nvim;
+                  };
+                });
                 zk = (prev.zk.overrideAttrs (oldAttrs: {
                   patches = pkgs.lib.optionals (oldAttrs ? patches) oldAttrs.patches ++ [
                     (builtins.toFile "tree-filetype.patch" ''
@@ -61,6 +72,7 @@
           };
           overlayAttrs = {
             inherit (_module.args.pkgs) zk;
+            inherit (_module.args.pkgs) vimPlugins;
           };
           checks = {
             # Run `nix flake check .` to verify that your config is not broken

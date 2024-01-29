@@ -4,9 +4,39 @@
 , ...
 }: {
   config = {
-    enableMan = false;
+    files = {
+      "ftplugin/tex.lua" = {
+        autoCmd = [{
+          event = [ "BufWritePost" ];
+          command = "call vimtex#toc#refresh()";
+        }];
+        options = {
+          conceallevel = 2;
+        };
+      };
+    };
+    autoCmd = [
+      {
+        event = "User";
+        group = "lualine_augroup";
+        pattern = "LspProgressStatusUpdated";
+        callback = helpers.mkRaw ''
+          require("lualine").refresh
+        '';
+      }
+    ];
+    autoGroups = {
+      lualine_augroup = {
+        clear = true;
+      };
+    };
     extraPlugins = with pkgs.vimPlugins; [
-      friendly-snippets
+      {
+        plugin = lsp-progress-nvim;
+        config = ''
+          lua require("lsp-progress").setup()
+        '';
+      }
       ltex_extra-nvim
       nvim-solarized-lua
       {
@@ -15,6 +45,7 @@
           lua require("nvim-web-devicons").setup()
         '';
       }
+      targets-vim
       pest-vim
       vim-eunuch
       vim-nix
@@ -37,6 +68,12 @@
       vim-speeddating
       vim-surround
       vim-unimpaired
+      {
+        plugin = tmux-navigator;
+        config = ''
+          let g:tmux_navigator_no_mappings = 1
+        '';
+      }
     ];
     colorscheme = "solarized";
     filetype = {
@@ -46,6 +83,7 @@
     };
     globals = {
       tex_flavor = "latex";
+      tmux_navigator_no_mappings = 1;
     };
     options = {
       clipboard = "unnamed";
@@ -64,13 +102,115 @@
     };
     keymaps = [
       {
+        mode = [ "n" "x" "o" ];
+        key = "<leader>s";
+        lua = true;
+        action = "function() require('flash').jump() end";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "n" "x" "o" ];
+        key = "<leader>S";
+        lua = true;
+        action = "function() require('flash').treesitter() end";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = "o";
+        key = "r";
+        lua = true;
+        action = "function() require('flash').remote() end";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "o" "x" ];
+        key = "R";
+        lua = true;
+        action = "function() require('flash').treesitter_search() end";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = "c";
+        key = "<C-s>";
+        lua = true;
+        action = "function() require('flash').toggle() end";
+        options = {
+          silent = true;
+        };
+      }
+      {
         mode = "n";
         key = "<leader>u";
         action = ":UndotreeToggle<CR>";
         options = {
           silent = true;
-          noremap = true;
         };
+      }
+      {
+        mode = [ "i" "s" ];
+        key = "<M-n>";
+        action = "<Plug>luasnip-next-choice";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "i" "s" ];
+        key = "<M-p>";
+        action = "<Plug>luasnip-prev-choice";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = "n";
+        key = "<C-m>";
+        action = ":<C-U>TmuxNavigateLeft<CR>";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = "n";
+        key = "<C-n>";
+        action = ":<C-U>TmuxNavigateDown<CR>";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = "n";
+        key = "<C-e>";
+        action = ":<C-U>TmuxNavigateUp<CR>";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = "n";
+        key = "<C-i>";
+        action = ":<C-U>TmuxNavigateRight<CR>";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = "n";
+        key = "<C-h>";
+        action = "<C-e>";
+      }
+      {
+        mode = "n";
+        key = "<C-l>";
+        action = "<C-i>";
       }
     ] ++ pkgs.lib.attrsets.mapAttrsToList
       (key: action: {
@@ -97,6 +237,42 @@
         "g+" = "outgoing_calls";
         "g-" = "incoming_calls";
         "gt" = "goto_type_definition";
+      } ++ pkgs.lib.attrsets.mapAttrsToList
+      (original: replacement: {
+        mode = [ "n" "x" ] ++ (pkgs.lib.optional (original != "i") "o") ++ (pkgs.lib.optional (original == "gN") "v");
+        key = original;
+        action = replacement;
+      })
+      {
+        # colemak-dh
+        "m" = "h";
+        "gm" = "gh";
+        "n" = "j";
+        "gn" = "gj";
+        "e" = "k";
+        "ge" = "gk";
+        "i" = "l";
+        "M" = "H";
+        "gM" = "gH";
+        "N" = "J";
+        "gN" = "gJ";
+        "E" = "K";
+        "I" = "L";
+        # recover lost keys
+        "k" = "n";
+        "K" = "N";
+        "l" = "e";
+        "gl" = "ge";
+        "L" = "E";
+        "gL" = "gE";
+        "h" = "i";
+        "gh" = "gi";
+        "H" = "I";
+        "gH" = "gI";
+        "j" = "m";
+        "gj" = "gm";
+        "J" = "M";
+        "gJ" = "gM";
       };
     plugins = {
       bufferline = {
@@ -104,6 +280,15 @@
         diagnostics = "nvim_lsp";
       };
       comment-nvim.enable = true;
+      conform-nvim = {
+        enable = true;
+        extraOptions = {
+          format_on_save = {
+            timeout_ms = 1000;
+            lsp_fallback = true;
+          };
+        };
+      };
       copilot-lua = {
         enable = true;
         filetypes = {
@@ -114,7 +299,6 @@
           keymap.accept = "<Right>";
         };
       };
-      fidget.enable = true;
       fugitive.enable = true;
       gitsigns.enable = true;
       indent-blankline.enable = true;
@@ -124,7 +308,7 @@
           check.command = "clippy";
         };
       };
-      leap = {
+      flash = {
         enable = true;
       };
       lsp = {
@@ -180,6 +364,7 @@
               "tree"
             ];
           };
+          lua-ls.enable = true;
           nixd.enable = true;
           pest_ls.enable = true;
           tailwindcss.enable = true;
@@ -189,6 +374,7 @@
               build = {
                 args = [
                   "-pdf"
+                  "-shell-escape"
                   "-interaction=nonstopmode"
                   "-synctex=1"
                   "%f"
@@ -225,7 +411,6 @@
           silent = true;
         };
       };
-      lsp-format.enable = true;
       lspkind = {
         enable = true;
         cmp = {
@@ -268,12 +453,20 @@
                 path = 1;
               };
             }
+            {
+              name = helpers.mkRaw ''
+                require("lsp-progress").progress
+              '';
+            }
           ];
         };
       };
       luasnip = {
         enable = true;
-        fromVscode = [{ }];
+        extraConfig = {
+          enable_autosnippets = true;
+        };
+        fromLua = [{ } { paths = "~/Dropbox/nixvim-flake/snippets"; }];
       };
       markdown-preview.enable = true;
       nvim-autopairs = {
@@ -297,10 +490,10 @@
                   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
                 end
                 local luasnip = require("luasnip")
-                if cmp.visible() then
-                  cmp.select_next_item()
-                elseif luasnip.expand_or_locally_jumpable() then
+                if luasnip.expand_or_locally_jumpable() then
                   luasnip.expand_or_jump()
+                elseif cmp.visible() then
+                  cmp.select_next_item()
                 elseif has_words_before() then
                   cmp.complete()
                 else
@@ -314,10 +507,10 @@
             action = ''
               function(fallback)
                 local luasnip = require("luasnip")
-                if cmp.visible() then
-                  cmp.select_prev_item()
-                elseif luasnip.jumpable(-1) then
+                if luasnip.jumpable(-1) then
                   luasnip.jump(-1)
+                elseif cmp.visible() then
+                  cmp.select_prev_item()
                 else
                   fallback()
                 end
@@ -374,8 +567,14 @@
       rainbow-delimiters.enable = true;
       treesitter = {
         enable = true;
+        disabledLanguages = [ "latex" ];
         folding = true;
-        incrementalSelection.enable = true;
+        incrementalSelection = {
+          enable = true;
+          keymaps = {
+            initSelection = "gkn";
+          };
+        };
         indent = true;
         nixvimInjections = true;
       };
@@ -415,9 +614,19 @@
           compiler_latexmk = {
             aux_dir = "build";
             out_dir = "build";
+            options = [
+              "-shell-escape"
+              "-verbose"
+              "-file-line-error"
+              "-synctex=1"
+              "-interaction=nonstopmode"
+            ];
           };
+          fold_enabled = 1;
+          format_enabled = 1;
           view_method = "zathura";
-          view_use_temp_files = 2;
+          view_use_temp_files = true;
+          quickfix_open_on_warning = 0;
         };
       };
       # These cmp plugins aren't be auto-enabled (no detection in extraConfigLuaPost)
@@ -452,5 +661,11 @@
         },
       })
     '';
+    userCommands = {
+      "LuaSnipEdit" = {
+        command = "lua require('luasnip.loaders').edit_snippet_files()";
+        desc = "Edit Snippets";
+      };
+    };
   };
 }
