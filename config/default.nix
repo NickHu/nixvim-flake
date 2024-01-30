@@ -45,7 +45,6 @@
           lua require("nvim-web-devicons").setup()
         '';
       }
-      targets-vim
       pest-vim
       vim-eunuch
       vim-nix
@@ -62,12 +61,7 @@
         '';
       }
       vim-pandoc-syntax
-      vim-repeat
       vim-rhubarb
-      vim-sleuth
-      vim-speeddating
-      vim-surround
-      vim-unimpaired
       {
         plugin = tmux-navigator;
         config = ''
@@ -279,7 +273,6 @@
         enable = true;
         diagnostics = "nvim_lsp";
       };
-      comment-nvim.enable = true;
       conform-nvim = {
         enable = true;
         extraOptions = {
@@ -468,11 +461,31 @@
         };
         fromLua = [{ } { paths = "~/Dropbox/nixvim-flake/snippets"; }];
       };
-      markdown-preview.enable = true;
-      nvim-autopairs = {
+      mini = {
         enable = true;
-        checkTs = true;
+        modules = {
+          ai = { };
+          align = { };
+          bracketed = { };
+          bufremove = { };
+          comment = { };
+          operators = { };
+          splitjoin = { };
+          surround = {
+            mappings = {
+              add = "ys";
+              delete = "ds";
+              find = "";
+              find_left = "";
+              highlight = "";
+              replace = "cs";
+              update_n_lines = "";
+            };
+          };
+          trailspace = { };
+        };
       };
+      markdown-preview.enable = true;
       nvim-cmp = {
         enable = true;
         mappingPresets = [ "insert" "cmdline" ];
@@ -572,7 +585,9 @@
         incrementalSelection = {
           enable = true;
           keymaps = {
-            initSelection = "gkn";
+            initSelection = "<C-Space>";
+            nodeIncremental = "<C-Space>";
+            nodeDecremental = "<BS>";
           };
         };
         indent = true;
@@ -592,7 +607,7 @@
         };
         keymaps = {
           "<leader>/" = "live_grep";
-          "<leader>E" = "diagnostics";
+          "<leader>d" = "diagnostics";
           "<leader>b" = "buffers";
           "<leader>f" = "find_files";
         };
