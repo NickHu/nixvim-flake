@@ -470,6 +470,7 @@
           bufremove = { };
           comment = { };
           operators = { };
+          pairs = { };
           splitjoin = { };
           surround = {
             mappings = {
