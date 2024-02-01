@@ -535,11 +535,11 @@
         snippet.expand = "luasnip";
         sources = [
           {
-            name = "nvim_lsp";
-            groupIndex = 1;
+            name = "nvim_lsp_signature_help";
+            groupIndex = 0;
           }
           {
-            name = "nvim_lsp_signature_help";
+            name = "nvim_lsp";
             groupIndex = 1;
           }
           {
@@ -653,6 +653,7 @@
     extraConfigLuaPost = ''
       local cmp = require("cmp")
       cmp.setup.cmdline('/', {
+        mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
           { name = 'nvim_lsp_document_symbol' }
         }, {
@@ -660,6 +661,11 @@
         })
       })
       cmp.setup.cmdline(':', {
+        mapping = cmp.mapping.preset.cmdline({
+          ["<CR>"] = {
+            c = cmp.mapping.confirm()
+          }
+        }),
         sources = cmp.config.sources({
           { name = 'path' }
         }, {
