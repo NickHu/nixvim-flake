@@ -227,7 +227,7 @@
         "<M-l>" = "code_action";
         "<M-r>" = "rename";
         "<M-p>" = "finder";
-        "K" = "hover_doc";
+        "E" = "hover_doc";
         "g+" = "outgoing_calls";
         "g-" = "incoming_calls";
         "gt" = "goto_type_definition";
@@ -250,7 +250,6 @@
         "gM" = "gH";
         "N" = "J";
         "gN" = "gJ";
-        "E" = "K";
         "I" = "L";
         # recover lost keys
         "k" = "n";
