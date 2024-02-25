@@ -133,11 +133,11 @@
     "lsp-progress-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1707491535,
-        "narHash": "sha256-5z+d6go/chUZAJL27SQdsJ33TqL6oCoWmxwsL3ka+pw=",
+        "lastModified": 1708789760,
+        "narHash": "sha256-wCVh/cZ7E60G4R+b8qzb8t7vGEMRA+469jCPsiyNlKw=",
         "owner": "linrongbin16",
         "repo": "lsp-progress.nvim",
-        "rev": "044bcfd13bcf79b2899a82b6bfadc90c48d879ad",
+        "rev": "c336039f3b03176a7b2f0c585a0e78056769b681",
         "type": "github"
       },
       "original": {
