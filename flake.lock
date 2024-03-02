@@ -87,6 +87,22 @@
         "type": "github"
       }
     },
+    "forester-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1707556161,
+        "narHash": "sha256-cozySQoJSWBw6hfDtGZFp0G0LbTSOs01Xd19dDReDag=",
+        "owner": "kentookura",
+        "repo": "forester.nvim",
+        "rev": "e39de0982cf85eadfcbafb1a83e9d3b2b12b76bb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kentookura",
+        "repo": "forester.nvim",
+        "type": "github"
+      }
+    },
     "gitignore": {
       "inputs": {
         "nixpkgs": [
@@ -255,12 +271,14 @@
     "root": {
       "inputs": {
         "flake-parts": "flake-parts",
+        "forester-nvim": "forester-nvim",
         "lsp-progress-nvim": "lsp-progress-nvim",
         "nixpkgs": [
           "nixvim",
           "nixpkgs"
         ],
-        "nixvim": "nixvim"
+        "nixvim": "nixvim",
+        "tree-sitter-forester": "tree-sitter-forester"
       }
     },
     "systems": {
@@ -275,6 +293,22 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "tree-sitter-forester": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1704638864,
+        "narHash": "sha256-nqzpGs85IfApwFLLdwbXye89w26D29yRaa7DsCEn4iU=",
+        "owner": "kentookura",
+        "repo": "tree-sitter-forester",
+        "rev": "34351e03436fe7177e4e9320312052164be02f08",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kentookura",
+        "repo": "tree-sitter-forester",
         "type": "github"
       }
     }

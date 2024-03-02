@@ -10,6 +10,14 @@
     nixvim.url = "github:nix-community/nixvim";
     nixpkgs.follows = "nixvim/nixpkgs";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    tree-sitter-forester = {
+      url = "github:kentookura/tree-sitter-forester";
+      flake = false;
+    };
+    forester-nvim = {
+      url = "github:kentookura/forester.nvim";
+      flake = false;
+    };
     lsp-progress-nvim = {
       url = "github:linrongbin16/lsp-progress.nvim";
       flake = false;
@@ -42,7 +50,19 @@
             inherit system;
             overlays = [
               (final: prev: {
+                tree-sitter-grammars = prev.tree-sitter-grammars // {
+                  tree-sitter-forester = prev.tree-sitter.buildGrammar {
+                    language = "forester";
+                    version = "unstable-${inputs.tree-sitter-forester.lastModifiedDate}";
+                    src = inputs.tree-sitter-forester;
+                  };
+                };
                 vimPlugins = prev.vimPlugins.extend (final': prev': {
+                  forester-nvim = final.vimUtils.buildVimPlugin {
+                    pname = "forester.nvim";
+                    version = "unstable-${inputs.forester-nvim.lastModifiedDate}";
+                    src = inputs.forester-nvim;
+                  };
                   lsp-progress-nvim = final.vimUtils.buildVimPlugin {
                     pname = "lsp-progress.nvim";
                     version = "unstable-${inputs.lsp-progress-nvim.lastModifiedDate}";
@@ -53,7 +73,7 @@
             ];
           };
           overlayAttrs = {
-            inherit (_module.args.pkgs) vimPlugins;
+            inherit (_module.args.pkgs) vimPlugins tree-sitter-grammars;
           };
           checks = {
             # Run `nix flake check .` to verify that your config is not broken

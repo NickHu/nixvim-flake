@@ -45,6 +45,12 @@
           lua require("nvim-web-devicons").setup()
         '';
       }
+      {
+        plugin = forester-nvim;
+        config = ''
+          lua require("forester").setup({ opts = { forests = { "~/Dropbox/forest" }, tree_dirs = { "trees" }, conceal = true, } })
+        '';
+      }
       pest-vim
       vim-eunuch
       vim-nix
@@ -582,6 +588,9 @@
         enable = true;
         disabledLanguages = [ "latex" ];
         folding = true;
+        grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars ++ [
+          pkgs.tree-sitter-grammars.tree-sitter-forester
+        ];
         incrementalSelection = {
           enable = true;
           keymaps = {
