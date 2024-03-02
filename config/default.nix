@@ -278,6 +278,7 @@
         enable = true;
         diagnostics = "nvim_lsp";
       };
+      clangd-extensions.enable = true;
       conform-nvim = {
         enable = true;
         extraOptions = {
