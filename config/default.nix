@@ -282,9 +282,35 @@
       conform-nvim = {
         enable = true;
         extraOptions = {
-          format_after_save = {
-            lsp_fallback = true;
-          };
+          format_after_save = helpers.mkRaw ''
+            function(bufnr)
+              -- Disable with a global or buffer-local variable
+              if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+                return
+              end
+              if not slow_format_filetypes[vim.bo[bufnr].filetype] then
+                return
+              end
+              return { lsp_fallback = true }
+            end
+          '';
+          format_on_save = helpers.mkRaw ''
+            function(bufnr)
+              -- Disable with a global or buffer-local variable
+              if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+                return
+              end
+              if slow_format_filetypes[vim.bo[bufnr].filetype] then
+                return
+              end
+              local function on_format(err)
+                if err and err:match("timeout$") then
+                  slow_format_filetypes[vim.bo[bufnr].filetype] = true
+                end
+              end
+              return { timeout_ms = 200, lsp_fallback = true }, on_format
+            end
+          '';
         };
       };
       copilot-lua = {
@@ -658,6 +684,9 @@
       cmp-dap.enable = true;
       cmp-nvim-lsp-document-symbol.enable = true;
     };
+    extraConfigLuaPre = ''
+      local slow_format_filetypes = {}
+    '';
     extraConfigLuaPost = ''
       local cmp = require("cmp")
       cmp.setup.cmdline('/', {
@@ -690,6 +719,24 @@
       "LuaSnipEdit" = {
         command = "lua require('luasnip.loaders').edit_snippet_files()";
         desc = "Edit Snippets";
+      };
+      "FormatDisable" = {
+        bang = true;
+        command = ''
+          if <bang>v:true
+            let g:disable_autoformat = v:true
+          else
+            let b:disable_autoformat = v:true
+          endif
+        '';
+        desc = "Disable autoformat-on-save";
+      };
+      "FormatEnable" = {
+        command = ''
+          let b:disable_autoformat = v:false
+          let g:disable_autoformat = v:false
+        '';
+        desc = "Re-enable autoformat-on-save";
       };
     };
   };
