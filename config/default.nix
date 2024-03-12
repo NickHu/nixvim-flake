@@ -660,7 +660,7 @@
       which-key.enable = true;
       vimtex = {
         enable = true;
-        extraConfig = {
+        settings = {
           compiler_latexmk = {
             aux_dir = "build";
             out_dir = "build";
@@ -678,6 +678,7 @@
           view_use_temp_files = true;
           quickfix_open_on_warning = 0;
         };
+        texlivePackage = null; # don't install texlive at all
       };
       # These cmp plugins aren't be auto-enabled (no detection in extraConfigLuaPost)
       cmp-cmdline.enable = true;
