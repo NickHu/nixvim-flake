@@ -390,6 +390,7 @@
           };
           lua-ls.enable = true;
           nixd.enable = true;
+          ocamllsp.enable = true;
           pest_ls.enable = true;
           tailwindcss.enable = true;
           texlab = {
