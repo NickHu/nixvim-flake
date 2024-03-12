@@ -518,94 +518,145 @@
         };
       };
       markdown-preview.enable = true;
-      nvim-cmp = {
+      cmp = {
         enable = true;
-        mappingPresets = [ "insert" "cmdline" ];
-        mapping = {
-          "<C-b>" = "cmp.mapping.scroll_docs(-4)";
-          "<C-f>" = "cmp.mapping.scroll_docs(4)";
-          "<CR>" = "cmp.mapping.confirm()";
-          "<Tab>" = {
-            modes = [ "i" "s" ];
-            action = ''
-              function(fallback)
-                local has_words_before = function()
-                  unpack = unpack or table.unpack
-                  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-                  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-                end
-                local luasnip = require("luasnip")
-                if luasnip.expand_or_locally_jumpable() then
-                  luasnip.expand_or_jump()
-                elseif cmp.visible() then
-                  cmp.select_next_item()
-                elseif has_words_before() then
-                  cmp.complete()
-                else
-                  fallback()
-                end
-              end
-            '';
+        cmdline = {
+          "/" = {
+            mapping = helpers.mkRaw "cmp.mapping.preset.cmdline()";
+            sources = [
+              {
+                name = "nvim_lsp_document_symbol";
+              }
+              {
+                name = "buffer";
+              }
+            ];
           };
-          "<S-Tab>" = {
-            modes = [ "i" "s" ];
-            action = ''
-              function(fallback)
-                local luasnip = require("luasnip")
-                if luasnip.jumpable(-1) then
-                  luasnip.jump(-1)
-                elseif cmp.visible() then
-                  cmp.select_prev_item()
-                else
-                  fallback()
-                end
-              end
+          ":" = {
+            mapping = helpers.mkRaw ''
+              cmp.mapping.preset.cmdline({
+                ["<CR>"] = {
+                  c = cmp.mapping.confirm()
+                }
+              })
             '';
+            sources = [
+              {
+                name = "path";
+              }
+              {
+                name = "cmdline";
+                option = {
+                  ignore_cmds = [
+                    "Man"
+                    "!"
+                  ];
+                };
+              }
+            ];
           };
         };
-        snippet.expand = "luasnip";
-        sources = [
-          {
-            name = "nvim_lsp_signature_help";
-            groupIndex = 0;
-          }
-          {
-            name = "nvim_lsp";
-            groupIndex = 1;
-          }
-          {
-            name = "luasnip";
-            groupIndex = 1;
-          }
-          {
-            name = "calc";
-            groupIndex = 1;
-          }
-          {
-            name = "path";
-            groupIndex = 1;
-          }
-          {
-            name = "buffer";
-            groupIndex = 2;
-          }
-          {
-            name = "treesitter";
-            groupIndex = 2;
-          }
-          {
-            name = "cmp_pandoc";
-            groupIndex = 1;
-          }
-          {
-            name = "latex_symbols";
-            groupIndex = 1;
-          }
-          {
-            name = "spell";
-            groupIndex = 1;
-          }
-        ];
+        filetype = {
+          "dapui_watches" = {
+            sources = [
+              {
+                name = "dap";
+              }
+            ];
+          };
+          "dap-repl" = {
+            sources = [
+              {
+                name = "dap";
+              }
+            ];
+          };
+        };
+        settings = {
+          mapping = {
+            "<C-b>" = "cmp.mapping.scroll_docs(-4)";
+            "<C-f>" = "cmp.mapping.scroll_docs(4)";
+            "<CR>" = "cmp.mapping.confirm()";
+            "<Tab>" = ''
+              cmp.mapping(
+                function(fallback)
+                  local has_words_before = function()
+                    unpack = unpack or table.unpack
+                    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+                    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+                  end
+                  local luasnip = require("luasnip")
+                  if luasnip.expand_or_locally_jumpable() then
+                    luasnip.expand_or_jump()
+                  elseif cmp.visible() then
+                    cmp.select_next_item()
+                  elseif has_words_before() then
+                    cmp.complete()
+                  else
+                    fallback()
+                  end
+                end,
+                { "i", "s" })
+            '';
+            "<S-Tab>" = ''
+              cmp.mapping(
+                function(fallback)
+                  local luasnip = require("luasnip")
+                  if luasnip.jumpable(-1) then
+                    luasnip.jump(-1)
+                  elseif cmp.visible() then
+                    cmp.select_prev_item()
+                  else
+                    fallback()
+                  end
+                end,
+                { "i", "s" })
+            '';
+          };
+          snippet.expand = "luasnip";
+          sources = [
+            {
+              name = "nvim_lsp_signature_help";
+              groupIndex = 0;
+            }
+            {
+              name = "nvim_lsp";
+              groupIndex = 1;
+            }
+            {
+              name = "luasnip";
+              groupIndex = 1;
+            }
+            {
+              name = "calc";
+              groupIndex = 1;
+            }
+            {
+              name = "path";
+              groupIndex = 1;
+            }
+            {
+              name = "buffer";
+              groupIndex = 2;
+            }
+            {
+              name = "treesitter";
+              groupIndex = 2;
+            }
+            {
+              name = "cmp_pandoc";
+              groupIndex = 1;
+            }
+            {
+              name = "latex_symbols";
+              groupIndex = 1;
+            }
+            {
+              name = "spell";
+              groupIndex = 1;
+            }
+          ];
+        };
       };
       nvim-colorizer.enable = true;
       nvim-tree.enable = true;
@@ -687,34 +738,6 @@
     };
     extraConfigLuaPre = ''
       local slow_format_filetypes = {}
-    '';
-    extraConfigLuaPost = ''
-      local cmp = require("cmp")
-      cmp.setup.cmdline('/', {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources({
-          { name = 'nvim_lsp_document_symbol' }
-        }, {
-          { name = 'buffer' }
-        })
-      })
-      cmp.setup.cmdline(':', {
-        mapping = cmp.mapping.preset.cmdline({
-          ["<CR>"] = {
-            c = cmp.mapping.confirm()
-          }
-        }),
-        sources = cmp.config.sources({
-          { name = 'path' }
-        }, {
-          { name = 'cmdline' }
-        })
-      })
-      cmp.setup.filetype({ "dap-repl", "dapui_watches" }, {
-        sources = {
-          { name = "dap" },
-        },
-      })
     '';
     userCommands = {
       "LuaSnipEdit" = {
