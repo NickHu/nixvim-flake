@@ -14,6 +14,12 @@
           conceallevel = 2;
         };
       };
+      "ftplugin/tree.lua" = {
+        options = {
+          cindent = true;
+          cinoptions = "+0";
+        };
+      };
     };
     autoCmd = [
       {
