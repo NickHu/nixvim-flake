@@ -172,8 +172,16 @@
       }
       {
         mode = "n";
-        key = "<C-m>";
+        key = "<C-m>"; # this also maps <CR> due to legacy terminal behavior
         action = ":<C-U>TmuxNavigateLeft<CR>";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = "n";
+        key = "<CR>";
+        action = "<CR>";
         options = {
           silent = true;
         };
@@ -196,8 +204,16 @@
       }
       {
         mode = "n";
-        key = "<C-i>";
+        key = "<C-i>"; # this also maps <Tab> due to legacy terminal behavior
         action = ":<C-U>TmuxNavigateRight<CR>";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = "n";
+        key = "<Tab>";
+        action = "<Tab>";
         options = {
           silent = true;
         };
