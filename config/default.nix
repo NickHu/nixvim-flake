@@ -732,10 +732,6 @@
         };
         texlivePackage = null; # don't install texlive at all
       };
-      # These cmp plugins aren't be auto-enabled (no detection in extraConfigLuaPost)
-      cmp-cmdline.enable = true;
-      cmp-dap.enable = true;
-      cmp-nvim-lsp-document-symbol.enable = true;
     };
     extraConfigLuaPre = ''
       local slow_format_filetypes = {}
