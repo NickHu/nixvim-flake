@@ -89,6 +89,7 @@
       clipboard = "unnamed";
       colorcolumn = "80";
       expandtab = true;
+      formatexpr = "v:lua.require'conform'.formatexpr()";
       linebreak = true;
       mouse = "vi";
       number = true;
@@ -297,6 +298,9 @@
       clangd-extensions.enable = true;
       conform-nvim = {
         enable = true;
+        formattersByFt = {
+          ocaml = ["ocamlformat"];
+        };
         extraOptions = {
           format_after_save = helpers.mkRaw ''
             function(bufnr)
