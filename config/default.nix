@@ -74,12 +74,6 @@
       }
       vim-pandoc-syntax
       vim-rhubarb
-      {
-        plugin = tmux-navigator;
-        config = ''
-          let g:tmux_navigator_no_mappings = 1
-        '';
-      }
     ];
     colorscheme = "solarized";
     filetype = {
@@ -89,7 +83,6 @@
     };
     globals = {
       tex_flavor = "latex";
-      tmux_navigator_no_mappings = 1;
     };
     options = {
       clipboard = "unnamed";
@@ -796,7 +789,13 @@
           "<leader>f" = "find_files";
         };
       };
-      tmux-navigator.enable = true;
+      tmux-navigator = {
+        enable = true;
+        settings = {
+          no_mappings = true;
+          no_wrap = true;
+        };
+      };
       undotree = {
         enable = true;
       };
