@@ -79,6 +79,7 @@
       }
       vim-pandoc-syntax
       vim-rhubarb
+      texpresso-vim
     ];
     colorscheme = "solarized";
     filetype = {
