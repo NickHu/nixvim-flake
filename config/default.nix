@@ -5,6 +5,11 @@
 }: {
   config = {
     files = {
+      "ftplugin/ocaml.lua" = {
+        options = {
+          formatexpr = "v:lua.require'conform'.formatexpr({ 'formatters': [ 'ocamlformat' ]})";
+        };
+      };
       "ftplugin/tex.lua" = {
         autoCmd = [{
           event = [ "BufWritePost" ];
@@ -298,7 +303,7 @@
       conform-nvim = {
         enable = true;
         formattersByFt = {
-          ocaml = ["ocamlformat"];
+          ocaml = [ [ "ocp-indent" "ocamlformat" ] ];
         };
         extraOptions = {
           format_after_save = helpers.mkRaw ''
