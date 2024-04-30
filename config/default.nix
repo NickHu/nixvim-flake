@@ -79,7 +79,6 @@
       }
       vim-pandoc-syntax
       vim-rhubarb
-      texpresso-vim
     ];
     colorscheme = "solarized";
     filetype = {
@@ -812,6 +811,7 @@
         treesitterIntegration.enable = true;
       };
       which-key.enable = true;
+      texpresso.enable = true;
       vimtex = {
         enable = true;
         settings = {
