@@ -94,10 +94,12 @@
       colorcolumn = "80";
       expandtab = true;
       formatexpr = "v:lua.require'conform'.formatexpr()";
+      jumpoptions = [ "stack" "view" ];
       linebreak = true;
       mouse = "vi";
       number = true;
       relativenumber = true;
+      signcolumn = "number";
       shiftwidth = 2;
       showbreak = "↳ ";
       spelllang = "en_gb";
