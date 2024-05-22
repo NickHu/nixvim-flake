@@ -24,6 +24,36 @@
           cindent = true;
           cinoptions = "+0";
         };
+        userCommands = {
+          "ForesterNew" = {
+            command = helpers.mkRaw ''
+              function(opts)
+                local prefix = opts.args
+                local handle = io.popen('forester new --dest=trees --prefix=' .. prefix .. ' --random')
+                if not handle then
+                  print('Failed to run forester')
+                  return
+                end
+
+                local result = handle:read("*a")
+                handle:close()
+
+                -- Extract 'foo-0001' from the result 'trees/foo-0001.tree'
+                local match = string.match(result, "trees/(%g+(%-[A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9]))%.tree")
+                if match then
+                  -- Insert the extracted string into the current buffer
+                  vim.api.nvim_put({match}, 'c', false, true)
+                  -- Open the new tree in a new buffer
+                  vim.cmd('e ' .. result)
+                else
+                  print('No match found in the command output: ' .. result)
+                end
+              end
+            '';
+            desc = "Create new forester tree";
+            nargs = 1;
+          };
+        };
       };
     };
     autoCmd = [
