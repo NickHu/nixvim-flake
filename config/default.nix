@@ -524,7 +524,6 @@
           align = { };
           bracketed = { };
           bufremove = { };
-          comment = { };
           operators = { };
           pairs = { };
           splitjoin = { };
