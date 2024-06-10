@@ -393,6 +393,7 @@
       };
       lsp = {
         enable = true;
+        inlayHints = true;
         onAttach = ''
           if client.name == "ltex" then
             require("ltex_extra").setup {
