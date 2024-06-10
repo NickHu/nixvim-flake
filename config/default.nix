@@ -390,6 +390,7 @@
       };
       flash = {
         enable = true;
+        modes.search.enabled = true;
       };
       lsp = {
         enable = true;
