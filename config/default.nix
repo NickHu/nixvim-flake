@@ -449,6 +449,7 @@
           ocamllsp.enable = true;
           pest_ls.enable = true;
           tailwindcss.enable = true;
+          svelte.enable = true;
           texlab = {
             enable = true;
             extraOptions.settings.texlab = {
