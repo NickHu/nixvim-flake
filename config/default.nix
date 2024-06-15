@@ -835,6 +835,7 @@
           no_wrap = true;
         };
       };
+      typescript-tools.enable = true;
       undotree = {
         enable = true;
       };
