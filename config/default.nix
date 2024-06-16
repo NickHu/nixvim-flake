@@ -597,17 +597,6 @@
           operators = { };
           pairs = { };
           splitjoin = { };
-          surround = {
-            mappings = {
-              add = "ys";
-              delete = "ds";
-              find = "";
-              find_left = "";
-              highlight = "";
-              replace = "cs";
-              update_n_lines = "";
-            };
-          };
           trailspace = { };
         };
       };
@@ -826,6 +815,7 @@
         '';
       };
       rainbow-delimiters.enable = true;
+      surround.enable = true;
       treesitter = {
         enable = true;
         disabledLanguages = [ "latex" ];
