@@ -109,6 +109,21 @@
       }
       vim-pandoc-syntax
       vim-rhubarb
+      {
+        plugin = vim-visual-multi;
+        config = ''
+          let g:VM_set_statusline = 1
+          let g:VM_custom_motions = {'m': 'h', 'n': 'j', 'e': 'k', 'i': 'l', 'l': 'e', 'L': 'E', 'gl': 'ge', 'gL': 'gE'}
+          let g:VM_maps = {}
+          let g:VM_maps['Find Under'] = '<C-k>'
+          let g:VM_maps['Find Subword Under'] = '<C-k>'
+          let g:VM_maps['Find Next'] = 'k'
+          let g:VM_maps['Find Prev'] = 'K'
+          let g:VM_maps['Find Operator'] = 'j'
+          let g:VM_maps['i'] = 'h'
+          let g:VM_maps['I'] = 'H'
+        '';
+      }
     ];
     colorscheme = "solarized";
     filetype = {
@@ -540,6 +555,26 @@
             {
               name = helpers.mkRaw ''
                 require("lsp-progress").progress
+              '';
+            }
+            {
+              name = helpers.mkRaw ''
+                function()
+                        local result = vim.fn["VMInfos"]()
+                        -- local current = result.current
+                        -- local total = result.total
+                        local ratio = result.ratio
+                        local patterns = result.patterns
+                        -- local status = result.status
+                        return "%#St_InsertMode# "
+                                .. " MULTI "
+                                .. "%#St_lspWarning#  "
+                                .. patterns[1]
+                                .. " "
+                                .. "%#StText#"
+                                .. " "
+                                .. ratio
+                end
               '';
             }
           ];
