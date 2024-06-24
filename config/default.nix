@@ -464,7 +464,7 @@
           lua-ls.enable = true;
           nixd.enable = true;
           ocamllsp.enable = true;
-          pest_ls.enable = true;
+          pest-ls.enable = true;
           tailwindcss.enable = true;
           svelte.enable = true;
           texlab = {
