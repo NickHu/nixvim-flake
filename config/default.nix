@@ -19,8 +19,8 @@
           conceallevel = 2;
         };
       };
-      "ftplugin/tree.lua" = {
-        options = {
+      "ftplugin/forester.lua" = {
+        opts = {
           cindent = true;
           cinoptions = "+0";
         };
@@ -126,11 +126,6 @@
       }
     ];
     colorscheme = "solarized";
-    filetype = {
-      extension = {
-        tree = "tree";
-      };
-    };
     globals = {
       tex_flavor = "latex";
     };
