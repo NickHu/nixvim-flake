@@ -397,10 +397,10 @@
       fugitive.enable = true;
       gitsigns.enable = true;
       indent-blankline.enable = true;
-      rust-tools = {
+      rustaceanvim = {
         enable = true;
-        server = {
-          check.command = "clippy";
+        settings.tools = {
+          enable_clippy = true;
         };
       };
       flash = {
