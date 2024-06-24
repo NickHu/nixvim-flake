@@ -6,7 +6,7 @@
   config = {
     files = {
       "ftplugin/ocaml.lua" = {
-        options = {
+        opts = {
           formatexpr = "v:lua.require'conform'.formatexpr({ 'formatters': [ 'ocamlformat' ]})";
         };
       };
@@ -15,7 +15,7 @@
           event = [ "BufWritePost" ];
           command = "call vimtex#toc#refresh()";
         }];
-        options = {
+        opts = {
           conceallevel = 2;
         };
       };
@@ -134,7 +134,7 @@
     globals = {
       tex_flavor = "latex";
     };
-    options = {
+    opts = {
       clipboard = "unnamed";
       colorcolumn = "80";
       expandtab = true;
@@ -156,8 +156,7 @@
       {
         mode = [ "n" "x" "o" ];
         key = "<leader>s";
-        lua = true;
-        action = "function() require('flash').jump() end";
+        action = helpers.mkRaw "function() require('flash').jump() end";
         options = {
           silent = true;
         };
@@ -165,8 +164,7 @@
       {
         mode = [ "n" "x" "o" ];
         key = "<leader>S";
-        lua = true;
-        action = "function() require('flash').treesitter() end";
+        action = helpers.mkRaw "function() require('flash').treesitter() end";
         options = {
           silent = true;
         };
@@ -174,8 +172,7 @@
       {
         mode = "o";
         key = "r";
-        lua = true;
-        action = "function() require('flash').remote() end";
+        action = helpers.mkRaw "function() require('flash').remote() end";
         options = {
           silent = true;
         };
@@ -183,8 +180,7 @@
       {
         mode = [ "o" "x" ];
         key = "R";
-        lua = true;
-        action = "function() require('flash').treesitter_search() end";
+        action = helpers.mkRaw "function() require('flash').treesitter_search() end";
         options = {
           silent = true;
         };
@@ -192,8 +188,7 @@
       {
         mode = "c";
         key = "<C-s>";
-        lua = true;
-        action = "function() require('flash').toggle() end";
+        action = helpers.mkRaw "function() require('flash').toggle() end";
         options = {
           silent = true;
         };
