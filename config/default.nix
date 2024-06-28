@@ -584,6 +584,12 @@
           align = { };
           bracketed = { };
           bufremove = { };
+          indentscope = {
+            draw = {
+              animation = helpers.mkRaw "require('mini.indentscope').gen_animation.none()";
+            };
+            symbol = "▎";
+          };
           operators = { };
           pairs = { };
           splitjoin = { };
