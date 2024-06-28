@@ -112,7 +112,8 @@
       {
         plugin = vim-visual-multi;
         config = ''
-          let g:VM_set_statusline = 1
+          let g:VM_set_statusline = 0
+          let g:VM_silent_exit = 1
           let g:VM_custom_motions = {'m': 'h', 'n': 'j', 'e': 'k', 'i': 'l', 'l': 'e', 'L': 'E', 'gl': 'ge', 'gL': 'gE'}
           let g:VM_maps = {}
           let g:VM_maps['Find Under'] = '<C-k>'
@@ -551,19 +552,55 @@
               name = helpers.mkRaw ''
                 function()
                         local result = vim.fn["VMInfos"]()
-                        -- local current = result.current
-                        -- local total = result.total
-                        local ratio = result.ratio
-                        local patterns = result.patterns
-                        -- local status = result.status
-                        return "%#St_InsertMode# "
-                                .. " MULTI "
-                                .. "%#St_lspWarning#  "
-                                .. patterns[1]
-                                .. " "
-                                .. "%#StText#"
-                                .. " "
-                                .. ratio
+                        if result ~= {} then
+                          -- local current = result.current
+                          -- local total = result.total
+                          local ratio = result.ratio
+                          local patterns = result.patterns
+                          local status = result.status
+                          local v = vim.b['VM_Selection'].Vars
+                          local mode = "V-M"
+                          local color = "%#VM_Extend#"
+                          local single = ""
+                          if v.single_region == 1 then
+                            single = "%#VM_Mono# SINGLE "
+                          end
+                          if v.insert == 1 then
+                            if vim.b['VM_Selection'].Insert.replace == 1 then
+                              mode = "V-R"
+                              color = "%#VM_Mono#"
+                            else
+                              mode = "V-I"
+                              color = "%#VM_Cursor#"
+                            end
+                          else
+                            local modes = {
+                              ['n'] = "V-M",
+                              ['v'] = "V",
+                              ['V'] = "V-L",
+                              ['\<C-v>'] = "V-B",
+                              default = "V-M",
+                            }
+                            mode = modes[vim.fn.mode()]
+                          end
+                          return
+                             color
+                          .. " "
+                          .. mode
+                          .. " "
+                          .. "%#VM_Insert#"
+                          .. ratio
+                          .. single
+                          .. "%#TabLine# "
+                          .. patterns[1]
+                          .. " "
+                          .. color
+                          .. " "
+                          .. status
+                          .. " "
+                        else
+                          return ""
+                        end
                 end
               '';
             }
