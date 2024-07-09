@@ -427,7 +427,7 @@
                     tex = 'latex',
                     xhtml = 'xhtml',
                     pandoc = 'markdown',
-                    tree = 'latex',
+                    forester = 'latex',
                   }
                   local language_id = language_id_mapping[filetype]
                   if language_id then
@@ -449,7 +449,7 @@
               "pandoc"
               "quarto"
               "rmd"
-              "tree"
+              "forester"
             ];
           };
           lua-ls.enable = true;
