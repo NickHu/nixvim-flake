@@ -335,15 +335,15 @@
     plugins = {
       bufferline = {
         enable = true;
-        diagnostics = "nvim_lsp";
+        settings.options.diagnostics = "nvim_lsp";
       };
       clangd-extensions.enable = true;
       conform-nvim = {
         enable = true;
-        formattersByFt = {
-          ocaml = [ [ "ocp-indent" "ocamlformat" ] ];
-        };
-        extraOptions = {
+        settings = {
+          formatters_by_ft = {
+            ocaml = [ [ "ocp-indent" "ocamlformat" ] ];
+          };
           format_after_save = helpers.mkRaw ''
             function(bufnr)
               -- Disable with a global or buffer-local variable
@@ -396,7 +396,7 @@
       };
       flash = {
         enable = true;
-        modes.search.enabled = true;
+        settings.modes.search.enabled = true;
       };
       lsp = {
         enable = true;
@@ -609,7 +609,7 @@
       };
       luasnip = {
         enable = true;
-        extraConfig = {
+        settings = {
           enable_autosnippets = true;
         };
         fromLua = [{ } { paths = "~/Dropbox/nixvim-flake/snippets"; }];
@@ -851,21 +851,22 @@
       surround.enable = true;
       treesitter = {
         enable = true;
-        disabledLanguages = [ "latex" ];
-        folding = true;
         grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars ++ [
           pkgs.tree-sitter-grammars.tree-sitter-forester
         ];
-        incrementalSelection = {
-          enable = true;
-          keymaps = {
-            initSelection = "<C-Space>";
-            nodeIncremental = "<C-Space>";
-            nodeDecremental = "<BS>";
+        folding = true;
+        settings = {
+          highlight.enable = true;
+          incremental_selection = {
+            enable = true;
+            keymaps = {
+              init_selection = "<C-Space>";
+              node_incremental = "<C-Space>";
+              node_decremental = "<BS>";
+            };
           };
+          indent.enable = true;
         };
-        indent = true;
-        nixvimInjections = true;
       };
       treesitter-context.enable = true;
       treesitter-refactor = {
