@@ -15,7 +15,7 @@
       flake = false;
     };
     forester-nvim = {
-      url = "github:NickHu/forester.nvim";
+      url = "github:kentookura/forester.nvim";
       flake = false;
     };
     lsp-progress-nvim = {
