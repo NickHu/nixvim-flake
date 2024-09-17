@@ -95,6 +95,12 @@
       ltex_extra-nvim
       nvim-solarized-lua
       {
+        plugin = nvim-scissors;
+        config = ''
+          lua require("scissors").setup({ snippetDir = "~/Dropbox/nixvim-flake/snippets", })
+        '';
+      }
+      {
         plugin = nvim-web-devicons;
         config = ''
           lua require("nvim-web-devicons").setup()
@@ -628,6 +634,7 @@
           store_selection_keys = "<Tab>";
         };
         fromLua = [{ } { paths = "~/Dropbox/nixvim-flake/snippets"; }];
+        fromVscode = [{ } { paths = "~/Dropbox/nixvim-flake/snippets"; }];
       };
       mini = {
         enable = true;
