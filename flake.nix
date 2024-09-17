@@ -22,6 +22,10 @@
       url = "github:linrongbin16/lsp-progress.nvim";
       flake = false;
     };
+    nvim-scissors = {
+      url = "github:chrisgrieser/nvim-scissors";
+      flake = false;
+    };
   };
 
   outputs = inputs @ { flake-parts, ... }:
@@ -67,6 +71,11 @@
                     pname = "lsp-progress.nvim";
                     version = "unstable-${inputs.lsp-progress-nvim.lastModifiedDate}";
                     src = inputs.lsp-progress-nvim;
+                  };
+                  nvim-scissors = final.vimUtils.buildVimPlugin {
+                    pname = "nvim-scissors";
+                    version = "unstable-${inputs.nvim-scissors.lastModifiedDate}";
+                    src = inputs.nvim-scissors;
                   };
                 });
               })

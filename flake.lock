@@ -294,6 +294,22 @@
         "type": "github"
       }
     },
+    "nvim-scissors": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1723897351,
+        "narHash": "sha256-KxF/Gy0B+GmW5Rw26vvHRlcWJCUpEwizN4v5Lnbd+6w=",
+        "owner": "chrisgrieser",
+        "repo": "nvim-scissors",
+        "rev": "884ac3fb8427bcc241c79298030a91332aaf4f79",
+        "type": "github"
+      },
+      "original": {
+        "owner": "chrisgrieser",
+        "repo": "nvim-scissors",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "flake-parts": "flake-parts",
@@ -304,6 +320,7 @@
           "nixpkgs"
         ],
         "nixvim": "nixvim",
+        "nvim-scissors": "nvim-scissors",
         "tree-sitter-forester": "tree-sitter-forester"
       }
     },
