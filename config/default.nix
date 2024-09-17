@@ -65,6 +65,20 @@
           require("lualine").refresh
         '';
       }
+      {
+        event = "ModeChanged";
+        pattern = "*";
+        callback = helpers.mkRaw ''
+          function()
+            if ((vim.v.event.old_mode == 's' and vim.v.event.new_mode == 'n') or vim.v.event.old_mode == 'i')
+                and require('luasnip').session.current_nodes[vim.api.nvim_get_current_buf()]
+                and not require('luasnip').session.jump_active
+            then
+              require('luasnip').unlink_current()
+            end
+          end
+        '';
+      }
     ];
     autoGroups = {
       lualine_augroup = {
@@ -611,6 +625,7 @@
         enable = true;
         settings = {
           enable_autosnippets = true;
+          store_selection_keys = "<Tab>";
         };
         fromLua = [{ } { paths = "~/Dropbox/nixvim-flake/snippets"; }];
       };
@@ -718,7 +733,7 @@
                 cmp.mapping(
                   function(fallback)
                     local luasnip = require("luasnip")
-                    if luasnip.jumpable(-1) then
+                    if luasnip.locally_jumpable(-1) then
                       luasnip.jump(-1)
                     elseif cmp.visible() then
                       cmp.select_prev_item()
