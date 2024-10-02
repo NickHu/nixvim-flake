@@ -26,6 +26,10 @@
       url = "github:chrisgrieser/nvim-scissors";
       flake = false;
     };
+    multicursor-nvim = {
+      url = "github:jake-stewart/multicursor.nvim";
+      flake = false;
+    };
   };
 
   outputs = inputs @ { flake-parts, ... }:
@@ -76,6 +80,11 @@
                     pname = "nvim-scissors";
                     version = "unstable-${inputs.nvim-scissors.lastModifiedDate}";
                     src = inputs.nvim-scissors;
+                  };
+                  multicursor-nvim = final.vimUtils.buildVimPlugin {
+                    pname = "multicursor.nvim";
+                    version = "unstable-${inputs.multicursor-nvim.lastModifiedDate}";
+                    src = inputs.multicursor-nvim;
                   };
                 });
               })

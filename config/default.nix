@@ -130,19 +130,9 @@
       vim-pandoc-syntax
       vim-rhubarb
       {
-        plugin = vim-visual-multi;
+        plugin = multicursor-nvim;
         config = ''
-          let g:VM_set_statusline = 0
-          let g:VM_silent_exit = 1
-          let g:VM_custom_motions = {'m': 'h', 'n': 'j', 'e': 'k', 'i': 'l', 'l': 'e', 'L': 'E', 'gl': 'ge', 'gL': 'gE'}
-          let g:VM_maps = {}
-          let g:VM_maps['Find Under'] = '<C-k>'
-          let g:VM_maps['Find Subword Under'] = '<C-k>'
-          let g:VM_maps['Find Next'] = 'k'
-          let g:VM_maps['Find Prev'] = 'K'
-          let g:VM_maps['Find Operator'] = 'j'
-          let g:VM_maps['i'] = 'h'
-          let g:VM_maps['I'] = 'H'
+          lua require("multicursor-nvim").setup()
         '';
       }
     ];
@@ -168,7 +158,228 @@
       undofile = true;
       updatetime = 750;
     };
-    keymaps = [
+    keymaps = pkgs.lib.attrsets.mapAttrsToList
+      (original: replacement: {
+        mode = [ "n" "x" ] ++ (pkgs.lib.optional (original != "i") "o") ++ (pkgs.lib.optional (original == "gN") "v");
+        key = original;
+        action = replacement;
+      })
+      {
+        # colemak-dh
+        "m" = "h";
+        "gm" = "gh";
+        "n" = "j";
+        "gn" = "gj";
+        "e" = "k";
+        "ge" = "gk";
+        "i" = "l";
+        "M" = "H";
+        "gM" = "gH";
+        "N" = "J";
+        "gN" = "gJ";
+        "I" = "L";
+        # recover lost keys
+        "k" = "n";
+        "K" = "N";
+        "l" = "e";
+        "gl" = "ge";
+        "L" = "E";
+        "gL" = "gE";
+        "h" = "i";
+        "gh" = "gi";
+        "H" = "I";
+        "gH" = "gI";
+        "j" = "m";
+        "gj" = "gm";
+        "J" = "M";
+        "gJ" = "gM";
+      } ++ [
+      {
+        mode = [ "n" "v" ];
+        key = "<C-Up>";
+        action = helpers.mkRaw "function() require('multicursor-nvim').lineAddCursor(-1) end";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "n" "v" ];
+        key = "<C-Down>";
+        action = helpers.mkRaw "function() require('multicursor-nvim').lineAddCursor(1) end";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "n" "v" ];
+        key = "<Up>";
+        action = helpers.mkRaw "function() require('multicursor-nvim').lineSkipCursor(-1) end";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "n" "v" ];
+        key = "<Down>";
+        action = helpers.mkRaw "function() require('multicursor-nvim').lineSkipCursor(1) end";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "n" "v" ];
+        key = "<C-k>";
+        action = helpers.mkRaw "function() require('multicursor-nvim').matchAddCursor(1) end";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "n" "v" ];
+        key = "<leader>k";
+        action = helpers.mkRaw "function() require('multicursor-nvim').matchSkipCursor(1) end";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "n" "v" ];
+        key = "<C-S-k>";
+        action = helpers.mkRaw "function() require('multicursor-nvim').matchAddCursor(-1) end";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "n" "v" ];
+        key = "<leader>K";
+        action = helpers.mkRaw "function() require('multicursor-nvim').matchSkipCursor(-1) end";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "n" "v" ];
+        key = "<Left>";
+        action = helpers.mkRaw "require('multicursor-nvim').nextCursor";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "n" "v" ];
+        key = "<Right>";
+        action = helpers.mkRaw "require('multicursor-nvim').prevCursor";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "n" "v" ];
+        key = "<leader>x";
+        action = helpers.mkRaw "require('multicursor-nvim').deleteCursor";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "n" ];
+        key = "<C-LeftMouse>";
+        action = helpers.mkRaw "require('multicursor-nvim').handleMouse";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "n" "v" ];
+        key = "<C-q>";
+        action = helpers.mkRaw "require('multicursor-nvim').toggleCursor";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "n" "v" ];
+        key = "<leader><C-q>";
+        action = helpers.mkRaw "require('multicursor-nvim').duplicateCursors";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "n" ];
+        key = "<Esc>";
+        action = helpers.mkRaw ''
+          function()
+            if not require('multicursor-nvim').cursorsEnabled() then
+              require('multicursor-nvim').enableCursors()
+            elseif require('multicursor-nvim').hasCursors() then
+              require('multicursor-nvim').clearCursors()
+            else
+              -- Default <esc> handler.
+            end
+          end
+        '';
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "n" "v" ];
+        key = "<leader>a";
+        action = helpers.mkRaw "require('multicursor-nvim').alignCursors";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "v" ];
+        key = "<C-s>";
+        action = helpers.mkRaw "require('multicursor-nvim').splitCursors";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "v" ];
+        key = "H";
+        action = helpers.mkRaw "insertVisualH";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "v" ];
+        key = "A";
+        action = helpers.mkRaw "require('multicursor-nvim').appendVisual";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "n" "v" ];
+        key = "<C-m>";
+        action = helpers.mkRaw "require('multicursor-nvim').matchCursors";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "v" ];
+        key = "<leader><C-t>";
+        action = helpers.mkRaw "function() require('multicursor-nvim').transposeCursors(1) end";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = [ "v" ];
+        key = "<leader><C-S-t>";
+        action = helpers.mkRaw "function() require('multicursor-nvim').transposeCursors(-1) end";
+        options = {
+          silent = true;
+        };
+      }
       {
         mode = [ "n" "x" "o" ];
         key = "<leader>s";
@@ -316,41 +527,6 @@
         "g+" = "outgoing_calls";
         "g-" = "incoming_calls";
         "gt" = "goto_type_definition";
-      } ++ pkgs.lib.attrsets.mapAttrsToList
-      (original: replacement: {
-        mode = [ "n" "x" ] ++ (pkgs.lib.optional (original != "i") "o") ++ (pkgs.lib.optional (original == "gN") "v");
-        key = original;
-        action = replacement;
-      })
-      {
-        # colemak-dh
-        "m" = "h";
-        "gm" = "gh";
-        "n" = "j";
-        "gn" = "gj";
-        "e" = "k";
-        "ge" = "gk";
-        "i" = "l";
-        "M" = "H";
-        "gM" = "gH";
-        "N" = "J";
-        "gN" = "gJ";
-        "I" = "L";
-        # recover lost keys
-        "k" = "n";
-        "K" = "N";
-        "l" = "e";
-        "gl" = "ge";
-        "L" = "E";
-        "gL" = "gE";
-        "h" = "i";
-        "gh" = "gi";
-        "H" = "I";
-        "gH" = "gI";
-        "j" = "m";
-        "gj" = "gm";
-        "J" = "M";
-        "gJ" = "gM";
       };
     plugins = {
       bufferline = {
@@ -567,62 +743,6 @@
             {
               name = helpers.mkRaw ''
                 require("lsp-progress").progress
-              '';
-            }
-            {
-              name = helpers.mkRaw ''
-                function()
-                        local result = vim.fn["VMInfos"]()
-                        if result ~= {} then
-                          -- local current = result.current
-                          -- local total = result.total
-                          local ratio = result.ratio
-                          local patterns = result.patterns
-                          local status = result.status
-                          local v = vim.b['VM_Selection'].Vars
-                          local mode = "V-M"
-                          local color = "%#VM_Extend#"
-                          local single = ""
-                          if v.single_region == 1 then
-                            single = "%#VM_Mono# SINGLE "
-                          end
-                          if v.insert == 1 then
-                            if vim.b['VM_Selection'].Insert.replace == 1 then
-                              mode = "V-R"
-                              color = "%#VM_Mono#"
-                            else
-                              mode = "V-I"
-                              color = "%#VM_Cursor#"
-                            end
-                          else
-                            local modes = {
-                              ['n'] = "V-M",
-                              ['v'] = "V",
-                              ['V'] = "V-L",
-                              ['\<C-v>'] = "V-B",
-                              default = "V-M",
-                            }
-                            mode = modes[vim.fn.mode()]
-                          end
-                          return
-                             color
-                          .. " "
-                          .. mode
-                          .. " "
-                          .. "%#VM_Insert#"
-                          .. ratio
-                          .. single
-                          .. "%#TabLine# "
-                          .. patterns[1]
-                          .. " "
-                          .. color
-                          .. " "
-                          .. status
-                          .. " "
-                        else
-                          return ""
-                        end
-                end
               '';
             }
           ];
@@ -958,6 +1078,27 @@
       vim.g.loaded_netrwPlugin = 1
 
       local slow_format_filetypes = {}
+
+      local mc = require('multicursor-nvim')
+      local TERM_CODES = require('multicursor-nvim.term-codes')
+      -- patch https://github.com/jake-stewart/multicursor.nvim/blob/99d704ab32a7a07ffa198370b4b177a23dfce8ec/lua/multicursor-nvim/examples.lua#L344-L360 for colemak-dh
+      function insertVisualH()
+          local mode = vim.fn.mode()
+          mc.action(function(ctx)
+              ctx:forEachCursor(function(cursor)
+                  cursor:splitVisualLines()
+              end)
+              ctx:forEachCursor(function(cursor)
+                  cursor:feedkeys(
+                      (cursor:atVisualStart() and "" or "o")
+                          .. "<esc>"
+                          .. (mode == TERM_CODES.CTRL_V and "" or "^"),
+                      { keycodes = true }
+                  )
+              end)
+          end)
+          mc.feedkeys(mode == TERM_CODES.CTRL_V and "h" or "H", { remap = true })
+      end
     '';
     userCommands = {
       "LuaSnipEdit" = {
