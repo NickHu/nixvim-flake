@@ -486,6 +486,14 @@
       }
       {
         mode = "n";
+        key = "<leader>bd";
+        action = helpers.mkRaw "MiniBufremove.delete";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = "n";
         key = "<Tab>";
         action = "<Tab>";
         options = {
