@@ -101,12 +101,6 @@
         '';
       }
       {
-        plugin = nvim-web-devicons;
-        config = ''
-          lua require("nvim-web-devicons").setup()
-        '';
-      }
-      {
         plugin = forester-nvim;
         config = ''
           lua require("forester").setup({ opts = { forests = { "~/Dropbox/forest" }, tree_dirs = { "trees" }, conceal = true, } })
@@ -706,28 +700,6 @@
           silent = true;
         };
       };
-      lspkind = {
-        enable = true;
-        cmp = {
-          enable = true;
-          menu = {
-            buffer = "[Buffer]";
-            calc = "[Calc]";
-            cmdline = "[cmdline]";
-            cmp_pandoc = "[Pandoc]";
-            dap = "[DAP]";
-            latex_symbols = "[LaTeX]";
-            luasnip = "[LuaSnip]";
-            nvim_lsp = "[LSP]";
-            nvim_lsp_document_symbol = "[LSP doc]";
-            nvim_lsp_signature_help = "[LSP sig]";
-            nvim_lua = "[Lua]";
-            path = "[Path]";
-            spell = "[Spell]";
-            treesitter = "[TS]";
-          };
-        };
-      };
       lspsaga = {
         enable = true;
       };
@@ -763,11 +735,13 @@
       };
       mini = {
         enable = true;
+        mockDevIcons = true;
         modules = {
           ai = { };
           align = { };
           bracketed = { };
           bufremove = { };
+          icons = { };
           indentscope = {
             draw = {
               animation = helpers.mkRaw "require('mini.indentscope').gen_animation.none()";
