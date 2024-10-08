@@ -781,6 +781,8 @@
           operators = { };
           pairs = { };
           splitjoin = { };
+          sessions = { };
+          starter = { };
           trailspace = { };
         };
       };
