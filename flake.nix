@@ -18,10 +18,6 @@
       url = "github:kentookura/forester.nvim";
       flake = false;
     };
-    lsp-progress-nvim = {
-      url = "github:linrongbin16/lsp-progress.nvim";
-      flake = false;
-    };
     nvim-scissors = {
       url = "github:chrisgrieser/nvim-scissors";
       flake = false;
@@ -70,11 +66,6 @@
                     pname = "forester.nvim";
                     version = "unstable-${inputs.forester-nvim.lastModifiedDate}";
                     src = inputs.forester-nvim;
-                  };
-                  lsp-progress-nvim = final.vimUtils.buildVimPlugin {
-                    pname = "lsp-progress.nvim";
-                    version = "unstable-${inputs.lsp-progress-nvim.lastModifiedDate}";
-                    src = inputs.lsp-progress-nvim;
                   };
                   nvim-scissors = final.vimUtils.buildVimPlugin {
                     pname = "nvim-scissors";

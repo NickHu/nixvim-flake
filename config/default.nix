@@ -733,27 +733,23 @@
       };
       lualine = {
         enable = true;
-        extensions = [
-          "fugitive"
-          "fzf"
-          "nvim-dap-ui"
-          "nvim-tree"
-          "quickfix"
-        ];
-        sections = {
-          lualine_c = [
-            {
-              name = "filename";
-              extraConfig = {
-                path = 1;
-              };
-            }
-            {
-              name = helpers.mkRaw ''
-                require("lsp-progress").progress
-              '';
-            }
+        settings = {
+          extensions = [
+            "fugitive"
+            "fzf"
+            "nvim-dap-ui"
+            "nvim-tree"
+            "quickfix"
           ];
+          sections = {
+            lualine_c = [
+              {
+                __unkeyed-1 = "filename";
+                path = 1;
+              }
+              (helpers.mkRaw "require('lsp-progress').progress")
+            ];
+          };
         };
       };
       luasnip = {
@@ -1001,7 +997,7 @@
         '';
       };
       rainbow-delimiters.enable = true;
-      surround.enable = true;
+      vim-surround.enable = true;
       treesitter = {
         enable = true;
         grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars ++ [
