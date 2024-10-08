@@ -133,6 +133,7 @@
     colorscheme = "solarized";
     globals = {
       tex_flavor = "latex";
+      mapleader = "\\";
     };
     opts = {
       clipboard = "unnamed";
@@ -141,7 +142,6 @@
       formatexpr = "v:lua.require'conform'.formatexpr()";
       jumpoptions = [ "stack" "view" ];
       linebreak = true;
-      mouse = "vi";
       number = true;
       relativenumber = true;
       signcolumn = "number";
@@ -441,9 +441,10 @@
       {
         mode = "n";
         key = "<C-m>"; # this also maps <CR> due to legacy terminal behavior
-        action = ":<C-U>TmuxNavigateLeft<CR>";
+        action = "<C-w>h";
         options = {
           silent = true;
+          desc = "Focus on left window";
         };
       }
       {
@@ -457,25 +458,64 @@
       {
         mode = "n";
         key = "<C-n>";
-        action = ":<C-U>TmuxNavigateDown<CR>";
+        action = "<C-w>j";
         options = {
           silent = true;
+          desc = "Focus on below window";
         };
       }
       {
         mode = "n";
         key = "<C-e>";
-        action = ":<C-U>TmuxNavigateUp<CR>";
+        action = "<C-w>k";
         options = {
           silent = true;
+          desc = "Focus on above window";
         };
       }
       {
         mode = "n";
         key = "<C-i>"; # this also maps <Tab> due to legacy terminal behavior
-        action = ":<C-U>TmuxNavigateRight<CR>";
+        action = "<C-w>l";
         options = {
           silent = true;
+          desc = "Focus on right window";
+        };
+      }
+      {
+        mode = "n";
+        key = "<M-C-m>";
+        action = "<C-w><";
+        options = {
+          silent = true;
+          desc = "Decrease window width";
+        };
+      }
+      {
+        mode = "n";
+        key = "<M-C-n>";
+        action = "<C-w>-";
+        options = {
+          silent = true;
+          desc = "Decrease window height";
+        };
+      }
+      {
+        mode = "n";
+        key = "<M-C-e>";
+        action = "<C-w>+";
+        options = {
+          silent = true;
+          desc = "Increase window height";
+        };
+      }
+      {
+        mode = "n";
+        key = "<M-C-i>";
+        action = "<C-w>>";
+        options = {
+          silent = true;
+          desc = "Increase window width";
         };
       }
       {
@@ -739,6 +779,15 @@
         modules = {
           ai = { };
           align = { };
+          basics = {
+            options = {
+              basic = true;
+              extra_ui = true;
+            };
+            autocommands = {
+              basic = true;
+            };
+          };
           bracketed = { };
           bufremove = { };
           icons = { };
@@ -1008,13 +1057,6 @@
           "<leader>d" = "diagnostics";
           "<leader>b" = "buffers";
           "<leader>f" = "find_files";
-        };
-      };
-      tmux-navigator = {
-        enable = true;
-        settings = {
-          no_mappings = true;
-          no_wrap = true;
         };
       };
       typescript-tools.enable = true;
