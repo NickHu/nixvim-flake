@@ -690,11 +690,11 @@
               "forester"
             ];
           };
-          lua-ls.enable = true;
+          lua_ls.enable = true;
           nixd.enable = true;
           ocamllsp.enable = true;
           ocamllsp.package = null;
-          pest-ls.enable = true;
+          pest_ls.enable = true;
           tailwindcss.enable = true;
           svelte.enable = true;
           texlab = {
