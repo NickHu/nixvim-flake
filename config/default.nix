@@ -148,7 +148,7 @@
       shiftwidth = 2;
       showbreak = "↳ ";
       spelllang = "en_gb";
-      undodir = "/home/nick/.cache/nvim/undo"; # TODO: make generic over home
+      undodir = helpers.mkRaw "vim.fn.expand('$HOME/.cache/nvim/undo')";
       undofile = true;
       updatetime = 750;
     };
