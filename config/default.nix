@@ -151,6 +151,7 @@
       undodir = helpers.mkRaw "vim.fn.expand('$HOME/.cache/nvim/undo')";
       undofile = true;
       updatetime = 750;
+      wrap = true;
     };
     keymaps = pkgs.lib.attrsets.mapAttrsToList
       (original: replacement: {
