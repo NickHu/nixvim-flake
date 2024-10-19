@@ -95,11 +95,11 @@
     "forester-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1728768197,
-        "narHash": "sha256-iftikj/5mOosJk61NI+jgXoR01VmGB/DeHot9fW2Hss=",
+        "lastModified": 1729256763,
+        "narHash": "sha256-OgqaVE6z0oMFXgsKUY2769/zypHz4RwaL/yVCdtgTGQ=",
         "owner": "kentookura",
         "repo": "forester.nvim",
-        "rev": "5360f95e0504d33cc484bb52466d8965d5eb7511",
+        "rev": "edf1cf1d8f0a224dc434f7d0a37a0bc3590df91e",
         "type": "github"
       },
       "original": {
@@ -184,11 +184,11 @@
     "multicursor-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1728953611,
-        "narHash": "sha256-OS8NBBpmRSDe8Uui0FjRlP039v7FnnhVqQ1Fiym1SHU=",
+        "lastModified": 1729295318,
+        "narHash": "sha256-KfjQPvPz8O1c/ZqeZXcMguZiyzlIkLsDbakHztwVeIo=",
         "owner": "jake-stewart",
         "repo": "multicursor.nvim",
-        "rev": "cb8ee9dde77da5bf5ef7d3d2a3898fe2082834e8",
+        "rev": "e21abafacf167757d4b0b48d27a2c48badea73c2",
         "type": "github"
       },
       "original": {
@@ -259,11 +259,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1729196897,
-        "narHash": "sha256-xftdQl0kxWJZNWCDSl0pU2E7zCmGjhD/N9ZWgPXK0A0=",
+        "lastModified": 1729281122,
+        "narHash": "sha256-fcV0T+Spw5/vF1Rgt/UiH4gKIDbb5NiIGagmBIULFyA=",
         "owner": "nix-community",
         "repo": "nixvim",
-        "rev": "3c7b6ae5d1524c691a1b65f7290facd0dc296e40",
+        "rev": "036e11665f819ebf1dddf493ba212c1ec441eaad",
         "type": "github"
       },
       "original": {
