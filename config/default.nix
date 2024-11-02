@@ -130,7 +130,7 @@
         '';
       }
     ];
-    extraPackages = with pkgs; [ ocamlPackages.ocp-indent ocamlformat ];
+    extraPackages = with pkgs; [ nixfmt-rfc-style ocamlPackages.ocp-indent ocamlformat ];
     colorscheme = "solarized";
     globals = {
       tex_flavor = "latex";
