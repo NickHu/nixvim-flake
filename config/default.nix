@@ -1126,7 +1126,10 @@
           indent.enable = true;
         };
       };
-      treesitter-context.enable = true;
+      treesitter-context = {
+        enable = true;
+        settings.max_lines = 3;
+      };
       treesitter-refactor = {
         enable = true;
         highlightDefinitions.enable = true;
