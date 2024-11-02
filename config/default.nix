@@ -130,6 +130,7 @@
         '';
       }
     ];
+    extraPackages = with pkgs; [ ocamlPackages.ocp-indent ocamlformat ];
     colorscheme = "solarized";
     globals = {
       tex_flavor = "latex";
@@ -581,8 +582,10 @@
         enable = true;
         settings = {
           formatters_by_ft = {
-            ocaml = [ [ "ocp-indent" "ocamlformat" ] ];
+            ocaml = [ "ocp-indent" "ocamlformat"
+            ];
           };
+          default_format_opts.lsp_format = "fallback";
           format_after_save = helpers.mkRaw ''
             function(bufnr)
               -- Disable with a global or buffer-local variable
@@ -592,7 +595,7 @@
               if not slow_format_filetypes[vim.bo[bufnr].filetype] then
                 return
               end
-              return { lsp_fallback = true }
+              return { lsp_format = "fallback" }
             end
           '';
           format_on_save = helpers.mkRaw ''
@@ -609,7 +612,7 @@
                   slow_format_filetypes[vim.bo[bufnr].filetype] = true
                 end
               end
-              return { timeout_ms = 200, lsp_fallback = true }, on_format
+              return { timeout_ms = 200, lsp_format = "fallback" }, on_format
             end
           '';
         };
