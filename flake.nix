@@ -28,17 +28,22 @@
     };
   };
 
-  outputs = inputs @ { flake-parts, ... }:
+  outputs =
+    inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [ flake-parts.flakeModules.easyOverlay ];
-      systems = [ "x86_64-linux" "aarch64-darwin" ];
+      systems = [
+        "x86_64-linux"
+        "aarch64-darwin"
+      ];
       perSystem =
-        { config
-        , self'
-        , inputs'
-        , pkgs
-        , system
-        , ...
+        {
+          config,
+          self',
+          inputs',
+          pkgs,
+          system,
+          ...
         }:
         let
           nixvimLib = inputs.nixvim.lib.${system};
@@ -48,8 +53,7 @@
             module = import ./config;
           };
         in
-        rec
-        {
+        rec {
           _module.args.pkgs = import inputs.nixpkgs {
             inherit system;
             overlays = [
@@ -73,23 +77,25 @@
                     src = inputs.tree-sitter-forester;
                   };
                 };
-                vimPlugins = prev.vimPlugins.extend (final': prev': {
-                  forester-nvim = final.vimUtils.buildVimPlugin {
-                    pname = "forester.nvim";
-                    version = "unstable-${inputs.forester-nvim.lastModifiedDate}";
-                    src = inputs.forester-nvim;
-                  };
-                  nvim-scissors = final.vimUtils.buildVimPlugin {
-                    pname = "nvim-scissors";
-                    version = "unstable-${inputs.nvim-scissors.lastModifiedDate}";
-                    src = inputs.nvim-scissors;
-                  };
-                  multicursor-nvim = final.vimUtils.buildVimPlugin {
-                    pname = "multicursor.nvim";
-                    version = "unstable-${inputs.multicursor-nvim.lastModifiedDate}";
-                    src = inputs.multicursor-nvim;
-                  };
-                });
+                vimPlugins = prev.vimPlugins.extend (
+                  final': prev': {
+                    forester-nvim = final.vimUtils.buildVimPlugin {
+                      pname = "forester.nvim";
+                      version = "unstable-${inputs.forester-nvim.lastModifiedDate}";
+                      src = inputs.forester-nvim;
+                    };
+                    nvim-scissors = final.vimUtils.buildVimPlugin {
+                      pname = "nvim-scissors";
+                      version = "unstable-${inputs.nvim-scissors.lastModifiedDate}";
+                      src = inputs.nvim-scissors;
+                    };
+                    multicursor-nvim = final.vimUtils.buildVimPlugin {
+                      pname = "multicursor.nvim";
+                      version = "unstable-${inputs.multicursor-nvim.lastModifiedDate}";
+                      src = inputs.multicursor-nvim;
+                    };
+                  }
+                );
               })
             ];
           };

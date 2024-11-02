@@ -1,8 +1,10 @@
-{ config
-, pkgs
-, helpers
-, ...
-}: {
+{
+  config,
+  pkgs,
+  helpers,
+  ...
+}:
+{
   config = {
     files = {
       "ftplugin/ocaml.lua" = {
@@ -11,10 +13,12 @@
         };
       };
       "ftplugin/tex.lua" = {
-        autoCmd = [{
-          event = [ "BufWritePost" ];
-          command = "call vimtex#toc#refresh()";
-        }];
+        autoCmd = [
+          {
+            event = [ "BufWritePost" ];
+            command = "call vimtex#toc#refresh()";
+          }
+        ];
         opts = {
           conceallevel = 2;
         };
@@ -130,7 +134,11 @@
         '';
       }
     ];
-    extraPackages = with pkgs; [ nixfmt-rfc-style ocamlPackages.ocp-indent ocamlformat ];
+    extraPackages = with pkgs; [
+      nixfmt-rfc-style
+      ocamlPackages.ocp-indent
+      ocamlformat
+    ];
     colorscheme = "solarized";
     globals = {
       tex_flavor = "latex";
@@ -141,7 +149,10 @@
       colorcolumn = "80";
       expandtab = true;
       formatexpr = "v:lua.require'conform'.formatexpr()";
-      jumpoptions = [ "stack" "view" ];
+      jumpoptions = [
+        "stack"
+        "view"
+      ];
       linebreak = true;
       number = true;
       relativenumber = true;
@@ -154,416 +165,485 @@
       updatetime = 750;
       wrap = true;
     };
-    keymaps = pkgs.lib.attrsets.mapAttrsToList
-      (original: replacement: {
-        mode = [ "n" "x" ] ++ (pkgs.lib.optional (original != "i") "o") ++ (pkgs.lib.optional (original == "gN") "v");
-        key = original;
-        action = replacement;
-      })
-      {
-        # colemak-dh
-        "m" = "h";
-        "gm" = "gh";
-        "n" = "j";
-        "gn" = "gj";
-        "e" = "k";
-        "ge" = "gk";
-        "i" = "l";
-        "M" = "H";
-        "gM" = "gH";
-        "N" = "J";
-        "gN" = "gJ";
-        "I" = "L";
-        # recover lost keys
-        "k" = "n";
-        "K" = "N";
-        "l" = "e";
-        "gl" = "ge";
-        "L" = "E";
-        "gL" = "gE";
-        "h" = "i";
-        "gh" = "gi";
-        "H" = "I";
-        "gH" = "gI";
-        "j" = "m";
-        "gj" = "gm";
-        "J" = "M";
-        "gJ" = "gM";
-      } ++ [
-      {
-        mode = [ "n" "v" ];
-        key = "<C-Up>";
-        action = helpers.mkRaw "function() require('multicursor-nvim').lineAddCursor(-1) end";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "n" "v" ];
-        key = "<C-Down>";
-        action = helpers.mkRaw "function() require('multicursor-nvim').lineAddCursor(1) end";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "n" "v" ];
-        key = "<Up>";
-        action = helpers.mkRaw "function() require('multicursor-nvim').lineSkipCursor(-1) end";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "n" "v" ];
-        key = "<Down>";
-        action = helpers.mkRaw "function() require('multicursor-nvim').lineSkipCursor(1) end";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "n" "v" ];
-        key = "<C-k>";
-        action = helpers.mkRaw "function() require('multicursor-nvim').matchAddCursor(1) end";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "n" "v" ];
-        key = "<leader>k";
-        action = helpers.mkRaw "function() require('multicursor-nvim').matchSkipCursor(1) end";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "n" "v" ];
-        key = "<C-S-k>";
-        action = helpers.mkRaw "function() require('multicursor-nvim').matchAddCursor(-1) end";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "n" "v" ];
-        key = "<leader>K";
-        action = helpers.mkRaw "function() require('multicursor-nvim').matchSkipCursor(-1) end";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "n" "v" ];
-        key = "<Left>";
-        action = helpers.mkRaw "require('multicursor-nvim').nextCursor";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "n" "v" ];
-        key = "<Right>";
-        action = helpers.mkRaw "require('multicursor-nvim').prevCursor";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "n" "v" ];
-        key = "<leader>x";
-        action = helpers.mkRaw "require('multicursor-nvim').deleteCursor";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "n" ];
-        key = "<C-LeftMouse>";
-        action = helpers.mkRaw "require('multicursor-nvim').handleMouse";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "n" "v" ];
-        key = "<C-q>";
-        action = helpers.mkRaw "require('multicursor-nvim').toggleCursor";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "n" "v" ];
-        key = "<leader><C-q>";
-        action = helpers.mkRaw "require('multicursor-nvim').duplicateCursors";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "n" ];
-        key = "<Esc>";
-        action = helpers.mkRaw ''
-          function()
-            if not require('multicursor-nvim').cursorsEnabled() then
-              require('multicursor-nvim').enableCursors()
-            elseif require('multicursor-nvim').hasCursors() then
-              require('multicursor-nvim').clearCursors()
-            else
-              -- Default <esc> handler.
+    keymaps =
+      pkgs.lib.attrsets.mapAttrsToList
+        (original: replacement: {
+          mode = [
+            "n"
+            "x"
+          ] ++ (pkgs.lib.optional (original != "i") "o") ++ (pkgs.lib.optional (original == "gN") "v");
+          key = original;
+          action = replacement;
+        })
+        {
+          # colemak-dh
+          "m" = "h";
+          "gm" = "gh";
+          "n" = "j";
+          "gn" = "gj";
+          "e" = "k";
+          "ge" = "gk";
+          "i" = "l";
+          "M" = "H";
+          "gM" = "gH";
+          "N" = "J";
+          "gN" = "gJ";
+          "I" = "L";
+          # recover lost keys
+          "k" = "n";
+          "K" = "N";
+          "l" = "e";
+          "gl" = "ge";
+          "L" = "E";
+          "gL" = "gE";
+          "h" = "i";
+          "gh" = "gi";
+          "H" = "I";
+          "gH" = "gI";
+          "j" = "m";
+          "gj" = "gm";
+          "J" = "M";
+          "gJ" = "gM";
+        }
+      ++ [
+        {
+          mode = [
+            "n"
+            "v"
+          ];
+          key = "<C-Up>";
+          action = helpers.mkRaw "function() require('multicursor-nvim').lineAddCursor(-1) end";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [
+            "n"
+            "v"
+          ];
+          key = "<C-Down>";
+          action = helpers.mkRaw "function() require('multicursor-nvim').lineAddCursor(1) end";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [
+            "n"
+            "v"
+          ];
+          key = "<Up>";
+          action = helpers.mkRaw "function() require('multicursor-nvim').lineSkipCursor(-1) end";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [
+            "n"
+            "v"
+          ];
+          key = "<Down>";
+          action = helpers.mkRaw "function() require('multicursor-nvim').lineSkipCursor(1) end";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [
+            "n"
+            "v"
+          ];
+          key = "<C-k>";
+          action = helpers.mkRaw "function() require('multicursor-nvim').matchAddCursor(1) end";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [
+            "n"
+            "v"
+          ];
+          key = "<leader>k";
+          action = helpers.mkRaw "function() require('multicursor-nvim').matchSkipCursor(1) end";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [
+            "n"
+            "v"
+          ];
+          key = "<C-S-k>";
+          action = helpers.mkRaw "function() require('multicursor-nvim').matchAddCursor(-1) end";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [
+            "n"
+            "v"
+          ];
+          key = "<leader>K";
+          action = helpers.mkRaw "function() require('multicursor-nvim').matchSkipCursor(-1) end";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [
+            "n"
+            "v"
+          ];
+          key = "<Left>";
+          action = helpers.mkRaw "require('multicursor-nvim').nextCursor";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [
+            "n"
+            "v"
+          ];
+          key = "<Right>";
+          action = helpers.mkRaw "require('multicursor-nvim').prevCursor";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [
+            "n"
+            "v"
+          ];
+          key = "<leader>x";
+          action = helpers.mkRaw "require('multicursor-nvim').deleteCursor";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [ "n" ];
+          key = "<C-LeftMouse>";
+          action = helpers.mkRaw "require('multicursor-nvim').handleMouse";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [
+            "n"
+            "v"
+          ];
+          key = "<C-q>";
+          action = helpers.mkRaw "require('multicursor-nvim').toggleCursor";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [
+            "n"
+            "v"
+          ];
+          key = "<leader><C-q>";
+          action = helpers.mkRaw "require('multicursor-nvim').duplicateCursors";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [ "n" ];
+          key = "<Esc>";
+          action = helpers.mkRaw ''
+            function()
+              if not require('multicursor-nvim').cursorsEnabled() then
+                require('multicursor-nvim').enableCursors()
+              elseif require('multicursor-nvim').hasCursors() then
+                require('multicursor-nvim').clearCursors()
+              else
+                -- Default <esc> handler.
+              end
             end
-          end
-        '';
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "n" "v" ];
-        key = "<leader>a";
-        action = helpers.mkRaw "require('multicursor-nvim').alignCursors";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "v" ];
-        key = "<C-s>";
-        action = helpers.mkRaw "require('multicursor-nvim').splitCursors";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "v" ];
-        key = "H";
-        action = helpers.mkRaw "insertVisualH";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "v" ];
-        key = "A";
-        action = helpers.mkRaw "require('multicursor-nvim').appendVisual";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "n" "v" ];
-        key = "<C-m>";
-        action = helpers.mkRaw "require('multicursor-nvim').matchCursors";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "v" ];
-        key = "<leader><C-t>";
-        action = helpers.mkRaw "function() require('multicursor-nvim').transposeCursors(1) end";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "v" ];
-        key = "<leader><C-S-t>";
-        action = helpers.mkRaw "function() require('multicursor-nvim').transposeCursors(-1) end";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "n" "x" "o" ];
-        key = "<leader>s";
-        action = helpers.mkRaw "function() require('flash').jump() end";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "n" "x" "o" ];
-        key = "<leader>S";
-        action = helpers.mkRaw "function() require('flash').treesitter() end";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = "o";
-        key = "r";
-        action = helpers.mkRaw "function() require('flash').remote() end";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "o" "x" ];
-        key = "R";
-        action = helpers.mkRaw "function() require('flash').treesitter_search() end";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = "c";
-        key = "<C-s>";
-        action = helpers.mkRaw "function() require('flash').toggle() end";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "i" "s" ];
-        key = "<M-n>";
-        action = "<Plug>luasnip-next-choice";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = [ "i" "s" ];
-        key = "<M-p>";
-        action = "<Plug>luasnip-prev-choice";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = "n";
-        key = "<C-m>"; # this also maps <CR> due to legacy terminal behavior
-        action = "<C-w>h";
-        options = {
-          silent = true;
-          desc = "Focus on left window";
-        };
-      }
-      {
-        mode = "n";
-        key = "<CR>";
-        action = "<CR>";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = "n";
-        key = "<C-n>";
-        action = "<C-w>j";
-        options = {
-          silent = true;
-          desc = "Focus on below window";
-        };
-      }
-      {
-        mode = "n";
-        key = "<C-e>";
-        action = "<C-w>k";
-        options = {
-          silent = true;
-          desc = "Focus on above window";
-        };
-      }
-      {
-        mode = "n";
-        key = "<C-i>"; # this also maps <Tab> due to legacy terminal behavior
-        action = "<C-w>l";
-        options = {
-          silent = true;
-          desc = "Focus on right window";
-        };
-      }
-      {
-        mode = "n";
-        key = "<M-C-m>";
-        action = "<C-w><";
-        options = {
-          silent = true;
-          desc = "Decrease window width";
-        };
-      }
-      {
-        mode = "n";
-        key = "<M-C-n>";
-        action = "<C-w>-";
-        options = {
-          silent = true;
-          desc = "Decrease window height";
-        };
-      }
-      {
-        mode = "n";
-        key = "<M-C-e>";
-        action = "<C-w>+";
-        options = {
-          silent = true;
-          desc = "Increase window height";
-        };
-      }
-      {
-        mode = "n";
-        key = "<M-C-i>";
-        action = "<C-w>>";
-        options = {
-          silent = true;
-          desc = "Increase window width";
-        };
-      }
-      {
-        mode = "n";
-        key = "<leader>bd";
-        action = helpers.mkRaw "MiniBufremove.delete";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = "n";
-        key = "<Tab>";
-        action = "<Tab>";
-        options = {
-          silent = true;
-        };
-      }
-      {
-        mode = "n";
-        key = "<C-h>";
-        action = "<C-e>";
-      }
-      {
-        mode = "n";
-        key = "<C-l>";
-        action = "<C-i>";
-      }
-    ] ++ pkgs.lib.attrsets.mapAttrsToList
-      (key: action: {
-        mode = "n";
-        inherit key;
-        action = "<Cmd>Lspsaga " + action + "<CR>";
-        options = {
-          silent = true;
-        };
-      })
-      {
-        "[d" = "diagnostic_jump_prev";
-        "]d" = "diagnostic_jump_next";
-        "<leader>e" = "show_buf_diagnostics";
-        "<leader>E" = "show_workspace_diagnostics";
-        "<leader>t" = "outline";
-        "<M-Enter>" = "term_toggle";
-        "<M-e>" = "show_cursor_diagnostics";
-        "<M-]>" = "goto_definition";
-        "<M-l>" = "code_action";
-        "<M-r>" = "rename";
-        "<M-p>" = "finder";
-        "E" = "hover_doc";
-        "g+" = "outgoing_calls";
-        "g-" = "incoming_calls";
-        "gt" = "goto_type_definition";
-      };
+          '';
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [
+            "n"
+            "v"
+          ];
+          key = "<leader>a";
+          action = helpers.mkRaw "require('multicursor-nvim').alignCursors";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [ "v" ];
+          key = "<C-s>";
+          action = helpers.mkRaw "require('multicursor-nvim').splitCursors";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [ "v" ];
+          key = "H";
+          action = helpers.mkRaw "insertVisualH";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [ "v" ];
+          key = "A";
+          action = helpers.mkRaw "require('multicursor-nvim').appendVisual";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [
+            "n"
+            "v"
+          ];
+          key = "<C-m>";
+          action = helpers.mkRaw "require('multicursor-nvim').matchCursors";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [ "v" ];
+          key = "<leader><C-t>";
+          action = helpers.mkRaw "function() require('multicursor-nvim').transposeCursors(1) end";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [ "v" ];
+          key = "<leader><C-S-t>";
+          action = helpers.mkRaw "function() require('multicursor-nvim').transposeCursors(-1) end";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [
+            "n"
+            "x"
+            "o"
+          ];
+          key = "<leader>s";
+          action = helpers.mkRaw "function() require('flash').jump() end";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [
+            "n"
+            "x"
+            "o"
+          ];
+          key = "<leader>S";
+          action = helpers.mkRaw "function() require('flash').treesitter() end";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = "o";
+          key = "r";
+          action = helpers.mkRaw "function() require('flash').remote() end";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [
+            "o"
+            "x"
+          ];
+          key = "R";
+          action = helpers.mkRaw "function() require('flash').treesitter_search() end";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = "c";
+          key = "<C-s>";
+          action = helpers.mkRaw "function() require('flash').toggle() end";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [
+            "i"
+            "s"
+          ];
+          key = "<M-n>";
+          action = "<Plug>luasnip-next-choice";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = [
+            "i"
+            "s"
+          ];
+          key = "<M-p>";
+          action = "<Plug>luasnip-prev-choice";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = "n";
+          key = "<C-m>"; # this also maps <CR> due to legacy terminal behavior
+          action = "<C-w>h";
+          options = {
+            silent = true;
+            desc = "Focus on left window";
+          };
+        }
+        {
+          mode = "n";
+          key = "<CR>";
+          action = "<CR>";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = "n";
+          key = "<C-n>";
+          action = "<C-w>j";
+          options = {
+            silent = true;
+            desc = "Focus on below window";
+          };
+        }
+        {
+          mode = "n";
+          key = "<C-e>";
+          action = "<C-w>k";
+          options = {
+            silent = true;
+            desc = "Focus on above window";
+          };
+        }
+        {
+          mode = "n";
+          key = "<C-i>"; # this also maps <Tab> due to legacy terminal behavior
+          action = "<C-w>l";
+          options = {
+            silent = true;
+            desc = "Focus on right window";
+          };
+        }
+        {
+          mode = "n";
+          key = "<M-C-m>";
+          action = "<C-w><";
+          options = {
+            silent = true;
+            desc = "Decrease window width";
+          };
+        }
+        {
+          mode = "n";
+          key = "<M-C-n>";
+          action = "<C-w>-";
+          options = {
+            silent = true;
+            desc = "Decrease window height";
+          };
+        }
+        {
+          mode = "n";
+          key = "<M-C-e>";
+          action = "<C-w>+";
+          options = {
+            silent = true;
+            desc = "Increase window height";
+          };
+        }
+        {
+          mode = "n";
+          key = "<M-C-i>";
+          action = "<C-w>>";
+          options = {
+            silent = true;
+            desc = "Increase window width";
+          };
+        }
+        {
+          mode = "n";
+          key = "<leader>bd";
+          action = helpers.mkRaw "MiniBufremove.delete";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = "n";
+          key = "<Tab>";
+          action = "<Tab>";
+          options = {
+            silent = true;
+          };
+        }
+        {
+          mode = "n";
+          key = "<C-h>";
+          action = "<C-e>";
+        }
+        {
+          mode = "n";
+          key = "<C-l>";
+          action = "<C-i>";
+        }
+      ]
+      ++
+        pkgs.lib.attrsets.mapAttrsToList
+          (key: action: {
+            mode = "n";
+            inherit key;
+            action = "<Cmd>Lspsaga " + action + "<CR>";
+            options = {
+              silent = true;
+            };
+          })
+          {
+            "[d" = "diagnostic_jump_prev";
+            "]d" = "diagnostic_jump_next";
+            "<leader>e" = "show_buf_diagnostics";
+            "<leader>E" = "show_workspace_diagnostics";
+            "<leader>t" = "outline";
+            "<M-Enter>" = "term_toggle";
+            "<M-e>" = "show_cursor_diagnostics";
+            "<M-]>" = "goto_definition";
+            "<M-l>" = "code_action";
+            "<M-r>" = "rename";
+            "<M-p>" = "finder";
+            "E" = "hover_doc";
+            "g+" = "outgoing_calls";
+            "g-" = "incoming_calls";
+            "gt" = "goto_type_definition";
+          };
     plugins = {
       bufferline = {
         enable = true;
@@ -574,7 +654,9 @@
         enable = true;
         settings = {
           formatters_by_ft = {
-            ocaml = [ "ocp-indent" "ocamlformat"
+            ocaml = [
+              "ocp-indent"
+              "ocamlformat"
             ];
           };
           default_format_opts.lsp_format = "fallback";
@@ -768,8 +850,14 @@
           enable_autosnippets = true;
           store_selection_keys = "<Tab>";
         };
-        fromLua = [{ } { paths = "~/Dropbox/nixvim-flake/snippets"; }];
-        fromVscode = [{ } { paths = "~/Dropbox/nixvim-flake/snippets"; }];
+        fromLua = [
+          { }
+          { paths = "~/Dropbox/nixvim-flake/snippets"; }
+        ];
+        fromVscode = [
+          { }
+          { paths = "~/Dropbox/nixvim-flake/snippets"; }
+        ];
       };
       mini = {
         enable = true;
