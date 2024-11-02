@@ -691,6 +691,8 @@
           ocamllsp.enable = true;
           ocamllsp.package = null;
           pest_ls.enable = true;
+          pyright.enable = true;
+          ruff.enable = true;
           tailwindcss.enable = true;
           svelte.enable = true;
           texlab = {
