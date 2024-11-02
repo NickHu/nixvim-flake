@@ -27,6 +27,7 @@
         opts = {
           cindent = true;
           cinoptions = "+0";
+          foldmethod = "indent";
         };
         userCommands = {
           "ForesterNew" = {
@@ -148,7 +149,12 @@
       clipboard = "unnamed";
       colorcolumn = "80";
       expandtab = true;
+      fillchars = "eob:\ ,fold:\ ,foldopen:,foldsep:\ ,foldclose:";
       formatexpr = "v:lua.require'conform'.formatexpr()";
+      foldclose = "all";
+      foldlevelstart = 1;
+      foldopen = "all";
+      foldtext = "";
       jumpoptions = [
         "stack"
         "view"
