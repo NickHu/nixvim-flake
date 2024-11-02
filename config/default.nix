@@ -417,14 +417,6 @@
         };
       }
       {
-        mode = "n";
-        key = "<leader>u";
-        action = ":UndotreeToggle<CR>";
-        options = {
-          silent = true;
-        };
-      }
-      {
         mode = [ "i" "s" ];
         key = "<M-n>";
         action = "<Plug>luasnip-next-choice";
@@ -1055,18 +1047,27 @@
         enable = true;
         extensions = {
           fzf-native.enable = true;
+          live-grep-args = {
+            enable = true;
+            settings.mappings = {
+              i = {
+                "<C-k>" = helpers.mkRaw ''require("telescope-live-grep-args.actions").quote_prompt()'';
+                "<C-r>" = helpers.mkRaw ''require("telescope.actions").to_fuzzy_refine'';
+              };
+            };
+          };
+          manix.enable = true;
+          undo.enable = true;
         };
         keymaps = {
-          "<leader>/" = "live_grep";
+          "<leader>/" = "live_grep_args";
           "<leader>d" = "diagnostics";
           "<leader>b" = "buffers";
           "<leader>f" = "find_files";
+          "<leader>u" = "undo";
         };
       };
       typescript-tools.enable = true;
-      undotree = {
-        enable = true;
-      };
       vim-matchup = {
         enable = true;
         enableSurround = true;
