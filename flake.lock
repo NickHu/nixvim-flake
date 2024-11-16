@@ -287,11 +287,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1731571290,
-        "narHash": "sha256-osvW1d7YxBs5UDRN/RLFqVtWegArqhvonL9odVpWMuc=",
+        "lastModified": 1731707185,
+        "narHash": "sha256-IfA3x0eL4Be/7hvdvGSnT8fgiXz7GL3PtjGw3BH68gM=",
         "owner": "nix-community",
         "repo": "nixvim",
-        "rev": "24fe0dd2478643fcd4dd57c9570b4614fac80144",
+        "rev": "be455f7f2714ce3479ae5bb662a03bd450f45793",
         "type": "github"
       },
       "original": {
@@ -326,11 +326,11 @@
     "nvim-scissors": {
       "flake": false,
       "locked": {
-        "lastModified": 1730308547,
-        "narHash": "sha256-0qbEQKrt00EquSSvA/lIqTl4RpFZUICjeJ8IiWYqpxk=",
+        "lastModified": 1731673253,
+        "narHash": "sha256-ooAOm8kNkvJ5lnZMx/gkEFhgSQ47fynkk+whUwrOrWM=",
         "owner": "chrisgrieser",
         "repo": "nvim-scissors",
-        "rev": "b681497a579d4d741fc6c20dc870ef3470c19201",
+        "rev": "49528c9a8b4bf6382270ebfcb8466f47abce4b87",
         "type": "github"
       },
       "original": {
