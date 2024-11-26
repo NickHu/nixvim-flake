@@ -326,11 +326,11 @@
     "nvim-scissors": {
       "flake": false,
       "locked": {
-        "lastModified": 1732383357,
-        "narHash": "sha256-BAULviLmHJBbCXAFQJ0xvtNro8XXjxxTVIVdkdJffzY=",
+        "lastModified": 1732569469,
+        "narHash": "sha256-muqVLehOs8vrZV96fY9v7zmy97tuGi4L+TOTlgpw7L4=",
         "owner": "chrisgrieser",
         "repo": "nvim-scissors",
-        "rev": "472199200accc7843087f82ed6ab5975eb4fe8b3",
+        "rev": "78d44d76e352c3e4f62966c7c05baf1b03d145f0",
         "type": "github"
       },
       "original": {
