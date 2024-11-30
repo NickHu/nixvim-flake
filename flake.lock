@@ -212,11 +212,11 @@
     "multicursor-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1731154584,
-        "narHash": "sha256-oaDWTMCBjqcPw3TizgTSHvvAsIpPzCqh+Q1aXSvHMC8=",
+        "lastModified": 1732919707,
+        "narHash": "sha256-cRpVgL/HQ6uiQXz4gRsvMC8eBTWoRI97oV/1Im6BfUk=",
         "owner": "jake-stewart",
         "repo": "multicursor.nvim",
-        "rev": "b715cc5bf69cf6e338899510eb2b60b1dd7ccce0",
+        "rev": "c55145b7e5adbe8f1cdd60b4736c7ad18302a5c0",
         "type": "github"
       },
       "original": {
@@ -287,11 +287,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1732726573,
-        "narHash": "sha256-gvCPgtcXGf/GZaJBHYrXuM5r2pFRG3VDr7uOb7B1748=",
+        "lastModified": 1732838896,
+        "narHash": "sha256-9YfEyCU2wB/aSbtpZ+OHb++xS2Km970Ja33H13oEaWM=",
         "owner": "nix-community",
         "repo": "nixvim",
-        "rev": "fc9178d124eba824f1862513314d351784e1a84c",
+        "rev": "05331006a42846d6e55129b642485f45f90c9efc",
         "type": "github"
       },
       "original": {
@@ -326,11 +326,11 @@
     "nvim-scissors": {
       "flake": false,
       "locked": {
-        "lastModified": 1732723085,
-        "narHash": "sha256-+xeZHyCFNmYaw4SXIqDQ0pm4sL+HL8MmwzpBSZfa43I=",
+        "lastModified": 1732924729,
+        "narHash": "sha256-cxUWUkNFPOlW+6Ds9Ml+jSXos5AxIjl4IuUsz9XSnMo=",
         "owner": "chrisgrieser",
         "repo": "nvim-scissors",
-        "rev": "633906352c5f8bd6df8e128a45b5e42a925be0bf",
+        "rev": "77b194b399f1563b7a021a0017f523dabf821170",
         "type": "github"
       },
       "original": {
