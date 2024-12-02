@@ -212,11 +212,11 @@
     "multicursor-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1733007869,
-        "narHash": "sha256-ijac3JGRCTmtByFy32KidTkmax2cZCRjrVcbnUEi6iA=",
+        "lastModified": 1733094800,
+        "narHash": "sha256-u1cAFttyD/ootWDlHtB7CtsUYFYdhCJcg85uFbX+fzk=",
         "owner": "jake-stewart",
         "repo": "multicursor.nvim",
-        "rev": "bebbc37f90f26a24b0712a796cb17b4c90428f51",
+        "rev": "7b2be6ed76c1a104fb0b1d82fb5f83f4e8c24198",
         "type": "github"
       },
       "original": {
@@ -287,11 +287,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1733010437,
-        "narHash": "sha256-xPf3jjDBDA9oMVnWU5DJ8gINCq2EPiupvF/4rD/0eEI=",
+        "lastModified": 1733098942,
+        "narHash": "sha256-RnDTSTRYcfgqrkBPNN7uvojwRzEKPYiZaFg9VQ4m7hQ=",
         "owner": "nix-community",
         "repo": "nixvim",
-        "rev": "80e49e7fd3fa720b93d18e6d859d9b9e7aad4a62",
+        "rev": "838829c8f9cb238a915fe3d6ac36df1a3f040d2c",
         "type": "github"
       },
       "original": {
