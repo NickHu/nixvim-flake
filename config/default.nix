@@ -90,51 +90,64 @@
         clear = true;
       };
     };
-    extraPlugins = with pkgs.vimPlugins; [
-      {
-        plugin = lsp-progress-nvim;
-        config = ''
-          lua require("lsp-progress").setup()
-        '';
-      }
-      ltex_extra-nvim
-      nvim-solarized-lua
-      {
-        plugin = nvim-scissors;
-        config = ''
-          lua require("scissors").setup({ snippetDir = "~/Dropbox/nixvim-flake/snippets", })
-        '';
-      }
-      {
-        plugin = forester-nvim;
-        config = ''
-          lua require("forester").setup({ opts = { forests = { "~/Dropbox/forest" }, tree_dirs = { "trees" }, conceal = true, } })
-        '';
-      }
-      pest-vim
-      vim-eunuch
-      vim-nix
-      {
-        plugin = vim-pandoc;
-        config = ''
-          let g:pandoc#biblio#bibs = ["bibliography.bib"]
-          let g:pandoc#command#latex_engine="lualatex"
-          let g:pandoc#command#autoexec_on_writes=1
-          let g:pandoc#completion#bib#mode='citeproc'
-          let g:pandoc#folding#fold_fenced_codeblocks=1
-          let g:pandoc#syntax#codeblocks#ignore=['definition']
-          let g:pandoc#syntax#use_definition_lists=0
-        '';
-      }
-      vim-pandoc-syntax
-      vim-rhubarb
-      {
-        plugin = multicursor-nvim;
-        config = ''
-          lua require("multicursor-nvim").setup()
-        '';
-      }
-    ];
+    extraPlugins =
+      let
+        stripNewlines = str: builtins.replaceStrings [ "\n" ] [ "" ] str;
+      in
+      with pkgs.vimPlugins;
+      [
+        {
+          plugin = lsp-progress-nvim;
+          config = ''
+            lua require("lsp-progress").setup()
+          '';
+        }
+        ltex_extra-nvim
+        nvim-solarized-lua
+        {
+          plugin = nvim-scissors;
+          config = stripNewlines ''
+            lua require("scissors").setup({
+              snippetDir = "~/Dropbox/nixvim-flake/snippets",
+            })
+          '';
+        }
+        {
+          plugin = forester-nvim;
+          config = stripNewlines ''
+            lua require("forester").setup({
+              opts = {
+                forests = { "~/Dropbox/forest" },
+                tree_dirs = { "trees" },
+                conceal = true,
+              }
+            })
+          '';
+        }
+        pest-vim
+        vim-eunuch
+        vim-nix
+        {
+          plugin = vim-pandoc;
+          config = ''
+            let g:pandoc#biblio#bibs = ["bibliography.bib"]
+            let g:pandoc#command#latex_engine="lualatex"
+            let g:pandoc#command#autoexec_on_writes=1
+            let g:pandoc#completion#bib#mode='citeproc'
+            let g:pandoc#folding#fold_fenced_codeblocks=1
+            let g:pandoc#syntax#codeblocks#ignore=['definition']
+            let g:pandoc#syntax#use_definition_lists=0
+          '';
+        }
+        vim-pandoc-syntax
+        vim-rhubarb
+        {
+          plugin = multicursor-nvim;
+          config = ''
+            lua require("multicursor-nvim").setup()
+          '';
+        }
+      ];
     extraPackages = with pkgs; [
       nixfmt-rfc-style
       ocamlPackages.ocp-indent
@@ -174,10 +187,13 @@
     keymaps =
       pkgs.lib.attrsets.mapAttrsToList
         (original: replacement: {
-          mode = [
-            "n"
-            "x"
-          ] ++ (pkgs.lib.optional (original != "i") "o") ++ (pkgs.lib.optional (original == "gN") "v");
+          mode =
+            [
+              "n"
+              "x"
+            ]
+            ++ (pkgs.lib.optional (original != "i") "o")
+            ++ (pkgs.lib.optional (original == "gN") "v");
           key = original;
           action = replacement;
         })
