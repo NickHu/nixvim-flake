@@ -672,6 +672,7 @@
         settings.options.diagnostics = "nvim_lsp";
       };
       clangd-extensions.enable = true;
+      colorizer.enable = true;
       conform-nvim = {
         enable = true;
         settings = {
@@ -1058,7 +1059,6 @@
           ];
         };
       };
-      nvim-colorizer.enable = true;
       nvim-tree = {
         enable = true;
         onAttach = helpers.mkRaw ''
@@ -1185,9 +1185,11 @@
       typescript-tools.enable = true;
       vim-matchup = {
         enable = true;
-        enableSurround = true;
-        enableTransmute = true;
-        treesitterIntegration.enable = true;
+        settings = {
+          surround_enabled = 1;
+          transmute_enabled = 1;
+          treesitter.enable = true;
+        };
       };
       which-key.enable = true;
       texpresso.enable = true;
