@@ -26,6 +26,10 @@
       url = "github:jake-stewart/multicursor.nvim";
       flake = false;
     };
+    treewalker-nvim = {
+      url = "github:aaronik/treewalker.nvim";
+      flake = false;
+    };
   };
 
   outputs =
@@ -93,6 +97,11 @@
                       pname = "multicursor.nvim";
                       version = "unstable-${inputs.multicursor-nvim.lastModifiedDate}";
                       src = inputs.multicursor-nvim;
+                    };
+                    treewalker-nvim = final.vimUtils.buildVimPlugin {
+                      pname = "treewalker.nvim";
+                      version = "unstable-${inputs.treewalker-nvim.lastModifiedDate}";
+                      src = inputs.treewalker-nvim;
                     };
                   }
                 );

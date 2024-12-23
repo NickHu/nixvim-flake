@@ -350,7 +350,8 @@
         ],
         "nixvim": "nixvim",
         "nvim-scissors": "nvim-scissors",
-        "tree-sitter-forester": "tree-sitter-forester"
+        "tree-sitter-forester": "tree-sitter-forester",
+        "treewalker-nvim": "treewalker-nvim"
       }
     },
     "systems": {
@@ -402,6 +403,22 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "treewalker-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1734624012,
+        "narHash": "sha256-x3mUyozM0UNv7xX/QSWDrMfsUFdPsWhYJ2+B1RTr2gQ=",
+        "owner": "aaronik",
+        "repo": "treewalker.nvim",
+        "rev": "e591604021cf8be6df081ee4c4853e29d48da9af",
+        "type": "github"
+      },
+      "original": {
+        "owner": "aaronik",
+        "repo": "treewalker.nvim",
         "type": "github"
       }
     }

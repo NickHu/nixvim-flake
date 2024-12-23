@@ -147,6 +147,9 @@
             lua require("multicursor-nvim").setup()
           '';
         }
+        {
+          plugin = treewalker-nvim;
+        }
       ];
     extraPackages = with pkgs; [
       nixfmt-rfc-style
@@ -665,6 +668,22 @@
             "g+" = "outgoing_calls";
             "g-" = "incoming_calls";
             "gt" = "goto_type_definition";
+          }
+      ++
+        pkgs.lib.attrsets.mapAttrsToList
+          (key: action: {
+            mode = "n";
+            inherit key;
+            action = "<Cmd>Treewalker " + action + "<CR>";
+            options = {
+              silent = true;
+            };
+          })
+          {
+            "<Up>" = "Up";
+            "<Down>" = "Down";
+            "<Left>" = "Left";
+            "<Right>" = "Right";
           };
     plugins = {
       bufferline = {
