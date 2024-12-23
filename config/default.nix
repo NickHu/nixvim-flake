@@ -148,6 +148,27 @@
           '';
         }
         {
+          plugin = codecompanion-nvim;
+          config = stripNewlines ''
+            lua require("codecompanion").setup({
+              display = {
+                diff = {
+                  provider = "mini_diff",
+                },
+              },
+              strategies = {
+                chat = {
+                  render_headers = false,
+                  adapter = "ollama",
+                },
+                inline = {
+                  adapter = "ollama",
+                },
+              },
+            })
+          '';
+        }
+        {
           plugin = treewalker-nvim;
         }
       ];
@@ -918,6 +939,7 @@
           };
           bracketed = { };
           bufremove = { };
+          diff = { };
           icons = { };
           indentscope = {
             draw = {
@@ -1233,6 +1255,15 @@
           quickfix_open_on_warning = 0;
         };
         texlivePackage = null; # don't install texlive at all
+      };
+      render-markdown = {
+        enable = true;
+        settings = {
+          file_types = [
+            "markdown"
+            "codecompanion"
+          ];
+        };
       };
     };
     extraConfigLuaPre = ''

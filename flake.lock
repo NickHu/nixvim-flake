@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "codecompanion-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1734950458,
+        "narHash": "sha256-rPkQZkyv9lQLxXUSLvAbWAe2DIebTduzhwl1UeOr+84=",
+        "owner": "olimorris",
+        "repo": "codecompanion.nvim",
+        "rev": "d20ca206e7092318ffd2d430d98a21aded7c3b4f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "olimorris",
+        "repo": "codecompanion.nvim",
+        "type": "github"
+      }
+    },
     "devshell": {
       "inputs": {
         "nixpkgs": [
@@ -341,6 +357,7 @@
     },
     "root": {
       "inputs": {
+        "codecompanion-nvim": "codecompanion-nvim",
         "flake-parts": "flake-parts",
         "forester-nvim": "forester-nvim",
         "multicursor-nvim": "multicursor-nvim",

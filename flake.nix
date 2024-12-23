@@ -26,6 +26,10 @@
       url = "github:jake-stewart/multicursor.nvim";
       flake = false;
     };
+    codecompanion-nvim = {
+      url = "github:olimorris/codecompanion.nvim";
+      flake = false;
+    };
     treewalker-nvim = {
       url = "github:aaronik/treewalker.nvim";
       flake = false;
@@ -97,6 +101,16 @@
                       pname = "multicursor.nvim";
                       version = "unstable-${inputs.multicursor-nvim.lastModifiedDate}";
                       src = inputs.multicursor-nvim;
+                    };
+                    codecompanion-nvim = final.vimUtils.buildVimPlugin {
+                      pname = "codecompanion.nvim";
+                      version = "unstable-${inputs.codecompanion-nvim.lastModifiedDate}";
+                      src = inputs.codecompanion-nvim;
+                      buildInputs = [ pkgs.curl ];
+                      postFixup = ''
+                        mkdir -p $target/binaries/${pkgs.curl.version}
+                        ln -s ${pkgs.curl}/bin/ $target/binaries/${pkgs.curl.version}/curl
+                      '';
                     };
                     treewalker-nvim = final.vimUtils.buildVimPlugin {
                       pname = "treewalker.nvim";
