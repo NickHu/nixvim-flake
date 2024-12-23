@@ -165,7 +165,7 @@
       fillchars = "eob:\ ,fold:\ ,foldopen:,foldsep:\ ,foldclose:";
       formatexpr = "v:lua.require'conform'.formatexpr()";
       foldclose = "all";
-      foldlevelstart = 1;
+      foldlevelstart = 99;
       foldopen = "all";
       foldtext = "";
       jumpoptions = [
