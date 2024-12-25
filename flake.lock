@@ -3,11 +3,11 @@
     "codecompanion-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1734950458,
-        "narHash": "sha256-rPkQZkyv9lQLxXUSLvAbWAe2DIebTduzhwl1UeOr+84=",
+        "lastModified": 1735074317,
+        "narHash": "sha256-/gFBnnR2V+3iiQ2Q4w2181GUZfruRdFewA2of15OJg8=",
         "owner": "olimorris",
         "repo": "codecompanion.nvim",
-        "rev": "d20ca206e7092318ffd2d430d98a21aded7c3b4f",
+        "rev": "8529f7a7be99a1cc1ed53edf5d86fdf617036a50",
         "type": "github"
       },
       "original": {
@@ -342,11 +342,11 @@
     "nvim-scissors": {
       "flake": false,
       "locked": {
-        "lastModified": 1734793695,
-        "narHash": "sha256-bBgjzcP7N9Euy0wekyFQH54817Sl25RPiHQilHMTSno=",
+        "lastModified": 1735077917,
+        "narHash": "sha256-fIRzJFCQQs8uDSXraz1LlEhkYYDIR8kn0tj4RlQgcug=",
         "owner": "chrisgrieser",
         "repo": "nvim-scissors",
-        "rev": "52e92bfc15f1572b8e9cc6e5dad68891bb5732c7",
+        "rev": "16b6d3e75d0e8d5e0e27584eb0f52ca4081304f5",
         "type": "github"
       },
       "original": {
