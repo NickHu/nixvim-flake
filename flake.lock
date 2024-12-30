@@ -3,11 +3,11 @@
     "codecompanion-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1735430489,
-        "narHash": "sha256-2ci6zHQcNK3VdWPqi7K7tjwVzT+o4v3nCJUmG8kscF0=",
+        "lastModified": 1735475433,
+        "narHash": "sha256-nLyxEAu4sSoNk1OWsKvxETpziVeAtzyg385mz9FmDCQ=",
         "owner": "olimorris",
         "repo": "codecompanion.nvim",
-        "rev": "ddc316a985a22fa2ab4b7942d3a396a72944b5f0",
+        "rev": "dab51b5a195ad382f1e4b3a4968f836c4bb48623",
         "type": "github"
       },
       "original": {
@@ -342,11 +342,11 @@
     "nvim-scissors": {
       "flake": false,
       "locked": {
-        "lastModified": 1735407806,
-        "narHash": "sha256-NRLtQZPU2JxM4O80lRS0WFWxfmoi078rAwVAje67Ytc=",
+        "lastModified": 1735484531,
+        "narHash": "sha256-VZ0CaH4mvPG08EfuP0PrvAMqOrAhTrCku4MZrSUbXjg=",
         "owner": "chrisgrieser",
         "repo": "nvim-scissors",
-        "rev": "6df5bf1054a5cd13a69c4b9a3ed1c167ed4b5c8a",
+        "rev": "6c097a6fdff73fa4ff6b750ddc99d7de88b29f28",
         "type": "github"
       },
       "original": {
@@ -426,11 +426,11 @@
     "treewalker-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1735342012,
-        "narHash": "sha256-oFUUHpovw5HJvnAFDoAcb/UPIOEX+6IPNa7V84oViDE=",
+        "lastModified": 1735504913,
+        "narHash": "sha256-EUOv2IxfLOc92B/oRYohCLRSetd/shuk4RzlzpPNi8A=",
         "owner": "aaronik",
         "repo": "treewalker.nvim",
-        "rev": "75cd76a4d68e60a9c3fd517b99a66ea2d7aa0377",
+        "rev": "008f26ece4cab0b4ee33c5e94c998202ca782d03",
         "type": "github"
       },
       "original": {
