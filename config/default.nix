@@ -489,7 +489,7 @@
             "x"
             "o"
           ];
-          key = "<leader>s";
+          key = "<C-j>";
           action = helpers.mkRaw "function() require('flash').jump() end";
           options = {
             silent = true;
@@ -501,7 +501,7 @@
             "x"
             "o"
           ];
-          key = "<leader>S";
+          key = "<C-S-j>";
           action = helpers.mkRaw "function() require('flash').treesitter() end";
           options = {
             silent = true;
