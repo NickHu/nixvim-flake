@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   helpers,
   ...
@@ -109,18 +108,6 @@
           config = stripNewlines ''
             lua require("scissors").setup({
               snippetDir = "~/Dropbox/nixvim-flake/snippets",
-            })
-          '';
-        }
-        {
-          plugin = forester-nvim;
-          config = stripNewlines ''
-            lua require("forester").setup({
-              opts = {
-                forests = { "~/Dropbox/forest" },
-                tree_dirs = { "trees" },
-                conceal = true,
-              }
             })
           '';
         }
@@ -756,12 +743,14 @@
       };
       copilot-lua = {
         enable = true;
-        filetypes = {
-          "*" = true;
-        };
-        suggestion = {
-          autoTrigger = true;
-          keymap.accept = "<Right>";
+        settings = {
+          filetypes = {
+            "*" = true;
+          };
+          suggestion = {
+            autoTrigger = true;
+            keymap.accept = "<Right>";
+          };
         };
       };
       fugitive.enable = true;

@@ -14,20 +14,8 @@
       url = "github:kentookura/tree-sitter-forester";
       flake = false;
     };
-    forester-nvim = {
-      url = "github:kentookura/forester.nvim";
-      flake = false;
-    };
-    nvim-scissors = {
-      url = "github:chrisgrieser/nvim-scissors";
-      flake = false;
-    };
     multicursor-nvim = {
       url = "github:jake-stewart/multicursor.nvim";
-      flake = false;
-    };
-    codecompanion-nvim = {
-      url = "github:olimorris/codecompanion.nvim";
       flake = false;
     };
     treewalker-nvim = {
@@ -46,8 +34,6 @@
       ];
       perSystem =
         {
-          config,
-          self',
           inputs',
           pkgs,
           system,
@@ -66,18 +52,6 @@
             inherit system;
             overlays = [
               (final: prev: {
-                neovim-unwrapped = prev.neovim-unwrapped.overrideAttrs (old: {
-                  patches = old.patches ++ [
-                    # Fix byte index encoding bounds.
-                    # - https://github.com/neovim/neovim/pull/30747
-                    # - https://github.com/nix-community/nixvim/issues/2390
-                    (final.fetchpatch {
-                      name = "fix-lsp-str_byteindex_enc-bounds-checking-30747.patch";
-                      url = "https://patch-diff.githubusercontent.com/raw/neovim/neovim/pull/30747.patch";
-                      hash = "sha256-2oNHUQozXKrHvKxt7R07T9YRIIx8W3gt8cVHLm2gYhg=";
-                    })
-                  ];
-                });
                 tree-sitter-grammars = prev.tree-sitter-grammars // {
                   tree-sitter-forester = prev.tree-sitter.buildGrammar {
                     language = "forester";
@@ -87,30 +61,10 @@
                 };
                 vimPlugins = prev.vimPlugins.extend (
                   final': prev': {
-                    forester-nvim = final.vimUtils.buildVimPlugin {
-                      pname = "forester.nvim";
-                      version = "unstable-${inputs.forester-nvim.lastModifiedDate}";
-                      src = inputs.forester-nvim;
-                    };
-                    nvim-scissors = final.vimUtils.buildVimPlugin {
-                      pname = "nvim-scissors";
-                      version = "unstable-${inputs.nvim-scissors.lastModifiedDate}";
-                      src = inputs.nvim-scissors;
-                    };
                     multicursor-nvim = final.vimUtils.buildVimPlugin {
                       pname = "multicursor.nvim";
                       version = "unstable-${inputs.multicursor-nvim.lastModifiedDate}";
                       src = inputs.multicursor-nvim;
-                    };
-                    codecompanion-nvim = final.vimUtils.buildVimPlugin {
-                      pname = "codecompanion.nvim";
-                      version = "unstable-${inputs.codecompanion-nvim.lastModifiedDate}";
-                      src = inputs.codecompanion-nvim;
-                      buildInputs = [ pkgs.curl ];
-                      postFixup = ''
-                        mkdir -p $target/binaries/${pkgs.curl.version}
-                        ln -s ${pkgs.curl}/bin/ $target/binaries/${pkgs.curl.version}/curl
-                      '';
                     };
                     treewalker-nvim = final.vimUtils.buildVimPlugin {
                       pname = "treewalker.nvim";
