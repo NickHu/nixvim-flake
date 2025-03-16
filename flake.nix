@@ -11,7 +11,7 @@
     nixpkgs.follows = "nixvim/nixpkgs";
     flake-parts.url = "github:hercules-ci/flake-parts";
     tree-sitter-forester = {
-      url = "github:kentookura/tree-sitter-forester";
+      url = "github:jetjinser/tree-sitter-forester/regrammar";
       flake = false;
     };
     multicursor-nvim = {

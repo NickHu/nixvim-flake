@@ -60,6 +60,11 @@
         };
       };
     };
+    filetype = {
+      extension = {
+        tree = "forester";
+      };
+    };
     autoCmd = [
       {
         event = "User";

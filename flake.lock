@@ -206,15 +206,16 @@
     "tree-sitter-forester": {
       "flake": false,
       "locked": {
-        "lastModified": 1727935289,
-        "narHash": "sha256-LtCIvKahwIzsXP1zFfSzLCxvr/al7Jd0illyNQMVa1w=",
-        "owner": "kentookura",
+        "lastModified": 1733556276,
+        "narHash": "sha256-HpDBpPgAe5wm0r4cSd0iXnzfGW02FrfZ6JioS2fWuiM=",
+        "owner": "jetjinser",
         "repo": "tree-sitter-forester",
-        "rev": "42709f432a2ff64a93e50185af16cecb9a0ec15f",
+        "rev": "5f094fca1cdf752ad6f72b1f9a6e91904e4d8bc2",
         "type": "github"
       },
       "original": {
-        "owner": "kentookura",
+        "owner": "jetjinser",
+        "ref": "regrammar",
         "repo": "tree-sitter-forester",
         "type": "github"
       }
