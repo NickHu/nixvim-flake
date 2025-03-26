@@ -140,27 +140,6 @@
           '';
         }
         {
-          plugin = codecompanion-nvim;
-          config = stripNewlines ''
-            lua require("codecompanion").setup({
-              display = {
-                diff = {
-                  provider = "mini_diff",
-                },
-              },
-              strategies = {
-                chat = {
-                  render_headers = false,
-                  adapter = "ollama",
-                },
-                inline = {
-                  adapter = "ollama",
-                },
-              },
-            })
-          '';
-        }
-        {
           plugin = treewalker-nvim;
         }
       ];
@@ -1250,17 +1229,14 @@
         };
         texlivePackage = null; # don't install texlive at all
       };
-      render-markdown = {
-        enable = true;
-        settings = {
-          file_types = [
-            "markdown"
-            "codecompanion"
-          ];
-        };
-      };
     };
     extraConfigLuaPre = ''
+      -- profiling
+      if vim.env.PROF then
+        require("snacks.profiler").startup({
+          startup = { },
+        })
+      end
       -- disable netrw at the very start of your init.lua
       vim.g.loaded_netrw = 1
       vim.g.loaded_netrwPlugin = 1
