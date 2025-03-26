@@ -850,6 +850,7 @@
           '';
         };
       };
+      copilot-chat.enable = true;
       copilot-lua = {
         enable = true;
         settings = {
