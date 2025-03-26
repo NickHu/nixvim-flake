@@ -886,6 +886,10 @@
           end
         '';
         servers = {
+          hls = {
+            enable = true;
+            installGhc = false;
+          };
           ltex = {
             enable = true;
             settings = {
