@@ -170,7 +170,6 @@
       linebreak = true;
       number = true;
       relativenumber = true;
-      signcolumn = "number";
       shiftwidth = 2;
       showbreak = "↳ ";
       spelllang = "en_gb";
@@ -214,9 +213,7 @@
           "L" = "E";
           "gL" = "gE";
           "h" = "i";
-          "gh" = "gi";
           "H" = "I";
-          "gH" = "gI";
           "j" = "m";
           "gj" = "gm";
           "J" = "M";
@@ -610,9 +607,37 @@
         {
           mode = "n";
           key = "<leader>bd";
-          action = helpers.mkRaw "MiniBufremove.delete";
+          action = helpers.mkRaw "function() Snacks.bufdelete() end";
           options = {
             silent = true;
+            desc = "Buffer delete";
+          };
+        }
+        {
+          mode = "n";
+          key = "<leader>fe";
+          action = helpers.mkRaw "function() Snacks.explorer() end";
+          options = {
+            silent = true;
+            desc = "Snacks explorer";
+          };
+        }
+        {
+          mode = "n";
+          key = "<leader>go";
+          action = helpers.mkRaw "function() MiniDiff.toggle_overlay() end";
+          options = {
+            silent = true;
+            desc = "mini.diff overlay";
+          };
+        }
+        {
+          mode = "n";
+          key = "<leader>fm";
+          action = helpers.mkRaw "function() MiniFiles.open() end";
+          options = {
+            silent = true;
+            desc = "mini.files open";
           };
         }
         {
@@ -639,27 +664,20 @@
           (key: action: {
             mode = "n";
             inherit key;
-            action = "<Cmd>Lspsaga " + action + "<CR>";
+            action = helpers.mkRaw ("function() Snacks.picker.pick(\"" + action + "\") end");
             options = {
               silent = true;
             };
           })
           {
-            "[d" = "diagnostic_jump_prev";
-            "]d" = "diagnostic_jump_next";
-            "<leader>e" = "show_buf_diagnostics";
-            "<leader>E" = "show_workspace_diagnostics";
-            "<leader>t" = "outline";
-            "<M-Enter>" = "term_toggle";
-            "<M-e>" = "show_cursor_diagnostics";
-            "<M-]>" = "goto_definition";
-            "<M-l>" = "code_action";
-            "<M-r>" = "rename";
-            "<M-p>" = "finder";
-            "E" = "hover_doc";
-            "g+" = "outgoing_calls";
-            "g-" = "incoming_calls";
-            "gt" = "goto_type_definition";
+            "<leader>/" = "grep";
+            "<leader>b" = "buffers";
+            "<leader>d" = "diagnostics";
+            "<leader>f" = "files";
+            "<leader>gS" = "git_stash";
+            "<leader>gd" = "git_diff";
+            "<leader>gs" = "git_status";
+            "<leader>u" = "undo";
           }
       ++
         pkgs.lib.attrsets.mapAttrsToList
@@ -678,6 +696,113 @@
             "<Right>" = "Right";
           };
     plugins = {
+      blink-cmp = {
+        enable = true;
+        settings = {
+          completion = {
+            documentation.auto_show = true;
+            ghost_text.enabled = true;
+            menu = {
+              auto_show = false;
+              draw = {
+                columns = [
+                  {
+                    __unkeyed-1 = "label";
+                    __unkeyed-2 = "label_description";
+                    gap = 1;
+                  }
+                  {
+                    __unkeyed-1 = "kind_icon";
+                    gap = 1;
+                    __unkeyed-2 = "kind";
+                  }
+                ];
+                components.kind_icon = {
+                  text = helpers.mkRaw ''
+                    function(ctx)
+                      local kind_icon, _, _ = require('mini.icons').get('lsp', ctx.kind)
+                      return kind_icon
+                    end
+                  '';
+                  highlight = helpers.mkRaw ''
+                    function(ctx)
+                      local _, hl, _ = require('mini.icons').get('lsp', ctx.kind)
+                      return hl
+                    end
+                  '';
+                };
+              };
+            };
+            list.selection.preselect = helpers.mkRaw ''
+              function(ctx)
+                return not require('blink.cmp').snippet_active({ direction = 1 })
+              end
+            '';
+          };
+          keymap = {
+            preset = "super-tab";
+            "<Up>" = [
+              "show"
+              "select_prev"
+              "fallback"
+            ];
+            "<C-p>" = [
+              "show"
+              "select_prev"
+              "fallback_to_mappings"
+            ];
+            "<Down>" = [
+              "show"
+              "select_next"
+              "fallback"
+            ];
+            "<C-n>" = [
+              "show"
+              "select_next"
+              "fallback_to_mappings"
+            ];
+            "<CR>" = [
+              (helpers.mkRaw ''
+                function(cmp)
+                  if cmp.is_menu_visible() then return cmp.accept() end
+                end
+              '')
+              "fallback"
+            ];
+          };
+          signature.enabled = true;
+          snippets.preset = "luasnip";
+          sources = {
+            default = [
+              "lsp"
+              "path"
+              "snippets"
+              "buffer"
+              "git"
+              "copilot"
+            ];
+            providers = {
+              copilot = {
+                async = true;
+                module = "blink-copilot";
+                name = "copilot";
+                score_offset = 100;
+              };
+              git = {
+                module = "blink-cmp-git";
+                name = "git";
+                enabled = helpers.mkRaw ''
+                  function()
+                    return vim.tbl_contains({ 'octo', 'gitcommit', 'markdown' }, vim.bo.filetype)
+                  end
+                '';
+              };
+            };
+          };
+        };
+      };
+      blink-cmp-git.enable = true;
+      blink-copilot.enable = true;
       bufferline = {
         enable = true;
         settings.options.diagnostics = "nvim_lsp";
@@ -731,15 +856,12 @@
           filetypes = {
             "*" = true;
           };
-          suggestion = {
-            autoTrigger = true;
-            keymap.accept = "<Right>";
-          };
+          panel.enabled = false;
+          suggestions.enabled = false;
         };
       };
       fugitive.enable = true;
       gitsigns.enable = true;
-      indent-blankline.enable = true;
       rustaceanvim = {
         enable = true;
         settings.tools = {
@@ -841,23 +963,29 @@
         keymaps = {
           diagnostic = {
             "<M-q>" = "setloclist";
+            "[d" = "goto_prev";
+            "]d" = "goto_next";
           };
           lspBuf = {
+            "<M-]>" = "definition";
             "<M-f>" = "format";
-            "<M-k>" = "signature_help";
+            "<M-l>" = "code_action";
+            "<M-r>" = "rename";
             "<M-w>a" = "add_workspace_folder";
             "<M-w>d" = "remove_workspace_folder";
+            "E" = "hover";
+            "g+" = "outgoing_calls";
+            "g-" = "incoming_calls";
             "gD" = "document_symbol";
+            "gE" = "signature_help";
             "gW" = "workspace_symbol";
             "gd" = "declaration";
-            "gi" = "implementation";
+            "gI" = "implementation";
             "gr" = "references";
+            "gt" = "type_definition";
           };
           silent = true;
         };
-      };
-      lspsaga = {
-        enable = true;
       };
       lualine = {
         enable = true;
@@ -866,7 +994,6 @@
             "fugitive"
             "fzf"
             "nvim-dap-ui"
-            "nvim-tree"
             "quickfix"
           ];
           sections = {
@@ -911,237 +1038,43 @@
             };
           };
           bracketed = { };
-          bufremove = { };
           diff = { };
-          icons = { };
-          indentscope = {
-            draw = {
-              animation = helpers.mkRaw "require('mini.indentscope').gen_animation.none()";
+          files = {
+            mappings = {
+              go_in = "i";
+              go_in_plus = "I";
+              go_out = "m";
+              go_out_plus = "M";
+              mark_set = "j";
             };
-            symbol = "▎";
           };
+          icons = { };
           operators = { };
           pairs = { };
-          splitjoin = { };
           sessions = { };
+          splitjoin = { };
           starter = { };
           trailspace = { };
         };
       };
-      markdown-preview.enable = true;
-      cmp = {
-        enable = true;
-        cmdline = {
-          "/" = {
-            mapping = helpers.mkRaw "cmp.mapping.preset.cmdline()";
-            sources = [
-              {
-                name = "nvim_lsp_document_symbol";
-              }
-              {
-                name = "buffer";
-              }
-            ];
-          };
-          ":" = {
-            mapping = helpers.mkRaw ''
-              cmp.mapping.preset.cmdline({
-                ["<CR>"] = {
-                  c = cmp.mapping.confirm()
-                }
-              })
-            '';
-            sources = [
-              {
-                name = "path";
-              }
-              {
-                name = "cmdline";
-                option = {
-                  ignore_cmds = [
-                    "Man"
-                    "!"
-                  ];
-                };
-              }
-            ];
-          };
-        };
-        filetype = {
-          "dapui_watches" = {
-            sources = [
-              {
-                name = "dap";
-              }
-            ];
-          };
-          "dap-repl" = {
-            sources = [
-              {
-                name = "dap";
-              }
-            ];
-          };
-        };
-        settings = {
-          mapping = helpers.mkRaw ''
-            cmp.mapping.preset.insert({
-              ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-              ['<C-f>'] = cmp.mapping.scroll_docs(4),
-              ['<CR>'] = cmp.mapping.confirm(),
-              ['<Tab>'] =
-                cmp.mapping(
-                  function(fallback)
-                    local has_words_before = function()
-                      unpack = unpack or table.unpack
-                      local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-                      return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-                    end
-                    local luasnip = require("luasnip")
-                    if luasnip.expand_or_locally_jumpable() then
-                      luasnip.expand_or_jump()
-                    elseif cmp.visible() then
-                      cmp.select_next_item()
-                    elseif has_words_before() then
-                      cmp.complete()
-                    else
-                      fallback()
-                    end
-                  end,
-                  { "i", "s" }),
-              ['<S-Tab>'] =
-                cmp.mapping(
-                  function(fallback)
-                    local luasnip = require("luasnip")
-                    if luasnip.locally_jumpable(-1) then
-                      luasnip.jump(-1)
-                    elseif cmp.visible() then
-                      cmp.select_prev_item()
-                    else
-                      fallback()
-                    end
-                  end,
-                  { "i", "s" }),
-            })
-          '';
-          snippet.expand = ''
-            function(args)
-              require('luasnip').lsp_expand(args.body)
-            end
-          '';
-          sources = [
-            {
-              name = "nvim_lsp_signature_help";
-              groupIndex = 0;
-            }
-            {
-              name = "nvim_lsp";
-              groupIndex = 1;
-            }
-            {
-              name = "luasnip";
-              groupIndex = 1;
-            }
-            {
-              name = "calc";
-              groupIndex = 1;
-            }
-            {
-              name = "path";
-              groupIndex = 1;
-            }
-            {
-              name = "buffer";
-              groupIndex = 2;
-            }
-            {
-              name = "treesitter";
-              groupIndex = 2;
-            }
-            {
-              name = "cmp_pandoc";
-              groupIndex = 1;
-            }
-            {
-              name = "latex_symbols";
-              groupIndex = 1;
-            }
-            {
-              name = "spell";
-              groupIndex = 1;
-            }
-          ];
-        };
-      };
-      nvim-tree = {
-        enable = true;
-        onAttach = helpers.mkRaw ''
-          function(bufnr)
-            local api = require("nvim-tree.api")
-            local function opts(desc)
-              return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
-            end
-            vim.keymap.set('n', '<C-]>',   api.tree.change_root_to_node,        opts('CD'))
-            vim.keymap.set('n', '<M-o>',   api.node.open.replace_tree_buffer,   opts('Open: In Place'))
-            vim.keymap.set('n', '<C-e>',   api.node.show_info_popup,            opts('Info'))
-            vim.keymap.set('n', '<C-r>',   api.fs.rename_sub,                   opts('Rename: Omit Filename'))
-            vim.keymap.set('n', '<C-t>',   api.node.open.tab,                   opts('Open: New Tab'))
-            vim.keymap.set('n', '<C-v>',   api.node.open.vertical,              opts('Open: Vertical Split'))
-            vim.keymap.set('n', '<C-h>',   api.node.open.horizontal,            opts('Open: Horizontal Split'))
-            vim.keymap.set('n', '<BS>',    api.node.navigate.parent_close,      opts('Close Directory'))
-            vim.keymap.set('n', '<CR>',    api.node.open.edit,                  opts('Open'))
-            vim.keymap.set('n', '<Tab>',   api.node.open.preview,               opts('Open Preview'))
-            vim.keymap.set('n', '>',       api.node.navigate.sibling.next,      opts('Next Sibling'))
-            vim.keymap.set('n', '<',       api.node.navigate.sibling.prev,      opts('Previous Sibling'))
-            vim.keymap.set('n', '.',       api.node.run.cmd,                    opts('Run Command'))
-            vim.keymap.set('n', '-',       api.tree.change_root_to_parent,      opts('Up'))
-            vim.keymap.set('n', 'a',       api.fs.create,                       opts('Create File Or Directory'))
-            vim.keymap.set('n', 'bd',      api.marks.bulk.delete,               opts('Delete Bookmarked'))
-            vim.keymap.set('n', 'bt',      api.marks.bulk.trash,                opts('Trash Bookmarked'))
-            vim.keymap.set('n', 'bmv',     api.marks.bulk.move,                 opts('Move Bookmarked'))
-            vim.keymap.set('n', 'B',       api.tree.toggle_no_buffer_filter,    opts('Toggle Filter: No Buffer'))
-            vim.keymap.set('n', 'c',       api.fs.copy.node,                    opts('Copy'))
-            vim.keymap.set('n', 'C',       api.tree.toggle_git_clean_filter,    opts('Toggle Filter: Git Clean'))
-            vim.keymap.set('n', '[c',      api.node.navigate.git.prev,          opts('Prev Git'))
-            vim.keymap.set('n', ']c',      api.node.navigate.git.next,          opts('Next Git'))
-            vim.keymap.set('n', 'd',       api.fs.remove,                       opts('Delete'))
-            vim.keymap.set('n', 'D',       api.fs.trash,                        opts('Trash'))
-            vim.keymap.set('n', 'zR',      api.tree.expand_all,                 opts('Expand All'))
-            vim.keymap.set('n', '<M-r>',   api.fs.rename_basename,              opts('Rename: Basename'))
-            vim.keymap.set('n', ']d',      api.node.navigate.diagnostics.next,  opts('Next Diagnostic'))
-            vim.keymap.set('n', '[d',      api.node.navigate.diagnostics.prev,  opts('Prev Diagnostic'))
-            vim.keymap.set('n', 'F',       api.live_filter.clear,               opts('Live Filter: Clear'))
-            vim.keymap.set('n', 'f',       api.live_filter.start,               opts('Live Filter: Start'))
-            vim.keymap.set('n', 'g?',      api.tree.toggle_help,                opts('Help'))
-            vim.keymap.set('n', 'gy',      api.fs.copy.absolute_path,           opts('Copy Absolute Path'))
-            vim.keymap.set('n', 'M',       api.tree.toggle_hidden_filter,       opts('Toggle Filter: Dotfiles'))
-            vim.keymap.set('n', 'gi',      api.tree.toggle_gitignore_filter,    opts('Toggle Filter: Git Ignore'))
-            vim.keymap.set('n', 'N',       api.node.navigate.sibling.last,      opts('Last Sibling'))
-            vim.keymap.set('n', 'E',       api.node.navigate.sibling.first,     opts('First Sibling'))
-            vim.keymap.set('n', 'I',       api.node.open.toggle_group_empty,    opts('Toggle Group Empty'))
-            vim.keymap.set('n', 'J',       api.tree.toggle_no_bookmark_filter,  opts('Toggle Filter: No Bookmark'))
-            vim.keymap.set('n', 'j',       api.marks.toggle,                    opts('Toggle Bookmark'))
-            vim.keymap.set('n', 'o',       api.node.open.edit,                  opts('Open'))
-            vim.keymap.set('n', 'O',       api.node.open.no_window_picker,      opts('Open: No Window Picker'))
-            vim.keymap.set('n', 'p',       api.fs.paste,                        opts('Paste'))
-            vim.keymap.set('n', 'P',       api.node.navigate.parent,            opts('Parent Directory'))
-            vim.keymap.set('n', 'q',       api.tree.close,                      opts('Close'))
-            vim.keymap.set('n', 'r',       api.fs.rename,                       opts('Rename'))
-            vim.keymap.set('n', 'R',       api.tree.reload,                     opts('Refresh'))
-            vim.keymap.set('n', 's',       api.node.run.system,                 opts('Run System'))
-            vim.keymap.set('n', 'S',       api.tree.search_node,                opts('Search'))
-            vim.keymap.set('n', 'u',       api.fs.rename_full,                  opts('Rename: Full Path'))
-            vim.keymap.set('n', 'U',       api.tree.toggle_custom_filter,       opts('Toggle Filter: Hidden'))
-            vim.keymap.set('n', 'W',       api.tree.collapse_all,               opts('Collapse'))
-            vim.keymap.set('n', 'x',       api.fs.cut,                          opts('Cut'))
-            vim.keymap.set('n', 'y',       api.fs.copy.filename,                opts('Copy Name'))
-            vim.keymap.set('n', 'Y',       api.fs.copy.relative_path,           opts('Copy Relative Path'))
-            vim.keymap.set('n', '<2-LeftMouse>',  api.node.open.edit,           opts('Open'))
-            vim.keymap.set('n', '<2-RightMouse>', api.tree.change_root_to_node, opts('CD'))
-          end
-        '';
-      };
       rainbow-delimiters.enable = true;
+      snacks = {
+        enable = true;
+        settings = {
+          bigfile.enabled = true;
+          bufdelete.enabled = true;
+          explorer.enabled = true;
+          image.enabled = true;
+          indent.enabled = true;
+          input.enabled = true;
+          notifier.enabled = true;
+          picker.enabled = true;
+          profiler.enabled = true;
+          scope.enabled = true;
+          # statuscolumn.enabled = true;
+          words.enabled = true;
+        };
+      };
       vim-surround.enable = true;
       treesitter = {
         enable = true;
@@ -1171,30 +1104,6 @@
         highlightDefinitions.enable = true;
         navigation.enable = true;
         smartRename.enable = true;
-      };
-      telescope = {
-        enable = true;
-        extensions = {
-          fzf-native.enable = true;
-          live-grep-args = {
-            enable = true;
-            settings.mappings = {
-              i = {
-                "<C-k>" = helpers.mkRaw ''require("telescope-live-grep-args.actions").quote_prompt()'';
-                "<C-r>" = helpers.mkRaw ''require("telescope.actions").to_fuzzy_refine'';
-              };
-            };
-          };
-          manix.enable = true;
-          undo.enable = true;
-        };
-        keymaps = {
-          "<leader>/" = "live_grep_args";
-          "<leader>d" = "diagnostics";
-          "<leader>b" = "buffers";
-          "<leader>f" = "find_files";
-          "<leader>u" = "undo";
-        };
       };
       typescript-tools.enable = true;
       vim-matchup = {
