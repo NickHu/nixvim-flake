@@ -107,7 +107,6 @@
           '';
         }
         ltex_extra-nvim
-        nvim-solarized-lua
         {
           plugin = nvim-scissors;
           config = stripNewlines ''
@@ -148,7 +147,6 @@
       ocamlPackages.ocp-indent
       ocamlformat
     ];
-    colorscheme = "solarized";
     globals = {
       tex_flavor = "latex";
       mapleader = "\\";
