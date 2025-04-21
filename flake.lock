@@ -88,11 +88,11 @@
     "multicursor-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1744681979,
-        "narHash": "sha256-vJpXveXQvS25jxYSfBVifwANe43QCDHEgsD657pre9o=",
+        "lastModified": 1745120510,
+        "narHash": "sha256-AR9gp+zDdzT59Gld/q3y6Qq943HxSQU998bOeuuPIDA=",
         "owner": "jake-stewart",
         "repo": "multicursor.nvim",
-        "rev": "f3a4899e5cdc93e6f8cd06bbc3b3631a2e85a315",
+        "rev": "ddc78dad507890db41b48b32bb015226a2838f50",
         "type": "github"
       },
       "original": {
@@ -139,11 +139,11 @@
         "nuschtosSearch": "nuschtosSearch"
       },
       "locked": {
-        "lastModified": 1745099712,
-        "narHash": "sha256-fj/S+L9nQyJYdWFk3+8BGPp4tg5rY3uaF6jGADm7OA0=",
+        "lastModified": 1745182672,
+        "narHash": "sha256-xh4O19Hre9LiJk0Aa3ZY/XlN00gAGhRUxCRz15j00JU=",
         "owner": "nix-community",
         "repo": "nixvim",
-        "rev": "710f9cbd520b8e78fa95d4c5d255891e2b14a277",
+        "rev": "6c4e2d9279e57369203ecfa159696c6a2af22130",
         "type": "github"
       },
       "original": {
