@@ -1060,6 +1060,34 @@
           trailspace = { };
         };
       };
+      orgmode = {
+        enable = true;
+        settings = {
+          org_agenda_files = "~/Dropbox/forest/org/**/*";
+          org_default_notes_file = "~/Dropbox/forest/org/refile.org";
+          org_capture_templates = {
+            j = {
+              description = "Journal";
+              template = "** %<%H:%M> %?";
+              target = "~/Dropbox/forest/org/journal/%<%Y-%m-%d>.org";
+              datetree = {
+                tree_type = "custom";
+                tree = [
+                  {
+                    format = "%A %d/%m/%Y";
+                    pattern = "^.*(%d%d)/(%d%d)/(%d%d%d%d)$";
+                    order = [
+                      3
+                      2
+                      1
+                    ];
+                  }
+                ];
+              };
+            };
+          };
+        };
+      };
       rainbow-delimiters.enable = true;
       snacks = {
         enable = true;
