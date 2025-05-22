@@ -88,11 +88,11 @@
     "multicursor-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1747105578,
-        "narHash": "sha256-rw7jE89Lj5F7bOCAx/rMO+Dpswfg9ohKDyQ3RJtaa3I=",
+        "lastModified": 1747792744,
+        "narHash": "sha256-IpLBYcqbM2AqVS4qyijmsYqfsXCcaq1yDpwGXw8Vqqg=",
         "owner": "jake-stewart",
         "repo": "multicursor.nvim",
-        "rev": "c731e52cee7b69fa05915affb09ba65e7cd31fa9",
+        "rev": "cecbb3028ba166578eb8620ce885e2362d112ee0",
         "type": "github"
       },
       "original": {
@@ -140,11 +140,11 @@
         "systems": "systems_2"
       },
       "locked": {
-        "lastModified": 1747743401,
-        "narHash": "sha256-AXk6mf9ySe44faNUGhD1mZud/kB7X+Nipzo2YxHet4s=",
+        "lastModified": 1747845951,
+        "narHash": "sha256-wTmZS30RIM6ELx9JFH5XSI5bjI4GzjtpodjHTSZBY3g=",
         "owner": "nix-community",
         "repo": "nixvim",
-        "rev": "47dba84e0d068a2b8c07faa0ec737ea98a226537",
+        "rev": "7e3a0f4e97c0906a276a860975888db96106b75e",
         "type": "github"
       },
       "original": {
@@ -239,11 +239,11 @@
     "treewalker-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1747776811,
-        "narHash": "sha256-19y4kJLOzG0bBJ91WDVc+lrqrNMhgUmQP30/2aAdWrU=",
+        "lastModified": 1747799217,
+        "narHash": "sha256-nsrHJDocayTR9nKK5Awm8d5bSVKtZr/q1JFnuzdfbSI=",
         "owner": "aaronik",
         "repo": "treewalker.nvim",
-        "rev": "8da5b0a2649ddbd010074b5d1c04a0b28c399f93",
+        "rev": "fe9551ec2a35b8ec59a7dce1028c38e836cb861d",
         "type": "github"
       },
       "original": {
