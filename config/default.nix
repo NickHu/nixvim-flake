@@ -640,6 +640,33 @@
         }
         {
           mode = "n";
+          key = "<leader>ojo";
+          action = "<Cmd>OrgJournal<CR>";
+          options = {
+            silent = true;
+            desc = "open journal (today)";
+          };
+        }
+        {
+          mode = "n";
+          key = "<leader>ojp";
+          action = "<Cmd>OrgJournalPrev<CR>";
+          options = {
+            silent = true;
+            desc = "open journal (yesterday)";
+          };
+        }
+        {
+          mode = "n";
+          key = "<leader>ojn";
+          action = "<Cmd>OrgJournalNext<CR>";
+          options = {
+            silent = true;
+            desc = "open journal (tomorrow)";
+          };
+        }
+        {
+          mode = "n";
           key = "<Tab>";
           action = "<Tab>";
           options = {
@@ -1205,29 +1232,81 @@
           mc.feedkeys(mode == TERM_CODES.CTRL_V and "h" or "H", { remap = true })
       end
     '';
-    userCommands = {
-      "LuaSnipEdit" = {
-        command = "lua require('luasnip.loaders').edit_snippet_files()";
-        desc = "Edit Snippets";
+    userCommands =
+      let
+        journalDir = "~/Dropbox/forest/org/journal/";
+      in
+      {
+        "LuaSnipEdit" = {
+          command = "lua require('luasnip.loaders').edit_snippet_files()";
+          desc = "Edit Snippets";
+        };
+        "FormatDisable" = {
+          bang = true;
+          command = ''
+            if <bang>v:true
+              let g:disable_autoformat = v:true
+            else
+              let b:disable_autoformat = v:true
+            endif
+          '';
+          desc = "Disable autoformat-on-save";
+        };
+        "FormatEnable" = {
+          command = ''
+            let b:disable_autoformat = v:false
+            let g:disable_autoformat = v:false
+          '';
+          desc = "Re-enable autoformat-on-save";
+        };
+        "OrgJournal" = {
+          command = helpers.mkRaw ''
+            function(opts)
+              local date = os.date("%Y-%m-%d")
+              local file = "${journalDir}" .. date .. ".org"
+              vim.cmd('e ' .. file)
+              vim.cmd('normal! G')
+            end
+          '';
+          desc = "Open today's journal";
+          nargs = 0;
+        };
+        "OrgJournalPrev" = {
+          command = helpers.mkRaw ''
+            function(opts)
+              local current_file = vim.fn.expand("%:p")
+              local year, month, day = current_file:match(vim.fn.expand("${journalDir}") .. "(%d%d%d%d)-(%d%d)-(%d%d).org")
+              if not year or not month or not day then
+                print("Current file is not a valid journal file")
+                return
+              end
+              local date = os.date("%Y-%m-%d", os.time({ year = tonumber(year), month = tonumber(month), day = tonumber(day) }) - 24 * 60 * 60)
+              local file = "${journalDir}" .. date .. ".org"
+              vim.cmd('e ' .. file)
+              vim.cmd('normal! G')
+            end
+          '';
+          desc = "Open yesterday's journal";
+          nargs = 0;
+        };
+        "OrgJournalNext" = {
+          command = helpers.mkRaw ''
+            function(opts)
+              local current_file = vim.fn.expand("%:p")
+              local year, month, day = current_file:match(vim.fn.expand("${journalDir}") .. "(%d%d%d%d)-(%d%d)-(%d%d).org")
+              if not year or not month or not day then
+                print("Current file is not a valid journal file")
+                return
+              end
+              local date = os.date("%Y-%m-%d", os.time({ year = tonumber(year), month = tonumber(month), day = tonumber(day) }) + 24 * 60 * 60)
+              local file = "${journalDir}" .. date .. ".org"
+              vim.cmd('e ' .. file)
+              vim.cmd('normal! G')
+            end
+          '';
+          desc = "Open tomorrow's journal";
+          nargs = 0;
+        };
       };
-      "FormatDisable" = {
-        bang = true;
-        command = ''
-          if <bang>v:true
-            let g:disable_autoformat = v:true
-          else
-            let b:disable_autoformat = v:true
-          endif
-        '';
-        desc = "Disable autoformat-on-save";
-      };
-      "FormatEnable" = {
-        command = ''
-          let b:disable_autoformat = v:false
-          let g:disable_autoformat = v:false
-        '';
-        desc = "Re-enable autoformat-on-save";
-      };
-    };
   };
 }
