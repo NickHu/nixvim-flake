@@ -965,6 +965,7 @@
         };
         keymaps = {
           diagnostic = {
+            "<M-e>" = "open_float";
             "<M-q>" = "setloclist";
             "[d" = "goto_prev";
             "]d" = "goto_next";
