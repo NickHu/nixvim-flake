@@ -239,11 +239,11 @@
     "treewalker-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1749105726,
-        "narHash": "sha256-k/LM+j3MS1EpFQZ4+y8J3n1EZC+TuxgmQoR+PGmMsxU=",
+        "lastModified": 1749323099,
+        "narHash": "sha256-J0mU1EyKe7kuudJaVWZmx7XSnp6NBxdrJnCr2KdRkpo=",
         "owner": "aaronik",
         "repo": "treewalker.nvim",
-        "rev": "fe814c2181dc3004d97073a613c20554cc1a7d7b",
+        "rev": "3f5f7b0712444276cbcdbdacb6264ee1ad1b4713",
         "type": "github"
       },
       "original": {
