@@ -59,6 +59,18 @@
           };
         };
       };
+      "ftplugin/org.lua" = {
+        keymaps = [
+          {
+            key = "<S-CR>";
+            action = "<Cmd>lua require('orgmode').action('org_mappings.meta_return')<CR>";
+            mode = [ "i" ];
+            options = {
+              silent = true;
+            };
+          }
+        ];
+      };
     };
     filetype = {
       extension = {
@@ -1114,6 +1126,8 @@
               };
             };
           };
+          org_startup_indented = true;
+          ui.input.use_vim_ui = true;
         };
       };
       rainbow-delimiters.enable = true;
