@@ -6,6 +6,66 @@
 {
   config = {
     files = {
+      "ftplugin/agda.lua" = {
+        autoCmd = [
+          {
+            event = [
+              "QuitPre"
+            ];
+            command = ":CornelisCloseInfoWindows";
+          }
+        ];
+        keymaps = [
+          {
+            key = "<leader>l";
+            action = ":CornelisLoad<CR>";
+          }
+          {
+            key = "<leader>r";
+            action = ":CornelisRefine<CR>";
+          }
+          {
+            key = "<leader>d";
+            action = ":CornelisMakeCase<CR>";
+          }
+          {
+            key = "<leader>,";
+            action = ":CornelisTypeContext<CR>";
+          }
+          {
+            key = "<leader>.";
+            action = ":CornelisTypeContextInfer<CR>";
+          }
+          {
+            key = "<leader>n";
+            action = ":CornelisSolve<CR>";
+          }
+          {
+            key = "<leader>a";
+            action = ":CornelisAuto<CR>";
+          }
+          {
+            key = "<C-]>";
+            action = ":CornelisGoToDefinition<CR>";
+          }
+          {
+            key = "[/";
+            action = ":CornelisPrevGoal<CR>";
+          }
+          {
+            key = "]/";
+            action = ":CornelisNextGoal<CR>";
+          }
+          {
+            key = "<C-a>";
+            action = ":CornelisInc<CR>";
+          }
+          {
+            key = "<C-x>";
+            action = ":CornelisDec<CR>";
+          }
+        ];
+      };
       "ftplugin/ocaml.lua" = {
         opts = {
           formatexpr = "v:lua.require'conform'.formatexpr({ 'formatters': [ 'ocamlformat' ]})";
@@ -902,6 +962,12 @@
           };
           panel.enabled = false;
           suggestions.enabled = false;
+        };
+      };
+      cornelis = {
+        enable = true;
+        settings = {
+          agda_prefix = "<C-k>";
         };
       };
       fugitive.enable = true;
