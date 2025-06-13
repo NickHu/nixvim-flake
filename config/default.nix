@@ -151,6 +151,12 @@
           '';
         }
         {
+          plugin = tex2uni-nvim;
+          config = ''
+            lua require("tex2uni").setup({ft = {"*.org"}})
+          '';
+        }
+        {
           plugin = treewalker-nvim;
         }
       ];

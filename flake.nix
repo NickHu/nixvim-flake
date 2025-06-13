@@ -18,6 +18,10 @@
       url = "github:jake-stewart/multicursor.nvim";
       flake = false;
     };
+    tex2uni-nvim = {
+      url = "github:Zeta611/tex2uni.nvim";
+      flake = false;
+    };
     treewalker-nvim = {
       url = "github:aaronik/treewalker.nvim";
       flake = false;
@@ -65,6 +69,11 @@
                       pname = "multicursor.nvim";
                       version = "unstable-${inputs.multicursor-nvim.lastModifiedDate}";
                       src = inputs.multicursor-nvim;
+                    };
+                    tex2uni-nvim = final.vimUtils.buildVimPlugin {
+                      pname = "tex2uni.nvim";
+                      version = "unstable-${inputs.tex2uni-nvim.lastModifiedDate}";
+                      src = inputs.tex2uni-nvim;
                     };
                     treewalker-nvim = final.vimUtils.buildVimPlugin {
                       pname = "treewalker.nvim";
