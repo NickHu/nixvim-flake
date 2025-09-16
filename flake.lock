@@ -88,11 +88,11 @@
     "multicursor-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1757817982,
-        "narHash": "sha256-THvkvlk7nrTgvDSXIbzQyhK9oJ8VxSmQfBDq0OVSsKE=",
+        "lastModified": 1757904054,
+        "narHash": "sha256-tDS+czj405CsdJJ4tzQc/RyLwLGlYExikTRSkXuU8GQ=",
         "owner": "jake-stewart",
         "repo": "multicursor.nvim",
-        "rev": "7f40243f1babbda65391ed4ee344a5be70bc1db6",
+        "rev": "ffe2e402e85150516d096842f7be99fd1321a72b",
         "type": "github"
       },
       "original": {
