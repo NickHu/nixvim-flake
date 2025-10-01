@@ -140,11 +140,11 @@
         "systems": "systems_2"
       },
       "locked": {
-        "lastModified": 1759101862,
-        "narHash": "sha256-Ybe+/vYCPA520Wm9DveaOJa7TQF2M82AtUKUh82vr7U=",
+        "lastModified": 1759279360,
+        "narHash": "sha256-0WavBzKMQ4Pn68fDHR1rigB+w5SlW36+Jxq/EuHmOhw=",
         "owner": "nix-community",
         "repo": "nixvim",
-        "rev": "1c802b3efe45625737d36b3d4b9710193fa39e2a",
+        "rev": "fe059cd395575c00d475ab1c8200dcc3495724d9",
         "type": "github"
       },
       "original": {
@@ -256,11 +256,11 @@
     "treewalker-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1759113857,
-        "narHash": "sha256-Mt89XyfcOvjMWGMMFumSjw0T5sTl7n6I+26mnG7f9OQ=",
+        "lastModified": 1759207995,
+        "narHash": "sha256-L5+idIs8ykn7PurTol9wCKkMk2WwcrXP2VzEcWDIG9g=",
         "owner": "aaronik",
         "repo": "treewalker.nvim",
-        "rev": "bccd819c9a1cb75a7ef945ccff87f3b3e1ef22b0",
+        "rev": "e339e81951e96147b57f30abbb76a67d71b809ba",
         "type": "github"
       },
       "original": {
