@@ -257,13 +257,12 @@
     keymaps =
       pkgs.lib.attrsets.mapAttrsToList
         (original: replacement: {
-          mode =
-            [
-              "n"
-              "x"
-            ]
-            ++ (pkgs.lib.optional (original != "i") "o")
-            ++ (pkgs.lib.optional (original == "gN") "v");
+          mode = [
+            "n"
+            "x"
+          ]
+          ++ (pkgs.lib.optional (original != "i") "o")
+          ++ (pkgs.lib.optional (original == "gN") "v");
           key = original;
           action = replacement;
         })
@@ -1246,9 +1245,11 @@
       };
       treesitter-refactor = {
         enable = true;
-        highlightDefinitions.enable = true;
-        navigation.enable = true;
-        smartRename.enable = true;
+        settings = {
+          highlightDefinitions.enable = true;
+          navigation.enable = true;
+          smartRename.enable = true;
+        };
       };
       typescript-tools.enable = true;
       vim-matchup = {
