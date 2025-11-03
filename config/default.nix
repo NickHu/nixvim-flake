@@ -257,13 +257,12 @@
     keymaps =
       pkgs.lib.attrsets.mapAttrsToList
         (original: replacement: {
-          mode =
-            [
-              "n"
-              "x"
-            ]
-            ++ (pkgs.lib.optional (original != "i") "o")
-            ++ (pkgs.lib.optional (original == "gN") "v");
+          mode = [
+            "n"
+            "x"
+          ]
+          ++ (pkgs.lib.optional (original != "i") "o")
+          ++ (pkgs.lib.optional (original == "gN") "v");
           key = original;
           action = replacement;
         })
