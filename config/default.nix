@@ -1279,7 +1279,7 @@
             };
             fold_enabled = 1;
             format_enabled = 1;
-            view_method = "zathura";
+            view_method = "zathura_simple";
             view_use_temp_files = true;
             quickfix_open_on_warning = 0;
           };
