@@ -797,494 +797,492 @@
             "<Left>" = "Left";
             "<Right>" = "Right";
           };
-    plugins = {
-      blink-cmp = {
-        enable = true;
-        settings = {
-          completion = {
-            documentation.auto_show = true;
-            ghost_text.enabled = true;
-            menu = {
-              auto_show = false;
-              draw = {
-                columns = [
-                  {
-                    __unkeyed-1 = "label";
-                    __unkeyed-2 = "label_description";
-                    gap = 1;
-                  }
-                  {
-                    __unkeyed-1 = "kind_icon";
-                    gap = 1;
-                    __unkeyed-2 = "kind";
-                  }
-                ];
-                components.kind_icon = {
-                  text = helpers.mkRaw ''
-                    function(ctx)
-                      local kind_icon, _, _ = require('mini.icons').get('lsp', ctx.kind)
-                      return kind_icon
-                    end
-                  '';
-                  highlight = helpers.mkRaw ''
-                    function(ctx)
-                      local _, hl, _ = require('mini.icons').get('lsp', ctx.kind)
-                      return hl
+    plugins =
+      let
+        latexmkArgs = [
+          "-shell-escape"
+          "-verbose"
+          "-file-line-error"
+          "-synctex=1"
+          "-interaction=nonstopmode"
+        ];
+      in
+      {
+        blink-cmp = {
+          enable = true;
+          settings = {
+            completion = {
+              documentation.auto_show = true;
+              ghost_text.enabled = true;
+              menu = {
+                auto_show = false;
+                draw = {
+                  columns = [
+                    {
+                      __unkeyed-1 = "label";
+                      __unkeyed-2 = "label_description";
+                      gap = 1;
+                    }
+                    {
+                      __unkeyed-1 = "kind_icon";
+                      gap = 1;
+                      __unkeyed-2 = "kind";
+                    }
+                  ];
+                  components.kind_icon = {
+                    text = helpers.mkRaw ''
+                      function(ctx)
+                        local kind_icon, _, _ = require('mini.icons').get('lsp', ctx.kind)
+                        return kind_icon
+                      end
+                    '';
+                    highlight = helpers.mkRaw ''
+                      function(ctx)
+                        local _, hl, _ = require('mini.icons').get('lsp', ctx.kind)
+                        return hl
+                      end
+                    '';
+                  };
+                };
+              };
+              list.selection.preselect = helpers.mkRaw ''
+                function(ctx)
+                  return not require('blink.cmp').snippet_active({ direction = 1 })
+                end
+              '';
+            };
+            keymap = {
+              preset = "super-tab";
+              "<Up>" = [
+                "show"
+                "select_prev"
+                "fallback"
+              ];
+              "<C-p>" = [
+                "show"
+                "select_prev"
+                "fallback_to_mappings"
+              ];
+              "<Down>" = [
+                "show"
+                "select_next"
+                "fallback"
+              ];
+              "<C-n>" = [
+                "show"
+                "select_next"
+                "fallback_to_mappings"
+              ];
+              "<CR>" = [
+                (helpers.mkRaw ''
+                  function(cmp)
+                    if cmp.is_menu_visible() then return cmp.accept() end
+                  end
+                '')
+                "fallback"
+              ];
+            };
+            signature.enabled = true;
+            snippets.preset = "luasnip";
+            sources = {
+              default = [
+                "lsp"
+                "path"
+                "snippets"
+                "buffer"
+                "git"
+                "copilot"
+              ];
+              providers = {
+                copilot = {
+                  async = true;
+                  module = "blink-copilot";
+                  name = "copilot";
+                  score_offset = 100;
+                };
+                git = {
+                  module = "blink-cmp-git";
+                  name = "git";
+                  enabled = helpers.mkRaw ''
+                    function()
+                      return vim.tbl_contains({ 'octo', 'gitcommit', 'markdown' }, vim.bo.filetype)
                     end
                   '';
                 };
               };
             };
-            list.selection.preselect = helpers.mkRaw ''
-              function(ctx)
-                return not require('blink.cmp').snippet_active({ direction = 1 })
+          };
+        };
+        blink-cmp-git.enable = true;
+        blink-copilot.enable = true;
+        bufferline = {
+          enable = true;
+          settings.options.diagnostics = "nvim_lsp";
+        };
+        clangd-extensions.enable = true;
+        colorizer.enable = true;
+        conform-nvim = {
+          enable = true;
+          settings = {
+            formatters_by_ft = {
+              ocaml = [
+                "ocp-indent"
+                "ocamlformat"
+              ];
+            };
+            default_format_opts.lsp_format = "fallback";
+            format_after_save = helpers.mkRaw ''
+              function(bufnr)
+                -- Disable with a global or buffer-local variable
+                if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+                  return
+                end
+                if not slow_format_filetypes[vim.bo[bufnr].filetype] then
+                  return
+                end
+                return { lsp_format = "fallback" }
+              end
+            '';
+            format_on_save = helpers.mkRaw ''
+              function(bufnr)
+                -- Disable with a global or buffer-local variable
+                if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+                  return
+                end
+                if slow_format_filetypes[vim.bo[bufnr].filetype] then
+                  return
+                end
+                local function on_format(err)
+                  if err and err:match("timeout$") then
+                    slow_format_filetypes[vim.bo[bufnr].filetype] = true
+                  end
+                end
+                return { timeout_ms = 200, lsp_format = "fallback" }, on_format
               end
             '';
           };
-          keymap = {
-            preset = "super-tab";
-            "<Up>" = [
-              "show"
-              "select_prev"
-              "fallback"
-            ];
-            "<C-p>" = [
-              "show"
-              "select_prev"
-              "fallback_to_mappings"
-            ];
-            "<Down>" = [
-              "show"
-              "select_next"
-              "fallback"
-            ];
-            "<C-n>" = [
-              "show"
-              "select_next"
-              "fallback_to_mappings"
-            ];
-            "<CR>" = [
-              (helpers.mkRaw ''
-                function(cmp)
-                  if cmp.is_menu_visible() then return cmp.accept() end
-                end
-              '')
-              "fallback"
-            ];
+        };
+        copilot-chat.enable = true;
+        copilot-lua = {
+          enable = true;
+          settings = {
+            filetypes = {
+              "*" = true;
+            };
+            panel.enabled = false;
+            suggestions.enabled = false;
           };
-          signature.enabled = true;
-          snippets.preset = "luasnip";
-          sources = {
-            default = [
-              "lsp"
-              "path"
-              "snippets"
-              "buffer"
-              "git"
-              "copilot"
-            ];
-            providers = {
-              copilot = {
-                async = true;
-                module = "blink-copilot";
-                name = "copilot";
-                score_offset = 100;
+        };
+        cornelis = {
+          enable = true;
+          settings = {
+            agda_prefix = "<C-k>";
+          };
+        };
+        fugitive.enable = true;
+        gitsigns.enable = true;
+        rustaceanvim = {
+          enable = true;
+          settings.tools = {
+            enable_clippy = true;
+          };
+        };
+        flash = {
+          enable = true;
+          settings.modes.search.enabled = true;
+        };
+        lsp = {
+          enable = true;
+          inlayHints = true;
+          onAttach = ''
+            if client.name == "ltex" then
+              require("ltex_extra").setup {
+                load_langs = {
+                  "en-GB"
+                }
+              }
+            end
+          '';
+          servers = {
+            hls = {
+              enable = true;
+              installGhc = false;
+            };
+            ltex = {
+              enable = true;
+              settings = {
+                language = "en-GB";
               };
-              git = {
-                module = "blink-cmp-git";
-                name = "git";
-                enabled = helpers.mkRaw ''
-                  function()
-                    return vim.tbl_contains({ 'octo', 'gitcommit', 'markdown' }, vim.bo.filetype)
+              extraOptions = {
+                get_language_id = helpers.mkRaw ''
+                  function(_, filetype)
+                    local language_id_mapping = {
+                      bib = 'bibtex',
+                      plaintex = 'tex',
+                      rnoweb = 'sweave',
+                      rst = 'restructuredtext',
+                      tex = 'latex',
+                      xhtml = 'xhtml',
+                      pandoc = 'markdown',
+                      forester = 'latex',
+                    }
+                    local language_id = language_id_mapping[filetype]
+                    if language_id then
+                      return language_id
+                    else
+                      return filetype
+                    end
                   end
                 '';
               };
+              filetypes = [
+                "bib"
+                "gitcommit"
+                "org"
+                "plaintex"
+                "rst"
+                "rnoweb"
+                "tex"
+                "pandoc"
+                "quarto"
+                "rmd"
+                "forester"
+              ];
             };
-          };
-        };
-      };
-      blink-cmp-git.enable = true;
-      blink-copilot.enable = true;
-      bufferline = {
-        enable = true;
-        settings.options.diagnostics = "nvim_lsp";
-      };
-      clangd-extensions.enable = true;
-      colorizer.enable = true;
-      conform-nvim = {
-        enable = true;
-        settings = {
-          formatters_by_ft = {
-            ocaml = [
-              "ocp-indent"
-              "ocamlformat"
-            ];
-          };
-          default_format_opts.lsp_format = "fallback";
-          format_after_save = helpers.mkRaw ''
-            function(bufnr)
-              -- Disable with a global or buffer-local variable
-              if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
-                return
-              end
-              if not slow_format_filetypes[vim.bo[bufnr].filetype] then
-                return
-              end
-              return { lsp_format = "fallback" }
-            end
-          '';
-          format_on_save = helpers.mkRaw ''
-            function(bufnr)
-              -- Disable with a global or buffer-local variable
-              if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
-                return
-              end
-              if slow_format_filetypes[vim.bo[bufnr].filetype] then
-                return
-              end
-              local function on_format(err)
-                if err and err:match("timeout$") then
-                  slow_format_filetypes[vim.bo[bufnr].filetype] = true
-                end
-              end
-              return { timeout_ms = 200, lsp_format = "fallback" }, on_format
-            end
-          '';
-        };
-      };
-      copilot-chat.enable = true;
-      copilot-lua = {
-        enable = true;
-        settings = {
-          filetypes = {
-            "*" = true;
-          };
-          panel.enabled = false;
-          suggestions.enabled = false;
-        };
-      };
-      cornelis = {
-        enable = true;
-        settings = {
-          agda_prefix = "<C-k>";
-        };
-      };
-      fugitive.enable = true;
-      gitsigns.enable = true;
-      rustaceanvim = {
-        enable = true;
-        settings.tools = {
-          enable_clippy = true;
-        };
-      };
-      flash = {
-        enable = true;
-        settings.modes.search.enabled = true;
-      };
-      lsp = {
-        enable = true;
-        inlayHints = true;
-        onAttach = ''
-          if client.name == "ltex" then
-            require("ltex_extra").setup {
-              load_langs = {
-                "en-GB"
-              }
-            }
-          end
-        '';
-        servers = {
-          hls = {
-            enable = true;
-            installGhc = false;
-          };
-          ltex = {
-            enable = true;
-            settings = {
-              language = "en-GB";
-            };
-            extraOptions = {
-              get_language_id = helpers.mkRaw ''
-                function(_, filetype)
-                  local language_id_mapping = {
-                    bib = 'bibtex',
-                    plaintex = 'tex',
-                    rnoweb = 'sweave',
-                    rst = 'restructuredtext',
-                    tex = 'latex',
-                    xhtml = 'xhtml',
-                    pandoc = 'markdown',
-                    forester = 'latex',
-                  }
-                  local language_id = language_id_mapping[filetype]
-                  if language_id then
-                    return language_id
-                  else
-                    return filetype
-                  end
-                end
-              '';
-            };
-            filetypes = [
-              "bib"
-              "gitcommit"
-              "org"
-              "plaintex"
-              "rst"
-              "rnoweb"
-              "tex"
-              "pandoc"
-              "quarto"
-              "rmd"
-              "forester"
-            ];
-          };
-          lua_ls.enable = true;
-          nixd.enable = true;
-          ocamllsp.enable = true;
-          ocamllsp.package = null;
-          pest_ls.enable = true;
-          pyright.enable = true;
-          ruff.enable = true;
-          tailwindcss.enable = true;
-          svelte.enable = true;
-          texlab = {
-            enable = true;
-            extraOptions.settings.texlab = {
-              build = {
-                args = [
-                  "-pdf"
-                  "-shell-escape"
-                  "-interaction=nonstopmode"
-                  "-synctex=1"
-                  "%f"
-                  "-auxdir=texlab-build"
-                  "-outdir=texlab-build"
-                ];
-                auxDirectory = "texlab-build";
-                logDirectory = "texlab-build";
+            lua_ls.enable = true;
+            nixd.enable = true;
+            ocamllsp.enable = true;
+            ocamllsp.package = null;
+            pest_ls.enable = true;
+            pyright.enable = true;
+            ruff.enable = true;
+            tailwindcss.enable = true;
+            svelte.enable = true;
+            texlab = {
+              enable = true;
+              extraOptions.settings.texlab = {
+                build = {
+                  args = [
+                    "-pdf"
+                  ]
+                  ++ latexmkArgs
+                  ++ [
+                    "%f"
+                  ];
+                };
+                forwardSearch.executable = "zathura";
+                chktex = {
+                  onOpenAndSave = true;
+                  onEdit = true;
+                };
+                latexindent.modifyLineBreaks = true;
               };
-              forwardSearch.executable = "zathura";
-              chktex = {
-                onOpenAndSave = true;
-                onEdit = true;
-              };
-              latexindent.modifyLineBreaks = true;
+            };
+          };
+          keymaps = {
+            diagnostic = {
+              "<M-e>" = "open_float";
+              "<M-q>" = "setloclist";
+              "[d" = "goto_prev";
+              "]d" = "goto_next";
+            };
+            lspBuf = {
+              "<M-]>" = "definition";
+              "<M-f>" = "format";
+              "<M-l>" = "code_action";
+              "<M-r>" = "rename";
+              "<M-w>a" = "add_workspace_folder";
+              "<M-w>d" = "remove_workspace_folder";
+              "E" = "hover";
+              "g+" = "outgoing_calls";
+              "g-" = "incoming_calls";
+              "gD" = "document_symbol";
+              "gE" = "signature_help";
+              "gW" = "workspace_symbol";
+              "gd" = "declaration";
+              "gI" = "implementation";
+              "gr" = "references";
+              "gt" = "type_definition";
+            };
+            silent = true;
+          };
+        };
+        lualine = {
+          enable = true;
+          settings = {
+            extensions = [
+              "fugitive"
+              "fzf"
+              "nvim-dap-ui"
+              "quickfix"
+            ];
+            sections = {
+              lualine_c = [
+                {
+                  __unkeyed-1 = "filename";
+                  path = 1;
+                }
+                (helpers.mkRaw "require('lsp-progress').progress")
+              ];
             };
           };
         };
-        keymaps = {
-          diagnostic = {
-            "<M-e>" = "open_float";
-            "<M-q>" = "setloclist";
-            "[d" = "goto_prev";
-            "]d" = "goto_next";
+        luasnip = {
+          enable = true;
+          settings = {
+            enable_autosnippets = true;
+            store_selection_keys = "<Tab>";
           };
-          lspBuf = {
-            "<M-]>" = "definition";
-            "<M-f>" = "format";
-            "<M-l>" = "code_action";
-            "<M-r>" = "rename";
-            "<M-w>a" = "add_workspace_folder";
-            "<M-w>d" = "remove_workspace_folder";
-            "E" = "hover";
-            "g+" = "outgoing_calls";
-            "g-" = "incoming_calls";
-            "gD" = "document_symbol";
-            "gE" = "signature_help";
-            "gW" = "workspace_symbol";
-            "gd" = "declaration";
-            "gI" = "implementation";
-            "gr" = "references";
-            "gt" = "type_definition";
-          };
-          silent = true;
-        };
-      };
-      lualine = {
-        enable = true;
-        settings = {
-          extensions = [
-            "fugitive"
-            "fzf"
-            "nvim-dap-ui"
-            "quickfix"
+          fromLua = [
+            { }
+            { paths = "~/Dropbox/nixvim-flake/snippets"; }
           ];
-          sections = {
-            lualine_c = [
-              {
-                __unkeyed-1 = "filename";
-                path = 1;
-              }
-              (helpers.mkRaw "require('lsp-progress').progress")
-            ];
-          };
+          fromVscode = [
+            { }
+            { paths = "~/Dropbox/nixvim-flake/snippets"; }
+          ];
         };
-      };
-      luasnip = {
-        enable = true;
-        settings = {
-          enable_autosnippets = true;
-          store_selection_keys = "<Tab>";
-        };
-        fromLua = [
-          { }
-          { paths = "~/Dropbox/nixvim-flake/snippets"; }
-        ];
-        fromVscode = [
-          { }
-          { paths = "~/Dropbox/nixvim-flake/snippets"; }
-        ];
-      };
-      mini = {
-        enable = true;
-        mockDevIcons = true;
-        modules = {
-          ai = { };
-          align = { };
-          basics = {
-            options = {
-              basic = true;
-              extra_ui = true;
-            };
-            autocommands = {
-              basic = true;
-            };
-          };
-          bracketed = { };
-          diff = { };
-          files = {
-            mappings = {
-              go_in = "i";
-              go_in_plus = "I";
-              go_out = "m";
-              go_out_plus = "M";
-              mark_set = "j";
-            };
-          };
-          icons = { };
-          operators = { };
-          pairs = { };
-          sessions = { };
-          splitjoin = { };
-          starter = { };
-          trailspace = { };
-        };
-      };
-      orgmode = {
-        enable = true;
-        settings = {
-          org_agenda_files = "~/Dropbox/forest/org/**/*";
-          org_default_notes_file = "~/Dropbox/forest/org/refile.org";
-          org_capture_templates = {
-            j = {
-              description = "Journal";
-              template = "** %<%H:%M> %?";
-              target = "~/Dropbox/forest/org/journal/%<%Y-%m-%d>.org";
-              datetree = {
-                tree_type = "custom";
-                tree = [
-                  {
-                    format = "%A %d/%m/%Y";
-                    pattern = "^.*(%d%d)/(%d%d)/(%d%d%d%d)$";
-                    order = [
-                      3
-                      2
-                      1
-                    ];
-                  }
-                ];
+        mini = {
+          enable = true;
+          mockDevIcons = true;
+          modules = {
+            ai = { };
+            align = { };
+            basics = {
+              options = {
+                basic = true;
+                extra_ui = true;
+              };
+              autocommands = {
+                basic = true;
               };
             };
-          };
-          org_startup_indented = true;
-          ui.input.use_vim_ui = true;
-        };
-      };
-      rainbow-delimiters.enable = true;
-      snacks = {
-        enable = true;
-        settings = {
-          bigfile.enabled = true;
-          bufdelete.enabled = true;
-          explorer.enabled = true;
-          image.enabled = true;
-          indent.enabled = true;
-          input.enabled = true;
-          notifier.enabled = true;
-          picker.enabled = true;
-          profiler.enabled = true;
-          scope.enabled = true;
-          # statuscolumn.enabled = true;
-          words.enabled = true;
-        };
-      };
-      vim-surround.enable = true;
-      treesitter = {
-        enable = true;
-        grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars ++ [
-          pkgs.tree-sitter-grammars.tree-sitter-forester
-        ];
-        folding = true;
-        settings = {
-          highlight.enable = true;
-          incremental_selection = {
-            enable = true;
-            keymaps = {
-              init_selection = "<C-Space>";
-              node_incremental = "<C-Space>";
-              node_decremental = "<BS>";
+            bracketed = { };
+            diff = { };
+            files = {
+              mappings = {
+                go_in = "i";
+                go_in_plus = "I";
+                go_out = "m";
+                go_out_plus = "M";
+                mark_set = "j";
+              };
             };
+            icons = { };
+            operators = { };
+            pairs = { };
+            sessions = { };
+            splitjoin = { };
+            starter = { };
+            trailspace = { };
           };
-          indent.enable = true;
         };
-      };
-      treesitter-context = {
-        enable = true;
-        settings.max_lines = 3;
-      };
-      treesitter-refactor = {
-        enable = true;
-        settings = {
-          highlightDefinitions.enable = true;
-          navigation.enable = true;
-          smartRename.enable = true;
-        };
-      };
-      typescript-tools.enable = true;
-      vim-matchup = {
-        enable = true;
-        settings = {
-          surround_enabled = 1;
-          transmute_enabled = 1;
-          treesitter.enable = true;
-        };
-      };
-      which-key.enable = true;
-      texpresso.enable = true;
-      vimtex = {
-        enable = true;
-        settings = {
-          compiler_latexmk = {
-            aux_dir = "build";
-            out_dir = "build";
-            options = [
-              "-shell-escape"
-              "-verbose"
-              "-file-line-error"
-              "-synctex=1"
-              "-interaction=nonstopmode"
-            ];
+        orgmode = {
+          enable = true;
+          settings = {
+            org_agenda_files = "~/Dropbox/forest/org/**/*";
+            org_default_notes_file = "~/Dropbox/forest/org/refile.org";
+            org_capture_templates = {
+              j = {
+                description = "Journal";
+                template = "** %<%H:%M> %?";
+                target = "~/Dropbox/forest/org/journal/%<%Y-%m-%d>.org";
+                datetree = {
+                  tree_type = "custom";
+                  tree = [
+                    {
+                      format = "%A %d/%m/%Y";
+                      pattern = "^.*(%d%d)/(%d%d)/(%d%d%d%d)$";
+                      order = [
+                        3
+                        2
+                        1
+                      ];
+                    }
+                  ];
+                };
+              };
+            };
+            org_startup_indented = true;
+            ui.input.use_vim_ui = true;
           };
-          fold_enabled = 1;
-          format_enabled = 1;
-          view_method = "zathura";
-          view_use_temp_files = true;
-          quickfix_open_on_warning = 0;
         };
-        texlivePackage = null; # don't install texlive at all
+        rainbow-delimiters.enable = true;
+        snacks = {
+          enable = true;
+          settings = {
+            bigfile.enabled = true;
+            bufdelete.enabled = true;
+            explorer.enabled = true;
+            image.enabled = true;
+            indent.enabled = true;
+            input.enabled = true;
+            notifier.enabled = true;
+            picker.enabled = true;
+            profiler.enabled = true;
+            scope.enabled = true;
+            # statuscolumn.enabled = true;
+            words.enabled = true;
+          };
+        };
+        vim-surround.enable = true;
+        treesitter = {
+          enable = true;
+          grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars ++ [
+            pkgs.tree-sitter-grammars.tree-sitter-forester
+          ];
+          folding = true;
+          settings = {
+            highlight.enable = true;
+            incremental_selection = {
+              enable = true;
+              keymaps = {
+                init_selection = "<C-Space>";
+                node_incremental = "<C-Space>";
+                node_decremental = "<BS>";
+              };
+            };
+            indent.enable = true;
+          };
+        };
+        treesitter-context = {
+          enable = true;
+          settings.max_lines = 3;
+        };
+        treesitter-refactor = {
+          enable = true;
+          settings = {
+            highlightDefinitions.enable = true;
+            navigation.enable = true;
+            smartRename.enable = true;
+          };
+        };
+        typescript-tools.enable = true;
+        vim-matchup = {
+          enable = true;
+          settings = {
+            surround_enabled = 1;
+            transmute_enabled = 1;
+            treesitter.enable = true;
+          };
+        };
+        which-key.enable = true;
+        texpresso.enable = true;
+        vimtex = {
+          enable = true;
+          settings = {
+            compiler_latexmk = {
+              options = latexmkArgs;
+            };
+            fold_enabled = 1;
+            format_enabled = 1;
+            view_method = "zathura";
+            view_use_temp_files = true;
+            quickfix_open_on_warning = 0;
+          };
+          texlivePackage = null; # don't install texlive at all
+        };
       };
-    };
     extraConfigLuaPre = ''
       -- profiling
       if vim.env.PROF then
