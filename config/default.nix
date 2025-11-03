@@ -1281,6 +1281,9 @@
             format_enabled = 1;
             view_method = "zathura_simple";
             view_use_temp_files = true;
+            view_zathura_use_synctex = helpers.mkRaw ''
+              not(vim.fn.has("mac") == 1)
+            '';
             quickfix_open_on_warning = 0;
           };
           texlivePackage = null; # don't install texlive at all
