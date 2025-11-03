@@ -1246,9 +1246,11 @@
       };
       treesitter-refactor = {
         enable = true;
-        highlightDefinitions.enable = true;
-        navigation.enable = true;
-        smartRename.enable = true;
+        settings = {
+          highlightDefinitions.enable = true;
+          navigation.enable = true;
+          smartRename.enable = true;
+        };
       };
       typescript-tools.enable = true;
       vim-matchup = {
