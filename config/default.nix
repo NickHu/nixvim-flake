@@ -1233,7 +1233,10 @@
           ];
           folding = true;
           settings = {
-            highlight.enable = true;
+            highlight = {
+              enable = true;
+              disable = [ "latex" ]; # use vimtex
+            };
             incremental_selection = {
               enable = true;
               keymaps = {
