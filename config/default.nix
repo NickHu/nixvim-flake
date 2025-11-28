@@ -1214,7 +1214,19 @@
             bigfile.enabled = true;
             bufdelete.enabled = true;
             explorer.enabled = true;
-            image.enabled = true;
+            image = {
+              enabled = true;
+              math.latex.tpl = ''
+                \documentclass[preview,border=0pt,varwidth,12pt]{standalone}
+                \usepackage{''${packages}}
+                ''${header}
+                \begin{document}
+                { \''${font_size} \selectfont
+                  \color[HTML]{''${color}}
+                ''${content}}
+                \end{document}
+              '';
+            };
             indent.enabled = true;
             input.enabled = true;
             notifier.enabled = true;
