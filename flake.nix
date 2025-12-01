@@ -30,8 +30,40 @@
 
   outputs =
     inputs@{ flake-parts, ... }:
+    let
+      overlay = final: prev: {
+        tree-sitter-grammars = prev.tree-sitter-grammars // {
+          tree-sitter-forester = prev.tree-sitter.buildGrammar {
+            language = "forester";
+            version = "unstable-${inputs.tree-sitter-forester.lastModifiedDate}";
+            src = inputs.tree-sitter-forester;
+          };
+        };
+        vimPlugins = prev.vimPlugins.extend (
+          final': prev': {
+            multicursor-nvim = final.vimUtils.buildVimPlugin {
+              pname = "multicursor.nvim";
+              version = "unstable-${inputs.multicursor-nvim.lastModifiedDate}";
+              src = inputs.multicursor-nvim;
+            };
+            tex2uni-nvim = final.vimUtils.buildVimPlugin {
+              pname = "tex2uni.nvim";
+              version = "unstable-${inputs.tex2uni-nvim.lastModifiedDate}";
+              src = inputs.tex2uni-nvim;
+            };
+            treewalker-nvim = final.vimUtils.buildVimPlugin {
+              pname = "treewalker.nvim";
+              version = "unstable-${inputs.treewalker-nvim.lastModifiedDate}";
+              src = inputs.treewalker-nvim;
+            };
+          }
+        );
+      };
+    in
     flake-parts.lib.mkFlake { inherit inputs; } {
-      imports = [ flake-parts.flakeModules.easyOverlay ];
+      flake = {
+        overlays.default = overlay;
+      };
       systems = [
         "x86_64-linux"
         "aarch64-darwin"
@@ -39,55 +71,17 @@
       perSystem =
         {
           inputs',
-          pkgs,
           system,
           ...
         }:
         let
           nixvimLib = inputs.nixvim.lib.${system};
           nixvim' = inputs'.nixvim.legacyPackages;
-          nvim = nixvim'.makeNixvimWithModule {
-            inherit pkgs;
-            module = import ./config;
+          nvim = (nixvim'.makeNixvimWithModule { module = import ./config; }).extend {
+            nixpkgs.overlays = [ overlay ];
           };
         in
-        rec {
-          _module.args.pkgs = import inputs.nixpkgs {
-            inherit system;
-            overlays = [
-              (final: prev: {
-                tree-sitter-grammars = prev.tree-sitter-grammars // {
-                  tree-sitter-forester = prev.tree-sitter.buildGrammar {
-                    language = "forester";
-                    version = "unstable-${inputs.tree-sitter-forester.lastModifiedDate}";
-                    src = inputs.tree-sitter-forester;
-                  };
-                };
-                vimPlugins = prev.vimPlugins.extend (
-                  final': prev': {
-                    multicursor-nvim = final.vimUtils.buildVimPlugin {
-                      pname = "multicursor.nvim";
-                      version = "unstable-${inputs.multicursor-nvim.lastModifiedDate}";
-                      src = inputs.multicursor-nvim;
-                    };
-                    tex2uni-nvim = final.vimUtils.buildVimPlugin {
-                      pname = "tex2uni.nvim";
-                      version = "unstable-${inputs.tex2uni-nvim.lastModifiedDate}";
-                      src = inputs.tex2uni-nvim;
-                    };
-                    treewalker-nvim = final.vimUtils.buildVimPlugin {
-                      pname = "treewalker.nvim";
-                      version = "unstable-${inputs.treewalker-nvim.lastModifiedDate}";
-                      src = inputs.treewalker-nvim;
-                    };
-                  }
-                );
-              })
-            ];
-          };
-          overlayAttrs = {
-            inherit (_module.args.pkgs) vimPlugins tree-sitter-grammars;
-          };
+        {
           checks = {
             # Run `nix flake check .` to verify that your config is not broken
             default = nixvimLib.check.mkTestDerivationFromNvim {
