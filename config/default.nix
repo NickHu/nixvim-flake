@@ -1,6 +1,6 @@
 {
+  lib,
   pkgs,
-  helpers,
   ...
 }:
 {
@@ -90,7 +90,7 @@
         };
         userCommands = {
           "ForesterNew" = {
-            command = helpers.mkRaw ''
+            command = lib.nixvim.mkRaw ''
               function(opts)
                 local prefix = opts.args
                 local handle = io.popen('forester new --dest=trees --prefix=' .. prefix .. ' --random')
@@ -142,14 +142,14 @@
         event = "User";
         group = "lualine_augroup";
         pattern = "LspProgressStatusUpdated";
-        callback = helpers.mkRaw ''
+        callback = lib.nixvim.mkRaw ''
           require("lualine").refresh
         '';
       }
       {
         event = "ModeChanged";
         pattern = "*";
-        callback = helpers.mkRaw ''
+        callback = lib.nixvim.mkRaw ''
           function()
             if ((vim.v.event.old_mode == 's' and vim.v.event.new_mode == 'n') or vim.v.event.old_mode == 'i')
                 and require('luasnip').session.current_nodes[vim.api.nvim_get_current_buf()]
@@ -249,7 +249,7 @@
       shiftwidth = 2;
       showbreak = "↳ ";
       spelllang = "en_gb";
-      undodir = helpers.mkRaw "vim.fn.expand('$HOME/.cache/nvim/undo')";
+      undodir = lib.nixvim.mkRaw "vim.fn.expand('$HOME/.cache/nvim/undo')";
       undofile = true;
       updatetime = 750;
       wrap = true;
@@ -301,7 +301,7 @@
             "v"
           ];
           key = "<C-Up>";
-          action = helpers.mkRaw "function() require('multicursor-nvim').lineAddCursor(-1) end";
+          action = lib.nixvim.mkRaw "function() require('multicursor-nvim').lineAddCursor(-1) end";
           options = {
             silent = true;
           };
@@ -312,7 +312,7 @@
             "v"
           ];
           key = "<C-Down>";
-          action = helpers.mkRaw "function() require('multicursor-nvim').lineAddCursor(1) end";
+          action = lib.nixvim.mkRaw "function() require('multicursor-nvim').lineAddCursor(1) end";
           options = {
             silent = true;
           };
@@ -323,7 +323,7 @@
             "v"
           ];
           key = "<Up>";
-          action = helpers.mkRaw "function() require('multicursor-nvim').lineSkipCursor(-1) end";
+          action = lib.nixvim.mkRaw "function() require('multicursor-nvim').lineSkipCursor(-1) end";
           options = {
             silent = true;
           };
@@ -334,7 +334,7 @@
             "v"
           ];
           key = "<Down>";
-          action = helpers.mkRaw "function() require('multicursor-nvim').lineSkipCursor(1) end";
+          action = lib.nixvim.mkRaw "function() require('multicursor-nvim').lineSkipCursor(1) end";
           options = {
             silent = true;
           };
@@ -345,7 +345,7 @@
             "v"
           ];
           key = "<C-k>";
-          action = helpers.mkRaw "function() require('multicursor-nvim').matchAddCursor(1) end";
+          action = lib.nixvim.mkRaw "function() require('multicursor-nvim').matchAddCursor(1) end";
           options = {
             silent = true;
           };
@@ -356,7 +356,7 @@
             "v"
           ];
           key = "<leader>k";
-          action = helpers.mkRaw "function() require('multicursor-nvim').matchSkipCursor(1) end";
+          action = lib.nixvim.mkRaw "function() require('multicursor-nvim').matchSkipCursor(1) end";
           options = {
             silent = true;
           };
@@ -367,7 +367,7 @@
             "v"
           ];
           key = "<C-S-k>";
-          action = helpers.mkRaw "function() require('multicursor-nvim').matchAddCursor(-1) end";
+          action = lib.nixvim.mkRaw "function() require('multicursor-nvim').matchAddCursor(-1) end";
           options = {
             silent = true;
           };
@@ -378,7 +378,7 @@
             "v"
           ];
           key = "<leader>K";
-          action = helpers.mkRaw "function() require('multicursor-nvim').matchSkipCursor(-1) end";
+          action = lib.nixvim.mkRaw "function() require('multicursor-nvim').matchSkipCursor(-1) end";
           options = {
             silent = true;
           };
@@ -389,7 +389,7 @@
             "v"
           ];
           key = "<Left>";
-          action = helpers.mkRaw "require('multicursor-nvim').nextCursor";
+          action = lib.nixvim.mkRaw "require('multicursor-nvim').nextCursor";
           options = {
             silent = true;
           };
@@ -400,7 +400,7 @@
             "v"
           ];
           key = "<Right>";
-          action = helpers.mkRaw "require('multicursor-nvim').prevCursor";
+          action = lib.nixvim.mkRaw "require('multicursor-nvim').prevCursor";
           options = {
             silent = true;
           };
@@ -411,7 +411,7 @@
             "v"
           ];
           key = "<leader>x";
-          action = helpers.mkRaw "require('multicursor-nvim').deleteCursor";
+          action = lib.nixvim.mkRaw "require('multicursor-nvim').deleteCursor";
           options = {
             silent = true;
           };
@@ -419,7 +419,7 @@
         {
           mode = [ "n" ];
           key = "<C-LeftMouse>";
-          action = helpers.mkRaw "require('multicursor-nvim').handleMouse";
+          action = lib.nixvim.mkRaw "require('multicursor-nvim').handleMouse";
           options = {
             silent = true;
           };
@@ -430,7 +430,7 @@
             "v"
           ];
           key = "<C-q>";
-          action = helpers.mkRaw "require('multicursor-nvim').toggleCursor";
+          action = lib.nixvim.mkRaw "require('multicursor-nvim').toggleCursor";
           options = {
             silent = true;
           };
@@ -441,7 +441,7 @@
             "v"
           ];
           key = "<leader><C-q>";
-          action = helpers.mkRaw "require('multicursor-nvim').duplicateCursors";
+          action = lib.nixvim.mkRaw "require('multicursor-nvim').duplicateCursors";
           options = {
             silent = true;
           };
@@ -449,7 +449,7 @@
         {
           mode = [ "n" ];
           key = "<Esc>";
-          action = helpers.mkRaw ''
+          action = lib.nixvim.mkRaw ''
             function()
               if not require('multicursor-nvim').cursorsEnabled() then
                 require('multicursor-nvim').enableCursors()
@@ -470,7 +470,7 @@
             "v"
           ];
           key = "<leader>a";
-          action = helpers.mkRaw "require('multicursor-nvim').alignCursors";
+          action = lib.nixvim.mkRaw "require('multicursor-nvim').alignCursors";
           options = {
             silent = true;
           };
@@ -478,7 +478,7 @@
         {
           mode = [ "v" ];
           key = "<C-s>";
-          action = helpers.mkRaw "require('multicursor-nvim').splitCursors";
+          action = lib.nixvim.mkRaw "require('multicursor-nvim').splitCursors";
           options = {
             silent = true;
           };
@@ -486,7 +486,7 @@
         {
           mode = [ "v" ];
           key = "H";
-          action = helpers.mkRaw "insertVisualH";
+          action = lib.nixvim.mkRaw "insertVisualH";
           options = {
             silent = true;
           };
@@ -494,7 +494,7 @@
         {
           mode = [ "v" ];
           key = "A";
-          action = helpers.mkRaw "require('multicursor-nvim').appendVisual";
+          action = lib.nixvim.mkRaw "require('multicursor-nvim').appendVisual";
           options = {
             silent = true;
           };
@@ -505,7 +505,7 @@
             "v"
           ];
           key = "<C-m>";
-          action = helpers.mkRaw "require('multicursor-nvim').matchCursors";
+          action = lib.nixvim.mkRaw "require('multicursor-nvim').matchCursors";
           options = {
             silent = true;
           };
@@ -513,7 +513,7 @@
         {
           mode = [ "v" ];
           key = "<leader><C-t>";
-          action = helpers.mkRaw "function() require('multicursor-nvim').transposeCursors(1) end";
+          action = lib.nixvim.mkRaw "function() require('multicursor-nvim').transposeCursors(1) end";
           options = {
             silent = true;
           };
@@ -521,7 +521,7 @@
         {
           mode = [ "v" ];
           key = "<leader><C-S-t>";
-          action = helpers.mkRaw "function() require('multicursor-nvim').transposeCursors(-1) end";
+          action = lib.nixvim.mkRaw "function() require('multicursor-nvim').transposeCursors(-1) end";
           options = {
             silent = true;
           };
@@ -533,7 +533,7 @@
             "o"
           ];
           key = "<C-j>";
-          action = helpers.mkRaw "function() require('flash').jump() end";
+          action = lib.nixvim.mkRaw "function() require('flash').jump() end";
           options = {
             silent = true;
           };
@@ -545,7 +545,7 @@
             "o"
           ];
           key = "<C-S-j>";
-          action = helpers.mkRaw "function() require('flash').treesitter() end";
+          action = lib.nixvim.mkRaw "function() require('flash').treesitter() end";
           options = {
             silent = true;
           };
@@ -553,7 +553,7 @@
         {
           mode = "o";
           key = "r";
-          action = helpers.mkRaw "function() require('flash').remote() end";
+          action = lib.nixvim.mkRaw "function() require('flash').remote() end";
           options = {
             silent = true;
           };
@@ -564,7 +564,7 @@
             "x"
           ];
           key = "R";
-          action = helpers.mkRaw "function() require('flash').treesitter_search() end";
+          action = lib.nixvim.mkRaw "function() require('flash').treesitter_search() end";
           options = {
             silent = true;
           };
@@ -572,7 +572,7 @@
         {
           mode = "c";
           key = "<C-s>";
-          action = helpers.mkRaw "function() require('flash').toggle() end";
+          action = lib.nixvim.mkRaw "function() require('flash').toggle() end";
           options = {
             silent = true;
           };
@@ -682,7 +682,7 @@
         {
           mode = "n";
           key = "<leader>bd";
-          action = helpers.mkRaw "function() Snacks.bufdelete() end";
+          action = lib.nixvim.mkRaw "function() Snacks.bufdelete() end";
           options = {
             silent = true;
             desc = "Buffer delete";
@@ -691,7 +691,7 @@
         {
           mode = "n";
           key = "<leader>fe";
-          action = helpers.mkRaw "function() Snacks.explorer() end";
+          action = lib.nixvim.mkRaw "function() Snacks.explorer() end";
           options = {
             silent = true;
             desc = "Snacks explorer";
@@ -700,7 +700,7 @@
         {
           mode = "n";
           key = "<leader>go";
-          action = helpers.mkRaw "function() MiniDiff.toggle_overlay() end";
+          action = lib.nixvim.mkRaw "function() MiniDiff.toggle_overlay() end";
           options = {
             silent = true;
             desc = "mini.diff overlay";
@@ -709,7 +709,7 @@
         {
           mode = "n";
           key = "<leader>fm";
-          action = helpers.mkRaw "function() MiniFiles.open() end";
+          action = lib.nixvim.mkRaw "function() MiniFiles.open() end";
           options = {
             silent = true;
             desc = "mini.files open";
@@ -766,7 +766,7 @@
           (key: action: {
             mode = "n";
             inherit key;
-            action = helpers.mkRaw ("function() Snacks.picker.pick(\"" + action + "\") end");
+            action = lib.nixvim.mkRaw ("function() Snacks.picker.pick(\"" + action + "\") end");
             options = {
               silent = true;
             };
@@ -830,13 +830,13 @@
                     }
                   ];
                   components.kind_icon = {
-                    text = helpers.mkRaw ''
+                    text = lib.nixvim.mkRaw ''
                       function(ctx)
                         local kind_icon, _, _ = require('mini.icons').get('lsp', ctx.kind)
                         return kind_icon
                       end
                     '';
-                    highlight = helpers.mkRaw ''
+                    highlight = lib.nixvim.mkRaw ''
                       function(ctx)
                         local _, hl, _ = require('mini.icons').get('lsp', ctx.kind)
                         return hl
@@ -845,7 +845,7 @@
                   };
                 };
               };
-              list.selection.preselect = helpers.mkRaw ''
+              list.selection.preselect = lib.nixvim.mkRaw ''
                 function(ctx)
                   return not require('blink.cmp').snippet_active({ direction = 1 })
                 end
@@ -874,7 +874,7 @@
                 "fallback_to_mappings"
               ];
               "<CR>" = [
-                (helpers.mkRaw ''
+                (lib.nixvim.mkRaw ''
                   function(cmp)
                     if cmp.is_menu_visible() then return cmp.accept() end
                   end
@@ -903,7 +903,7 @@
                 git = {
                   module = "blink-cmp-git";
                   name = "git";
-                  enabled = helpers.mkRaw ''
+                  enabled = lib.nixvim.mkRaw ''
                     function()
                       return vim.tbl_contains({ 'octo', 'gitcommit', 'markdown' }, vim.bo.filetype)
                     end
@@ -931,7 +931,7 @@
               ];
             };
             default_format_opts.lsp_format = "fallback";
-            format_after_save = helpers.mkRaw ''
+            format_after_save = lib.nixvim.mkRaw ''
               function(bufnr)
                 -- Disable with a global or buffer-local variable
                 if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
@@ -943,7 +943,7 @@
                 return { lsp_format = "fallback" }
               end
             '';
-            format_on_save = helpers.mkRaw ''
+            format_on_save = lib.nixvim.mkRaw ''
               function(bufnr)
                 -- Disable with a global or buffer-local variable
                 if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
@@ -1014,7 +1014,7 @@
                 language = "en-GB";
               };
               extraOptions = {
-                get_language_id = helpers.mkRaw ''
+                get_language_id = lib.nixvim.mkRaw ''
                   function(_, filetype)
                     local language_id_mapping = {
                       bib = 'bibtex',
@@ -1122,7 +1122,7 @@
                   __unkeyed-1 = "filename";
                   path = 1;
                 }
-                (helpers.mkRaw "require('lsp-progress').progress")
+                (lib.nixvim.mkRaw "require('lsp-progress').progress")
               ];
             };
           };
@@ -1293,7 +1293,7 @@
             format_enabled = 1;
             view_method = "zathura_simple";
             view_use_temp_files = true;
-            view_zathura_use_synctex = helpers.mkRaw ''
+            view_zathura_use_synctex = lib.nixvim.mkRaw ''
               not(vim.fn.has("mac") == 1)
             '';
             quickfix_open_on_warning = 0;
@@ -1371,7 +1371,7 @@
           desc = "Re-enable autoformat-on-save";
         };
         "OrgJournal" = {
-          command = helpers.mkRaw ''
+          command = lib.nixvim.mkRaw ''
             function(opts)
               local date = os.date("%Y-%m-%d")
               local file = "${journalDir}" .. date .. ".org"
@@ -1383,7 +1383,7 @@
           nargs = 0;
         };
         "OrgJournalPrev" = {
-          command = helpers.mkRaw ''
+          command = lib.nixvim.mkRaw ''
             function(opts)
               local current_file = vim.fn.expand("%:p")
               local year, month, day = current_file:match(vim.fn.expand("${journalDir}") .. "(%d%d%d%d)-(%d%d)-(%d%d).org")
@@ -1401,7 +1401,7 @@
           nargs = 0;
         };
         "OrgJournalNext" = {
-          command = helpers.mkRaw ''
+          command = lib.nixvim.mkRaw ''
             function(opts)
               local current_file = vim.fn.expand("%:p")
               local year, month, day = current_file:match(vim.fn.expand("${journalDir}") .. "(%d%d%d%d)-(%d%d)-(%d%d).org")
