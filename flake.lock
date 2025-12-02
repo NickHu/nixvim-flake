@@ -185,9 +185,10 @@
           "nixpkgs"
         ],
         "nixvim": "nixvim",
-        "tex2uni-nvim": "tex2uni-nvim",
         "tree-sitter-forester": "tree-sitter-forester",
-        "treewalker-nvim": "treewalker-nvim"
+        "treewalker-nvim": "treewalker-nvim",
+        "unicode-latex": "unicode-latex",
+        "vim-texabbrev": "vim-texabbrev"
       }
     },
     "systems": {
@@ -217,22 +218,6 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
-        "type": "github"
-      }
-    },
-    "tex2uni-nvim": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1742259929,
-        "narHash": "sha256-AWyqBIrsJ0xRaJ8xsFPUCch7dhFilSoAKH571Oxr5Ww=",
-        "owner": "Zeta611",
-        "repo": "tex2uni.nvim",
-        "rev": "1ab909c64cde8db9227b51d9596e5d75af9fc77c",
-        "type": "github"
-      },
-      "original": {
-        "owner": "Zeta611",
-        "repo": "tex2uni.nvim",
         "type": "github"
       }
     },
@@ -266,6 +251,38 @@
       "original": {
         "owner": "aaronik",
         "repo": "treewalker.nvim",
+        "type": "github"
+      }
+    },
+    "unicode-latex": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1574463287,
+        "narHash": "sha256-3Zq+cR877qdXF7YPA/hRPB32KGJRAUaYP0SyVZyhIOs=",
+        "owner": "ViktorQvarfordt",
+        "repo": "unicode-latex",
+        "rev": "07e197af90dd351b4347c72d12af177caae8c090",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ViktorQvarfordt",
+        "repo": "unicode-latex",
+        "type": "github"
+      }
+    },
+    "vim-texabbrev": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1698360572,
+        "narHash": "sha256-dE+JvPNtuPhilvH3aasPaSiwll+Q9JVL7uuwlIV2dbY=",
+        "owner": "78g",
+        "repo": "vim-texabbrev",
+        "rev": "747a3b22796139e545c573ef10f8296fcdc6bfca",
+        "type": "github"
+      },
+      "original": {
+        "owner": "78g",
+        "repo": "vim-texabbrev",
         "type": "github"
       }
     }

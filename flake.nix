@@ -18,8 +18,12 @@
       url = "github:jake-stewart/multicursor.nvim";
       flake = false;
     };
-    tex2uni-nvim = {
-      url = "github:Zeta611/tex2uni.nvim";
+    vim-texabbrev = {
+      url = "github:78g/vim-texabbrev";
+      flake = false;
+    };
+    unicode-latex = {
+      url = "github:ViktorQvarfordt/unicode-latex";
       flake = false;
     };
     treewalker-nvim = {
@@ -46,11 +50,19 @@
               version = "unstable-${inputs.multicursor-nvim.lastModifiedDate}";
               src = inputs.multicursor-nvim;
             };
-            tex2uni-nvim = final.vimUtils.buildVimPlugin {
-              pname = "tex2uni.nvim";
-              version = "unstable-${inputs.tex2uni-nvim.lastModifiedDate}";
-              src = inputs.tex2uni-nvim;
-            };
+            vim-texabbrev =
+              (final.vimUtils.buildVimPlugin {
+                pname = "vim-texabbrev";
+                version = "unstable-${inputs.vim-texabbrev.lastModifiedDate}";
+                src = inputs.vim-texabbrev;
+              }).overrideAttrs
+                (
+                  finalAttrs: previousAttrs: {
+                    passthru = previousAttrs.passthru // {
+                      latex-unicode = builtins.fromJSON (builtins.readFile "${inputs.unicode-latex}/latex-unicode.json");
+                    };
+                  }
+                );
             treewalker-nvim = final.vimUtils.buildVimPlugin {
               pname = "treewalker.nvim";
               version = "unstable-${inputs.treewalker-nvim.lastModifiedDate}";
