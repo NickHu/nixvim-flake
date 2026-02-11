@@ -4,840 +4,927 @@
   ...
 }:
 {
-  config = {
-    files = {
-      "ftplugin/agda.lua" = {
-        autoCmd = [
-          {
-            event = [
-              "QuitPre"
-            ];
-            command = ":CornelisCloseInfoWindows";
-          }
-        ];
-        keymaps = [
-          {
-            key = "<leader>l";
-            action = ":CornelisLoad<CR>";
-          }
-          {
-            key = "<leader>r";
-            action = ":CornelisRefine<CR>";
-          }
-          {
-            key = "<leader>d";
-            action = ":CornelisMakeCase<CR>";
-          }
-          {
-            key = "<leader>,";
-            action = ":CornelisTypeContext<CR>";
-          }
-          {
-            key = "<leader>.";
-            action = ":CornelisTypeContextInfer<CR>";
-          }
-          {
-            key = "<leader>n";
-            action = ":CornelisSolve<CR>";
-          }
-          {
-            key = "<leader>a";
-            action = ":CornelisAuto<CR>";
-          }
-          {
-            key = "<C-]>";
-            action = ":CornelisGoToDefinition<CR>";
-          }
-          {
-            key = "[/";
-            action = ":CornelisPrevGoal<CR>";
-          }
-          {
-            key = "]/";
-            action = ":CornelisNextGoal<CR>";
-          }
-          {
-            key = "<C-a>";
-            action = ":CornelisInc<CR>";
-          }
-          {
-            key = "<C-x>";
-            action = ":CornelisDec<CR>";
-          }
-        ];
-      };
-      "ftplugin/ocaml.lua" = {
-        opts = {
-          formatexpr = "v:lua.require'conform'.formatexpr({ 'formatters': [ 'ocamlformat' ]})";
+  config =
+    let
+      latexmkArgs = [
+        "-shell-escape"
+        "-verbose"
+        "-file-line-error"
+        "-synctex=1"
+        "-interaction=nonstopmode"
+      ];
+    in
+    {
+      files = {
+        "ftplugin/agda.lua" = {
+          autoCmd = [
+            {
+              event = [
+                "QuitPre"
+              ];
+              command = ":CornelisCloseInfoWindows";
+            }
+          ];
+          keymaps = [
+            {
+              key = "<leader>l";
+              action = ":CornelisLoad<CR>";
+            }
+            {
+              key = "<leader>r";
+              action = ":CornelisRefine<CR>";
+            }
+            {
+              key = "<leader>d";
+              action = ":CornelisMakeCase<CR>";
+            }
+            {
+              key = "<leader>,";
+              action = ":CornelisTypeContext<CR>";
+            }
+            {
+              key = "<leader>.";
+              action = ":CornelisTypeContextInfer<CR>";
+            }
+            {
+              key = "<leader>n";
+              action = ":CornelisSolve<CR>";
+            }
+            {
+              key = "<leader>a";
+              action = ":CornelisAuto<CR>";
+            }
+            {
+              key = "<C-]>";
+              action = ":CornelisGoToDefinition<CR>";
+            }
+            {
+              key = "[/";
+              action = ":CornelisPrevGoal<CR>";
+            }
+            {
+              key = "]/";
+              action = ":CornelisNextGoal<CR>";
+            }
+            {
+              key = "<C-a>";
+              action = ":CornelisInc<CR>";
+            }
+            {
+              key = "<C-x>";
+              action = ":CornelisDec<CR>";
+            }
+          ];
         };
-      };
-      "ftplugin/tex.lua" = {
-        autoCmd = [
-          {
-            event = [ "BufWritePost" ];
-            command = "call vimtex#toc#refresh()";
-          }
-        ];
-        opts = {
-          conceallevel = 2;
+        "ftplugin/ocaml.lua" = {
+          opts = {
+            formatexpr = "v:lua.require'conform'.formatexpr({ 'formatters': [ 'ocamlformat' ]})";
+          };
         };
-      };
-      "ftplugin/forester.lua" = {
-        opts = {
-          cindent = true;
-          cinoptions = "+0";
-          foldmethod = "indent";
+        "ftplugin/tex.lua" = {
+          autoCmd = [
+            {
+              event = [ "BufWritePost" ];
+              command = "call vimtex#toc#refresh()";
+            }
+          ];
+          opts = {
+            conceallevel = 2;
+          };
         };
-        userCommands = {
-          "ForesterNew" = {
-            command = lib.nixvim.mkRaw ''
-              function(opts)
-                local prefix = opts.args
-                local handle = io.popen('forester new --dest=trees --prefix=' .. prefix .. ' --random')
-                if not handle then
-                  print('Failed to run forester')
-                  return
+        "ftplugin/forester.lua" = {
+          opts = {
+            cindent = true;
+            cinoptions = "+0";
+            foldmethod = "indent";
+          };
+          userCommands = {
+            "ForesterNew" = {
+              command = lib.nixvim.mkRaw ''
+                function(opts)
+                  local prefix = opts.args
+                  local handle = io.popen('forester new --dest=trees --prefix=' .. prefix .. ' --random')
+                  if not handle then
+                    print('Failed to run forester')
+                    return
+                  end
+
+                  local result = handle:read("*a")
+                  handle:close()
+
+                  -- Extract 'foo-0001' from the result 'trees/foo-0001.tree'
+                  local match = string.match(result, "trees/(%g+(%-[A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9]))%.tree")
+                  if match then
+                    -- Insert the extracted string into the current buffer
+                    vim.api.nvim_put({match}, 'c', false, true)
+                    -- Open the new tree in a new buffer
+                    vim.cmd('e ' .. result)
+                  else
+                    print('No match found in the command output: ' .. result)
+                  end
                 end
-
-                local result = handle:read("*a")
-                handle:close()
-
-                -- Extract 'foo-0001' from the result 'trees/foo-0001.tree'
-                local match = string.match(result, "trees/(%g+(%-[A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9]))%.tree")
-                if match then
-                  -- Insert the extracted string into the current buffer
-                  vim.api.nvim_put({match}, 'c', false, true)
-                  -- Open the new tree in a new buffer
-                  vim.cmd('e ' .. result)
+              '';
+              desc = "Create new forester tree";
+              nargs = 1;
+            };
+          };
+        };
+        "ftplugin/org.lua" = {
+          keymaps = [
+            {
+              key = "<S-CR>";
+              action = "<Cmd>lua require('orgmode').action('org_mappings.meta_return')<CR>";
+              mode = [ "i" ];
+              options = {
+                silent = true;
+              };
+            }
+          ];
+          extraConfigLua = ''
+            vim.cmd("TexAbbrev")
+            vim.cmd("TexAbbrevExtra")
+          '';
+        };
+      };
+      filetype = {
+        extension = {
+          tree = "forester";
+        };
+      };
+      autoCmd = [
+        {
+          event = "User";
+          group = "lualine_augroup";
+          pattern = "LspProgressStatusUpdated";
+          callback = lib.nixvim.mkRaw ''
+            require("lualine").refresh
+          '';
+        }
+        {
+          event = "ModeChanged";
+          pattern = "*";
+          callback = lib.nixvim.mkRaw ''
+            function()
+              if ((vim.v.event.old_mode == 's' and vim.v.event.new_mode == 'n') or vim.v.event.old_mode == 'i')
+                  and require('luasnip').session.current_nodes[vim.api.nvim_get_current_buf()]
+                  and not require('luasnip').session.jump_active
+              then
+                require('luasnip').unlink_current()
+              end
+            end
+          '';
+        }
+      ];
+      autoGroups = {
+        lualine_augroup = {
+          clear = true;
+        };
+      };
+      extraPlugins =
+        let
+          stripNewlines = str: builtins.replaceStrings [ "\n" ] [ "" ] str;
+        in
+        with pkgs.vimPlugins;
+        [
+          {
+            plugin = lsp-progress-nvim;
+            config = ''
+              lua require("lsp-progress").setup()
+            '';
+          }
+          ltex_extra-nvim
+          {
+            plugin = nvim-scissors;
+            config = stripNewlines ''
+              lua require("scissors").setup({
+                snippetDir = "~/Dropbox/nixvim-flake/snippets",
+              })
+            '';
+          }
+          pest-vim
+          vim-eunuch
+          vim-nix
+          {
+            plugin = vim-pandoc;
+            config = ''
+              let g:pandoc#biblio#bibs = ["bibliography.bib"]
+              let g:pandoc#command#latex_engine="lualatex"
+              let g:pandoc#command#autoexec_on_writes=1
+              let g:pandoc#completion#bib#mode='citeproc'
+              let g:pandoc#folding#fold_fenced_codeblocks=1
+              let g:pandoc#syntax#codeblocks#ignore=['definition']
+              let g:pandoc#syntax#use_definition_lists=0
+            '';
+          }
+          vim-pandoc-syntax
+          vim-rhubarb
+          {
+            plugin = multicursor-nvim;
+            config = ''
+              lua require("multicursor-nvim").setup()
+            '';
+          }
+          {
+            plugin = vim-texabbrev;
+            config = ''
+              let g:texabbrev_table = [
+                \ ${
+                  lib.strings.concatMapAttrsStringSep ",\n  \\ " (
+                    n: v:
+                    "['${builtins.replaceStrings [ "\\" ] [ "" ] n}', '${
+                      builtins.replaceStrings [ "⎪" "|" ] [ "\\⎪" "\\|" ] v
+                    }']"
+                  ) (lib.filterAttrs (n: v: builtins.substring 0 1 n == "\\") vim-texabbrev.passthru.latex-unicode)
+                } ]
+              let g:texabbrev_table_extra = [
+                \ ${
+                  lib.strings.concatMapAttrsStringSep ",\n  \\ " (n: v: "['${n}', '${v}']") (
+                    lib.filterAttrs (n: v: !(builtins.substring 0 1 n == "\\")) vim-texabbrev.passthru.latex-unicode
+                  )
+                } ]
+              func s:TexAbbrevExtra()
+                for pair in g:texabbrev_table_extra
+                  silent execute "abbrev <buffer> ".pair[0]." ".pair[1]
+                endfor
+              endfun
+              func s:TexUnabbrevExtra()
+                for pair in g:texabbrev_table_extra
+                  silent! execute "unabbrev <buffer> ".pair[0]
+                endfor
+              endfun
+              command TexAbbrevExtra call s:TexAbbrevExtra()
+              command TexUnabbrevExtra call s:TexUnabbrevExtra()
+            '';
+          }
+          {
+            plugin = treewalker-nvim;
+          }
+        ];
+      extraPackages = with pkgs; [
+        nixfmt
+        ocamlPackages.ocp-indent
+        ocamlformat
+      ];
+      lsp = {
+        inlayHints.enable = true;
+        onAttach = ''
+          if client.name == "ltex" then
+            require("ltex_extra").setup {
+              load_langs = {
+                "en-GB"
+              }
+            }
+          end
+        '';
+        servers = {
+          clangd.enable = true;
+          hls.enable = true;
+          ltex = {
+            enable = true;
+            config = {
+              cmd = [ "ltex-ls-plus" ];
+              ltex = {
+                language = "en-GB";
+                additionalRules.enablePickyRules = true;
+              };
+            };
+          };
+          lua_ls.enable = true;
+          nixd.enable = true;
+          ocamllsp.enable = true;
+          pest_ls.enable = true;
+          pyright.enable = true;
+          ruff.enable = true;
+          texlab = {
+            enable = true;
+            config.texlab = {
+              build = {
+                args = [
+                  "-pdf"
+                ]
+                ++ latexmkArgs
+                ++ [
+                  "%f"
+                ];
+              };
+              forwardSearch.executable = "zathura";
+              chktex = {
+                onOpenAndSave = true;
+                onEdit = true;
+              };
+              latexindent.modifyLineBreaks = true;
+            };
+          };
+        };
+        keymaps =
+          let
+            diagnostic = {
+              "<M-e>" = "open_float";
+              "<M-q>" = "setloclist";
+              "[d" = "goto_prev";
+              "]d" = "goto_next";
+            };
+            lspBuf = {
+              "<M-]>" = "definition";
+              "<M-f>" = "format";
+              "<M-l>" = "code_action";
+              "<M-r>" = "rename";
+              "<M-s>" = "signature_help";
+              "<M-w>a" = "add_workspace_folder";
+              "<M-w>d" = "remove_workspace_folder";
+              "E" = "hover";
+              "g+" = "outgoing_calls";
+              "g-" = "incoming_calls";
+              "gD" = "document_symbol";
+              "gW" = "workspace_symbol";
+              "gd" = "declaration";
+              "gI" = "implementation";
+              "gr" = "references";
+              "gt" = "type_definition";
+            };
+          in
+          lib.mapAttrsToList (name: value: {
+            key = name;
+            action = lib.nixvim.mkRaw "vim.diagnostic.${value}";
+          }) diagnostic
+          ++ lib.mapAttrsToList (name: value: {
+            key = name;
+            lspBufAction = value;
+          }) lspBuf;
+      };
+      globals = {
+        tex_flavor = "latex";
+        mapleader = "\\";
+      };
+      opts = {
+        clipboard = "unnamed";
+        colorcolumn = "80";
+        expandtab = true;
+        fillchars = "eob:\ ,fold:\ ,foldopen:,foldsep:\ ,foldclose:";
+        formatexpr = "v:lua.require'conform'.formatexpr()";
+        foldclose = "all";
+        foldlevelstart = 99;
+        foldopen = "all";
+        foldtext = "";
+        jumpoptions = [
+          "stack"
+          "view"
+        ];
+        linebreak = true;
+        number = true;
+        relativenumber = true;
+        shiftwidth = 2;
+        showbreak = "↳ ";
+        spelllang = "en_gb";
+        undodir = lib.nixvim.mkRaw "vim.fn.expand('$HOME/.cache/nvim/undo')";
+        undofile = true;
+        updatetime = 750;
+        wrap = true;
+      };
+      keymaps =
+        pkgs.lib.attrsets.mapAttrsToList
+          (original: replacement: {
+            mode = [
+              "n"
+              "x"
+            ]
+            ++ (pkgs.lib.optional (original != "i") "o")
+            ++ (pkgs.lib.optional (original == "gN") "v");
+            key = original;
+            action = replacement;
+          })
+          {
+            # colemak-dh
+            "m" = "h";
+            "gm" = "gh";
+            "n" = "j";
+            "gn" = "gj";
+            "e" = "k";
+            "ge" = "gk";
+            "i" = "l";
+            "M" = "H";
+            "gM" = "gH";
+            "N" = "J";
+            "gN" = "gJ";
+            "I" = "L";
+            # recover lost keys
+            "k" = "n";
+            "K" = "N";
+            "l" = "e";
+            "gl" = "ge";
+            "L" = "E";
+            "gL" = "gE";
+            "h" = "i";
+            "H" = "I";
+            "j" = "m";
+            "gj" = "gm";
+            "J" = "M";
+            "gJ" = "gM";
+          }
+        ++ [
+          {
+            mode = [
+              "n"
+              "v"
+            ];
+            key = "<C-Up>";
+            action = lib.nixvim.mkRaw "function() require('multicursor-nvim').lineAddCursor(-1) end";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [
+              "n"
+              "v"
+            ];
+            key = "<C-Down>";
+            action = lib.nixvim.mkRaw "function() require('multicursor-nvim').lineAddCursor(1) end";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [
+              "n"
+              "v"
+            ];
+            key = "<Up>";
+            action = lib.nixvim.mkRaw "function() require('multicursor-nvim').lineSkipCursor(-1) end";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [
+              "n"
+              "v"
+            ];
+            key = "<Down>";
+            action = lib.nixvim.mkRaw "function() require('multicursor-nvim').lineSkipCursor(1) end";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [
+              "n"
+              "v"
+            ];
+            key = "<C-k>";
+            action = lib.nixvim.mkRaw "function() require('multicursor-nvim').matchAddCursor(1) end";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [
+              "n"
+              "v"
+            ];
+            key = "<leader>k";
+            action = lib.nixvim.mkRaw "function() require('multicursor-nvim').matchSkipCursor(1) end";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [
+              "n"
+              "v"
+            ];
+            key = "<C-S-k>";
+            action = lib.nixvim.mkRaw "function() require('multicursor-nvim').matchAddCursor(-1) end";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [
+              "n"
+              "v"
+            ];
+            key = "<leader>K";
+            action = lib.nixvim.mkRaw "function() require('multicursor-nvim').matchSkipCursor(-1) end";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [
+              "n"
+              "v"
+            ];
+            key = "<Left>";
+            action = lib.nixvim.mkRaw "require('multicursor-nvim').nextCursor";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [
+              "n"
+              "v"
+            ];
+            key = "<Right>";
+            action = lib.nixvim.mkRaw "require('multicursor-nvim').prevCursor";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [
+              "n"
+              "v"
+            ];
+            key = "<leader>x";
+            action = lib.nixvim.mkRaw "require('multicursor-nvim').deleteCursor";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [ "n" ];
+            key = "<C-LeftMouse>";
+            action = lib.nixvim.mkRaw "require('multicursor-nvim').handleMouse";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [
+              "n"
+              "v"
+            ];
+            key = "<C-q>";
+            action = lib.nixvim.mkRaw "require('multicursor-nvim').toggleCursor";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [
+              "n"
+              "v"
+            ];
+            key = "<leader><C-q>";
+            action = lib.nixvim.mkRaw "require('multicursor-nvim').duplicateCursors";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [ "n" ];
+            key = "<Esc>";
+            action = lib.nixvim.mkRaw ''
+              function()
+                if not require('multicursor-nvim').cursorsEnabled() then
+                  require('multicursor-nvim').enableCursors()
+                elseif require('multicursor-nvim').hasCursors() then
+                  require('multicursor-nvim').clearCursors()
                 else
-                  print('No match found in the command output: ' .. result)
+                  -- Default <esc> handler.
                 end
               end
             '';
-            desc = "Create new forester tree";
-            nargs = 1;
-          };
-        };
-      };
-      "ftplugin/org.lua" = {
-        keymaps = [
-          {
-            key = "<S-CR>";
-            action = "<Cmd>lua require('orgmode').action('org_mappings.meta_return')<CR>";
-            mode = [ "i" ];
             options = {
               silent = true;
             };
           }
-        ];
-        extraConfigLua = ''
-          vim.cmd("TexAbbrev")
-          vim.cmd("TexAbbrevExtra")
-        '';
-      };
-    };
-    filetype = {
-      extension = {
-        tree = "forester";
-      };
-    };
-    autoCmd = [
-      {
-        event = "User";
-        group = "lualine_augroup";
-        pattern = "LspProgressStatusUpdated";
-        callback = lib.nixvim.mkRaw ''
-          require("lualine").refresh
-        '';
-      }
-      {
-        event = "ModeChanged";
-        pattern = "*";
-        callback = lib.nixvim.mkRaw ''
-          function()
-            if ((vim.v.event.old_mode == 's' and vim.v.event.new_mode == 'n') or vim.v.event.old_mode == 'i')
-                and require('luasnip').session.current_nodes[vim.api.nvim_get_current_buf()]
-                and not require('luasnip').session.jump_active
-            then
-              require('luasnip').unlink_current()
-            end
-          end
-        '';
-      }
-    ];
-    autoGroups = {
-      lualine_augroup = {
-        clear = true;
-      };
-    };
-    extraPlugins =
-      let
-        stripNewlines = str: builtins.replaceStrings [ "\n" ] [ "" ] str;
-      in
-      with pkgs.vimPlugins;
-      [
-        {
-          plugin = lsp-progress-nvim;
-          config = ''
-            lua require("lsp-progress").setup()
-          '';
-        }
-        ltex_extra-nvim
-        {
-          plugin = nvim-scissors;
-          config = stripNewlines ''
-            lua require("scissors").setup({
-              snippetDir = "~/Dropbox/nixvim-flake/snippets",
+          {
+            mode = [
+              "n"
+              "v"
+            ];
+            key = "<leader>a";
+            action = lib.nixvim.mkRaw "require('multicursor-nvim').alignCursors";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [ "v" ];
+            key = "<C-s>";
+            action = lib.nixvim.mkRaw "require('multicursor-nvim').splitCursors";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [ "v" ];
+            key = "H";
+            action = lib.nixvim.mkRaw "insertVisualH";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [ "v" ];
+            key = "A";
+            action = lib.nixvim.mkRaw "require('multicursor-nvim').appendVisual";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [
+              "n"
+              "v"
+            ];
+            key = "<C-m>";
+            action = lib.nixvim.mkRaw "require('multicursor-nvim').matchCursors";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [ "v" ];
+            key = "<leader><C-t>";
+            action = lib.nixvim.mkRaw "function() require('multicursor-nvim').transposeCursors(1) end";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [ "v" ];
+            key = "<leader><C-S-t>";
+            action = lib.nixvim.mkRaw "function() require('multicursor-nvim').transposeCursors(-1) end";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [
+              "n"
+              "x"
+              "o"
+            ];
+            key = "<C-j>";
+            action = lib.nixvim.mkRaw "function() require('flash').jump() end";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [
+              "n"
+              "x"
+              "o"
+            ];
+            key = "<C-S-j>";
+            action = lib.nixvim.mkRaw "function() require('flash').treesitter() end";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = "o";
+            key = "r";
+            action = lib.nixvim.mkRaw "function() require('flash').remote() end";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [
+              "o"
+              "x"
+            ];
+            key = "R";
+            action = lib.nixvim.mkRaw "function() require('flash').treesitter_search() end";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = "c";
+            key = "<C-s>";
+            action = lib.nixvim.mkRaw "function() require('flash').toggle() end";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [
+              "i"
+              "s"
+            ];
+            key = "<M-n>";
+            action = "<Plug>luasnip-next-choice";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = [
+              "i"
+              "s"
+            ];
+            key = "<M-p>";
+            action = "<Plug>luasnip-prev-choice";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = "n";
+            key = "<C-m>"; # this also maps <CR> due to legacy terminal behavior
+            action = "<C-w>h";
+            options = {
+              silent = true;
+              desc = "Focus on left window";
+            };
+          }
+          {
+            mode = "n";
+            key = "<CR>";
+            action = "<CR>";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = "n";
+            key = "<C-n>";
+            action = "<C-w>j";
+            options = {
+              silent = true;
+              desc = "Focus on below window";
+            };
+          }
+          {
+            mode = "n";
+            key = "<C-e>";
+            action = "<C-w>k";
+            options = {
+              silent = true;
+              desc = "Focus on above window";
+            };
+          }
+          {
+            mode = "n";
+            key = "<C-i>"; # this also maps <Tab> due to legacy terminal behavior
+            action = "<C-w>l";
+            options = {
+              silent = true;
+              desc = "Focus on right window";
+            };
+          }
+          {
+            mode = "n";
+            key = "<M-C-m>";
+            action = "<C-w><";
+            options = {
+              silent = true;
+              desc = "Decrease window width";
+            };
+          }
+          {
+            mode = "n";
+            key = "<M-C-n>";
+            action = "<C-w>-";
+            options = {
+              silent = true;
+              desc = "Decrease window height";
+            };
+          }
+          {
+            mode = "n";
+            key = "<M-C-e>";
+            action = "<C-w>+";
+            options = {
+              silent = true;
+              desc = "Increase window height";
+            };
+          }
+          {
+            mode = "n";
+            key = "<M-C-i>";
+            action = "<C-w>>";
+            options = {
+              silent = true;
+              desc = "Increase window width";
+            };
+          }
+          {
+            mode = "n";
+            key = "<leader>bd";
+            action = lib.nixvim.mkRaw "function() Snacks.bufdelete() end";
+            options = {
+              silent = true;
+              desc = "Buffer delete";
+            };
+          }
+          {
+            mode = "n";
+            key = "<leader>fe";
+            action = lib.nixvim.mkRaw "function() Snacks.explorer() end";
+            options = {
+              silent = true;
+              desc = "Snacks explorer";
+            };
+          }
+          {
+            mode = "n";
+            key = "<leader>go";
+            action = lib.nixvim.mkRaw "function() MiniDiff.toggle_overlay() end";
+            options = {
+              silent = true;
+              desc = "mini.diff overlay";
+            };
+          }
+          {
+            mode = "n";
+            key = "<leader>fm";
+            action = lib.nixvim.mkRaw "function() MiniFiles.open() end";
+            options = {
+              silent = true;
+              desc = "mini.files open";
+            };
+          }
+          {
+            mode = "n";
+            key = "<leader>ojo";
+            action = "<Cmd>OrgJournal<CR>";
+            options = {
+              silent = true;
+              desc = "open journal (today)";
+            };
+          }
+          {
+            mode = "n";
+            key = "<leader>ojp";
+            action = "<Cmd>OrgJournalPrev<CR>";
+            options = {
+              silent = true;
+              desc = "open journal (yesterday)";
+            };
+          }
+          {
+            mode = "n";
+            key = "<leader>ojn";
+            action = "<Cmd>OrgJournalNext<CR>";
+            options = {
+              silent = true;
+              desc = "open journal (tomorrow)";
+            };
+          }
+          {
+            mode = "n";
+            key = "<Tab>";
+            action = "<Tab>";
+            options = {
+              silent = true;
+            };
+          }
+          {
+            mode = "n";
+            key = "<C-h>";
+            action = "<C-e>";
+          }
+          {
+            mode = "n";
+            key = "<C-l>";
+            action = "<C-i>";
+          }
+        ]
+        ++
+          pkgs.lib.attrsets.mapAttrsToList
+            (key: action: {
+              mode = "n";
+              inherit key;
+              action = lib.nixvim.mkRaw ("function() Snacks.picker.pick(\"" + action + "\") end");
+              options = {
+                silent = true;
+              };
             })
-          '';
-        }
-        pest-vim
-        vim-eunuch
-        vim-nix
-        {
-          plugin = vim-pandoc;
-          config = ''
-            let g:pandoc#biblio#bibs = ["bibliography.bib"]
-            let g:pandoc#command#latex_engine="lualatex"
-            let g:pandoc#command#autoexec_on_writes=1
-            let g:pandoc#completion#bib#mode='citeproc'
-            let g:pandoc#folding#fold_fenced_codeblocks=1
-            let g:pandoc#syntax#codeblocks#ignore=['definition']
-            let g:pandoc#syntax#use_definition_lists=0
-          '';
-        }
-        vim-pandoc-syntax
-        vim-rhubarb
-        {
-          plugin = multicursor-nvim;
-          config = ''
-            lua require("multicursor-nvim").setup()
-          '';
-        }
-        {
-          plugin = vim-texabbrev;
-          config = ''
-            let g:texabbrev_table = [
-              \ ${
-                lib.strings.concatMapAttrsStringSep ",\n  \\ " (
-                  n: v:
-                  "['${builtins.replaceStrings [ "\\" ] [ "" ] n}', '${
-                    builtins.replaceStrings [ "⎪" "|" ] [ "\\⎪" "\\|" ] v
-                  }']"
-                ) (lib.filterAttrs (n: v: builtins.substring 0 1 n == "\\") vim-texabbrev.passthru.latex-unicode)
-              } ]
-            let g:texabbrev_table_extra = [
-              \ ${
-                lib.strings.concatMapAttrsStringSep ",\n  \\ " (n: v: "['${n}', '${v}']") (
-                  lib.filterAttrs (n: v: !(builtins.substring 0 1 n == "\\")) vim-texabbrev.passthru.latex-unicode
-                )
-              } ]
-            func s:TexAbbrevExtra()
-              for pair in g:texabbrev_table_extra
-                silent execute "abbrev <buffer> ".pair[0]." ".pair[1]
-              endfor
-            endfun
-            func s:TexUnabbrevExtra()
-              for pair in g:texabbrev_table_extra
-                silent! execute "unabbrev <buffer> ".pair[0]
-              endfor
-            endfun
-            command TexAbbrevExtra call s:TexAbbrevExtra()
-            command TexUnabbrevExtra call s:TexUnabbrevExtra()
-          '';
-        }
-        {
-          plugin = treewalker-nvim;
-        }
-      ];
-    extraPackages = with pkgs; [
-      nixfmt
-      ocamlPackages.ocp-indent
-      ocamlformat
-    ];
-    globals = {
-      tex_flavor = "latex";
-      mapleader = "\\";
-    };
-    opts = {
-      clipboard = "unnamed";
-      colorcolumn = "80";
-      expandtab = true;
-      fillchars = "eob:\ ,fold:\ ,foldopen:,foldsep:\ ,foldclose:";
-      formatexpr = "v:lua.require'conform'.formatexpr()";
-      foldclose = "all";
-      foldlevelstart = 99;
-      foldopen = "all";
-      foldtext = "";
-      jumpoptions = [
-        "stack"
-        "view"
-      ];
-      linebreak = true;
-      number = true;
-      relativenumber = true;
-      shiftwidth = 2;
-      showbreak = "↳ ";
-      spelllang = "en_gb";
-      undodir = lib.nixvim.mkRaw "vim.fn.expand('$HOME/.cache/nvim/undo')";
-      undofile = true;
-      updatetime = 750;
-      wrap = true;
-    };
-    keymaps =
-      pkgs.lib.attrsets.mapAttrsToList
-        (original: replacement: {
-          mode = [
-            "n"
-            "x"
-          ]
-          ++ (pkgs.lib.optional (original != "i") "o")
-          ++ (pkgs.lib.optional (original == "gN") "v");
-          key = original;
-          action = replacement;
-        })
-        {
-          # colemak-dh
-          "m" = "h";
-          "gm" = "gh";
-          "n" = "j";
-          "gn" = "gj";
-          "e" = "k";
-          "ge" = "gk";
-          "i" = "l";
-          "M" = "H";
-          "gM" = "gH";
-          "N" = "J";
-          "gN" = "gJ";
-          "I" = "L";
-          # recover lost keys
-          "k" = "n";
-          "K" = "N";
-          "l" = "e";
-          "gl" = "ge";
-          "L" = "E";
-          "gL" = "gE";
-          "h" = "i";
-          "H" = "I";
-          "j" = "m";
-          "gj" = "gm";
-          "J" = "M";
-          "gJ" = "gM";
-        }
-      ++ [
-        {
-          mode = [
-            "n"
-            "v"
-          ];
-          key = "<C-Up>";
-          action = lib.nixvim.mkRaw "function() require('multicursor-nvim').lineAddCursor(-1) end";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [
-            "n"
-            "v"
-          ];
-          key = "<C-Down>";
-          action = lib.nixvim.mkRaw "function() require('multicursor-nvim').lineAddCursor(1) end";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [
-            "n"
-            "v"
-          ];
-          key = "<Up>";
-          action = lib.nixvim.mkRaw "function() require('multicursor-nvim').lineSkipCursor(-1) end";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [
-            "n"
-            "v"
-          ];
-          key = "<Down>";
-          action = lib.nixvim.mkRaw "function() require('multicursor-nvim').lineSkipCursor(1) end";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [
-            "n"
-            "v"
-          ];
-          key = "<C-k>";
-          action = lib.nixvim.mkRaw "function() require('multicursor-nvim').matchAddCursor(1) end";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [
-            "n"
-            "v"
-          ];
-          key = "<leader>k";
-          action = lib.nixvim.mkRaw "function() require('multicursor-nvim').matchSkipCursor(1) end";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [
-            "n"
-            "v"
-          ];
-          key = "<C-S-k>";
-          action = lib.nixvim.mkRaw "function() require('multicursor-nvim').matchAddCursor(-1) end";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [
-            "n"
-            "v"
-          ];
-          key = "<leader>K";
-          action = lib.nixvim.mkRaw "function() require('multicursor-nvim').matchSkipCursor(-1) end";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [
-            "n"
-            "v"
-          ];
-          key = "<Left>";
-          action = lib.nixvim.mkRaw "require('multicursor-nvim').nextCursor";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [
-            "n"
-            "v"
-          ];
-          key = "<Right>";
-          action = lib.nixvim.mkRaw "require('multicursor-nvim').prevCursor";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [
-            "n"
-            "v"
-          ];
-          key = "<leader>x";
-          action = lib.nixvim.mkRaw "require('multicursor-nvim').deleteCursor";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [ "n" ];
-          key = "<C-LeftMouse>";
-          action = lib.nixvim.mkRaw "require('multicursor-nvim').handleMouse";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [
-            "n"
-            "v"
-          ];
-          key = "<C-q>";
-          action = lib.nixvim.mkRaw "require('multicursor-nvim').toggleCursor";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [
-            "n"
-            "v"
-          ];
-          key = "<leader><C-q>";
-          action = lib.nixvim.mkRaw "require('multicursor-nvim').duplicateCursors";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [ "n" ];
-          key = "<Esc>";
-          action = lib.nixvim.mkRaw ''
-            function()
-              if not require('multicursor-nvim').cursorsEnabled() then
-                require('multicursor-nvim').enableCursors()
-              elseif require('multicursor-nvim').hasCursors() then
-                require('multicursor-nvim').clearCursors()
-              else
-                -- Default <esc> handler.
-              end
-            end
-          '';
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [
-            "n"
-            "v"
-          ];
-          key = "<leader>a";
-          action = lib.nixvim.mkRaw "require('multicursor-nvim').alignCursors";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [ "v" ];
-          key = "<C-s>";
-          action = lib.nixvim.mkRaw "require('multicursor-nvim').splitCursors";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [ "v" ];
-          key = "H";
-          action = lib.nixvim.mkRaw "insertVisualH";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [ "v" ];
-          key = "A";
-          action = lib.nixvim.mkRaw "require('multicursor-nvim').appendVisual";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [
-            "n"
-            "v"
-          ];
-          key = "<C-m>";
-          action = lib.nixvim.mkRaw "require('multicursor-nvim').matchCursors";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [ "v" ];
-          key = "<leader><C-t>";
-          action = lib.nixvim.mkRaw "function() require('multicursor-nvim').transposeCursors(1) end";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [ "v" ];
-          key = "<leader><C-S-t>";
-          action = lib.nixvim.mkRaw "function() require('multicursor-nvim').transposeCursors(-1) end";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [
-            "n"
-            "x"
-            "o"
-          ];
-          key = "<C-j>";
-          action = lib.nixvim.mkRaw "function() require('flash').jump() end";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [
-            "n"
-            "x"
-            "o"
-          ];
-          key = "<C-S-j>";
-          action = lib.nixvim.mkRaw "function() require('flash').treesitter() end";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = "o";
-          key = "r";
-          action = lib.nixvim.mkRaw "function() require('flash').remote() end";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [
-            "o"
-            "x"
-          ];
-          key = "R";
-          action = lib.nixvim.mkRaw "function() require('flash').treesitter_search() end";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = "c";
-          key = "<C-s>";
-          action = lib.nixvim.mkRaw "function() require('flash').toggle() end";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [
-            "i"
-            "s"
-          ];
-          key = "<M-n>";
-          action = "<Plug>luasnip-next-choice";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = [
-            "i"
-            "s"
-          ];
-          key = "<M-p>";
-          action = "<Plug>luasnip-prev-choice";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = "n";
-          key = "<C-m>"; # this also maps <CR> due to legacy terminal behavior
-          action = "<C-w>h";
-          options = {
-            silent = true;
-            desc = "Focus on left window";
-          };
-        }
-        {
-          mode = "n";
-          key = "<CR>";
-          action = "<CR>";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = "n";
-          key = "<C-n>";
-          action = "<C-w>j";
-          options = {
-            silent = true;
-            desc = "Focus on below window";
-          };
-        }
-        {
-          mode = "n";
-          key = "<C-e>";
-          action = "<C-w>k";
-          options = {
-            silent = true;
-            desc = "Focus on above window";
-          };
-        }
-        {
-          mode = "n";
-          key = "<C-i>"; # this also maps <Tab> due to legacy terminal behavior
-          action = "<C-w>l";
-          options = {
-            silent = true;
-            desc = "Focus on right window";
-          };
-        }
-        {
-          mode = "n";
-          key = "<M-C-m>";
-          action = "<C-w><";
-          options = {
-            silent = true;
-            desc = "Decrease window width";
-          };
-        }
-        {
-          mode = "n";
-          key = "<M-C-n>";
-          action = "<C-w>-";
-          options = {
-            silent = true;
-            desc = "Decrease window height";
-          };
-        }
-        {
-          mode = "n";
-          key = "<M-C-e>";
-          action = "<C-w>+";
-          options = {
-            silent = true;
-            desc = "Increase window height";
-          };
-        }
-        {
-          mode = "n";
-          key = "<M-C-i>";
-          action = "<C-w>>";
-          options = {
-            silent = true;
-            desc = "Increase window width";
-          };
-        }
-        {
-          mode = "n";
-          key = "<leader>bd";
-          action = lib.nixvim.mkRaw "function() Snacks.bufdelete() end";
-          options = {
-            silent = true;
-            desc = "Buffer delete";
-          };
-        }
-        {
-          mode = "n";
-          key = "<leader>fe";
-          action = lib.nixvim.mkRaw "function() Snacks.explorer() end";
-          options = {
-            silent = true;
-            desc = "Snacks explorer";
-          };
-        }
-        {
-          mode = "n";
-          key = "<leader>go";
-          action = lib.nixvim.mkRaw "function() MiniDiff.toggle_overlay() end";
-          options = {
-            silent = true;
-            desc = "mini.diff overlay";
-          };
-        }
-        {
-          mode = "n";
-          key = "<leader>fm";
-          action = lib.nixvim.mkRaw "function() MiniFiles.open() end";
-          options = {
-            silent = true;
-            desc = "mini.files open";
-          };
-        }
-        {
-          mode = "n";
-          key = "<leader>ojo";
-          action = "<Cmd>OrgJournal<CR>";
-          options = {
-            silent = true;
-            desc = "open journal (today)";
-          };
-        }
-        {
-          mode = "n";
-          key = "<leader>ojp";
-          action = "<Cmd>OrgJournalPrev<CR>";
-          options = {
-            silent = true;
-            desc = "open journal (yesterday)";
-          };
-        }
-        {
-          mode = "n";
-          key = "<leader>ojn";
-          action = "<Cmd>OrgJournalNext<CR>";
-          options = {
-            silent = true;
-            desc = "open journal (tomorrow)";
-          };
-        }
-        {
-          mode = "n";
-          key = "<Tab>";
-          action = "<Tab>";
-          options = {
-            silent = true;
-          };
-        }
-        {
-          mode = "n";
-          key = "<C-h>";
-          action = "<C-e>";
-        }
-        {
-          mode = "n";
-          key = "<C-l>";
-          action = "<C-i>";
-        }
-      ]
-      ++
-        pkgs.lib.attrsets.mapAttrsToList
-          (key: action: {
-            mode = "n";
-            inherit key;
-            action = lib.nixvim.mkRaw ("function() Snacks.picker.pick(\"" + action + "\") end");
-            options = {
-              silent = true;
+            {
+              "<leader>/" = "grep";
+              "<leader>b" = "buffers";
+              "<leader>d" = "diagnostics";
+              "<leader>f" = "files";
+              "<leader>gS" = "git_stash";
+              "<leader>gd" = "git_diff";
+              "<leader>gs" = "git_status";
+              "<leader>u" = "undo";
+            }
+        ++
+          pkgs.lib.attrsets.mapAttrsToList
+            (key: action: {
+              mode = "n";
+              inherit key;
+              action = "<Cmd>Treewalker " + action + "<CR>";
+              options = {
+                silent = true;
+              };
+            })
+            {
+              "<Up>" = "Up";
+              "<Down>" = "Down";
+              "<Left>" = "Left";
+              "<Right>" = "Right";
             };
-          })
-          {
-            "<leader>/" = "grep";
-            "<leader>b" = "buffers";
-            "<leader>d" = "diagnostics";
-            "<leader>f" = "files";
-            "<leader>gS" = "git_stash";
-            "<leader>gd" = "git_diff";
-            "<leader>gs" = "git_status";
-            "<leader>u" = "undo";
-          }
-      ++
-        pkgs.lib.attrsets.mapAttrsToList
-          (key: action: {
-            mode = "n";
-            inherit key;
-            action = "<Cmd>Treewalker " + action + "<CR>";
-            options = {
-              silent = true;
-            };
-          })
-          {
-            "<Up>" = "Up";
-            "<Down>" = "Down";
-            "<Left>" = "Left";
-            "<Right>" = "Right";
-          };
-    plugins =
-      let
-        latexmkArgs = [
-          "-shell-escape"
-          "-verbose"
-          "-file-line-error"
-          "-synctex=1"
-          "-interaction=nonstopmode"
-        ];
-      in
-      {
+      plugins = {
         blink-cmp = {
           enable = true;
           settings = {
@@ -1025,122 +1112,6 @@
         flash = {
           enable = true;
           settings.modes.search.enabled = true;
-        };
-        lsp = {
-          enable = true;
-          inlayHints = true;
-          onAttach = ''
-            if client.name == "ltex" then
-              require("ltex_extra").setup {
-                load_langs = {
-                  "en-GB"
-                }
-              }
-            end
-          '';
-          servers = {
-            hls = {
-              enable = true;
-              installGhc = false;
-            };
-            ltex = {
-              enable = true;
-              settings = {
-                language = "en-GB";
-              };
-              extraOptions = {
-                get_language_id = lib.nixvim.mkRaw ''
-                  function(_, filetype)
-                    local language_id_mapping = {
-                      bib = 'bibtex',
-                      plaintex = 'tex',
-                      rnoweb = 'sweave',
-                      rst = 'restructuredtext',
-                      tex = 'latex',
-                      xhtml = 'xhtml',
-                      pandoc = 'markdown',
-                      forester = 'latex',
-                    }
-                    local language_id = language_id_mapping[filetype]
-                    if language_id then
-                      return language_id
-                    else
-                      return filetype
-                    end
-                  end
-                '';
-              };
-              filetypes = [
-                "bib"
-                "gitcommit"
-                "org"
-                "plaintex"
-                "rst"
-                "rnoweb"
-                "tex"
-                "pandoc"
-                "quarto"
-                "rmd"
-                "forester"
-              ];
-            };
-            lua_ls.enable = true;
-            nixd.enable = true;
-            ocamllsp.enable = true;
-            ocamllsp.package = null;
-            pest_ls.enable = true;
-            pyright.enable = true;
-            ruff.enable = true;
-            tailwindcss.enable = true;
-            svelte.enable = true;
-            texlab = {
-              enable = true;
-              extraOptions.settings.texlab = {
-                build = {
-                  args = [
-                    "-pdf"
-                  ]
-                  ++ latexmkArgs
-                  ++ [
-                    "%f"
-                  ];
-                };
-                forwardSearch.executable = "zathura";
-                chktex = {
-                  onOpenAndSave = true;
-                  onEdit = true;
-                };
-                latexindent.modifyLineBreaks = true;
-              };
-            };
-          };
-          keymaps = {
-            diagnostic = {
-              "<M-e>" = "open_float";
-              "<M-q>" = "setloclist";
-              "[d" = "goto_prev";
-              "]d" = "goto_next";
-            };
-            lspBuf = {
-              "<M-]>" = "definition";
-              "<M-f>" = "format";
-              "<M-l>" = "code_action";
-              "<M-r>" = "rename";
-              "<M-w>a" = "add_workspace_folder";
-              "<M-w>d" = "remove_workspace_folder";
-              "E" = "hover";
-              "g+" = "outgoing_calls";
-              "g-" = "incoming_calls";
-              "gD" = "document_symbol";
-              "gE" = "signature_help";
-              "gW" = "workspace_symbol";
-              "gd" = "declaration";
-              "gI" = "implementation";
-              "gr" = "references";
-              "gt" = "type_definition";
-            };
-            silent = true;
-          };
         };
         lualine = {
           enable = true;
@@ -1341,115 +1312,115 @@
           texlivePackage = null; # don't install texlive at all
         };
       };
-    extraConfigLuaPre = ''
-      -- profiling
-      if vim.env.PROF then
-        require("snacks.profiler").startup({
-          startup = { },
-        })
-      end
-      -- disable netrw at the very start of your init.lua
-      vim.g.loaded_netrw = 1
-      vim.g.loaded_netrwPlugin = 1
+      extraConfigLuaPre = ''
+        -- profiling
+        if vim.env.PROF then
+          require("snacks.profiler").startup({
+            startup = { },
+          })
+        end
+        -- disable netrw at the very start of your init.lua
+        vim.g.loaded_netrw = 1
+        vim.g.loaded_netrwPlugin = 1
 
-      local slow_format_filetypes = {}
+        local slow_format_filetypes = {}
 
-      local mc = require('multicursor-nvim')
-      local TERM_CODES = require('multicursor-nvim.term-codes')
-      -- patch https://github.com/jake-stewart/multicursor.nvim/blob/99d704ab32a7a07ffa198370b4b177a23dfce8ec/lua/multicursor-nvim/examples.lua#L344-L360 for colemak-dh
-      function insertVisualH()
-          local mode = vim.fn.mode()
-          mc.action(function(ctx)
-              ctx:forEachCursor(function(cursor)
-                  cursor:splitVisualLines()
-              end)
-              ctx:forEachCursor(function(cursor)
-                  cursor:feedkeys(
-                      (cursor:atVisualStart() and "" or "o")
-                          .. "<esc>"
-                          .. (mode == TERM_CODES.CTRL_V and "" or "^"),
-                      { keycodes = true }
-                  )
-              end)
-          end)
-          mc.feedkeys(mode == TERM_CODES.CTRL_V and "h" or "H", { remap = true })
-      end
-    '';
-    userCommands =
-      let
-        journalDir = "~/Dropbox/forest/org/journal/";
-      in
-      {
-        "LuaSnipEdit" = {
-          command = "lua require('luasnip.loaders').edit_snippet_files()";
-          desc = "Edit Snippets";
-        };
-        "FormatDisable" = {
-          bang = true;
-          command = ''
-            if <bang>v:true
-              let g:disable_autoformat = v:true
-            else
-              let b:disable_autoformat = v:true
-            endif
-          '';
-          desc = "Disable autoformat-on-save";
-        };
-        "FormatEnable" = {
-          command = ''
-            let b:disable_autoformat = v:false
-            let g:disable_autoformat = v:false
-          '';
-          desc = "Re-enable autoformat-on-save";
-        };
-        "OrgJournal" = {
-          command = lib.nixvim.mkRaw ''
-            function(opts)
-              local date = os.date("%Y-%m-%d")
-              local file = "${journalDir}" .. date .. ".org"
-              vim.cmd('e ' .. file)
-              vim.cmd('normal! G')
-            end
-          '';
-          desc = "Open today's journal";
-          nargs = 0;
-        };
-        "OrgJournalPrev" = {
-          command = lib.nixvim.mkRaw ''
-            function(opts)
-              local current_file = vim.fn.expand("%:p")
-              local year, month, day = current_file:match(vim.fn.expand("${journalDir}") .. "(%d%d%d%d)-(%d%d)-(%d%d).org")
-              if not year or not month or not day then
-                print("Current file is not a valid journal file")
-                return
+        local mc = require('multicursor-nvim')
+        local TERM_CODES = require('multicursor-nvim.term-codes')
+        -- patch https://github.com/jake-stewart/multicursor.nvim/blob/99d704ab32a7a07ffa198370b4b177a23dfce8ec/lua/multicursor-nvim/examples.lua#L344-L360 for colemak-dh
+        function insertVisualH()
+            local mode = vim.fn.mode()
+            mc.action(function(ctx)
+                ctx:forEachCursor(function(cursor)
+                    cursor:splitVisualLines()
+                end)
+                ctx:forEachCursor(function(cursor)
+                    cursor:feedkeys(
+                        (cursor:atVisualStart() and "" or "o")
+                            .. "<esc>"
+                            .. (mode == TERM_CODES.CTRL_V and "" or "^"),
+                        { keycodes = true }
+                    )
+                end)
+            end)
+            mc.feedkeys(mode == TERM_CODES.CTRL_V and "h" or "H", { remap = true })
+        end
+      '';
+      userCommands =
+        let
+          journalDir = "~/Dropbox/forest/org/journal/";
+        in
+        {
+          "LuaSnipEdit" = {
+            command = "lua require('luasnip.loaders').edit_snippet_files()";
+            desc = "Edit Snippets";
+          };
+          "FormatDisable" = {
+            bang = true;
+            command = ''
+              if <bang>v:true
+                let g:disable_autoformat = v:true
+              else
+                let b:disable_autoformat = v:true
+              endif
+            '';
+            desc = "Disable autoformat-on-save";
+          };
+          "FormatEnable" = {
+            command = ''
+              let b:disable_autoformat = v:false
+              let g:disable_autoformat = v:false
+            '';
+            desc = "Re-enable autoformat-on-save";
+          };
+          "OrgJournal" = {
+            command = lib.nixvim.mkRaw ''
+              function(opts)
+                local date = os.date("%Y-%m-%d")
+                local file = "${journalDir}" .. date .. ".org"
+                vim.cmd('e ' .. file)
+                vim.cmd('normal! G')
               end
-              local date = os.date("%Y-%m-%d", os.time({ year = tonumber(year), month = tonumber(month), day = tonumber(day) }) - 24 * 60 * 60)
-              local file = "${journalDir}" .. date .. ".org"
-              vim.cmd('e ' .. file)
-              vim.cmd('normal! G')
-            end
-          '';
-          desc = "Open yesterday's journal";
-          nargs = 0;
-        };
-        "OrgJournalNext" = {
-          command = lib.nixvim.mkRaw ''
-            function(opts)
-              local current_file = vim.fn.expand("%:p")
-              local year, month, day = current_file:match(vim.fn.expand("${journalDir}") .. "(%d%d%d%d)-(%d%d)-(%d%d).org")
-              if not year or not month or not day then
-                print("Current file is not a valid journal file")
-                return
+            '';
+            desc = "Open today's journal";
+            nargs = 0;
+          };
+          "OrgJournalPrev" = {
+            command = lib.nixvim.mkRaw ''
+              function(opts)
+                local current_file = vim.fn.expand("%:p")
+                local year, month, day = current_file:match(vim.fn.expand("${journalDir}") .. "(%d%d%d%d)-(%d%d)-(%d%d).org")
+                if not year or not month or not day then
+                  print("Current file is not a valid journal file")
+                  return
+                end
+                local date = os.date("%Y-%m-%d", os.time({ year = tonumber(year), month = tonumber(month), day = tonumber(day) }) - 24 * 60 * 60)
+                local file = "${journalDir}" .. date .. ".org"
+                vim.cmd('e ' .. file)
+                vim.cmd('normal! G')
               end
-              local date = os.date("%Y-%m-%d", os.time({ year = tonumber(year), month = tonumber(month), day = tonumber(day) }) + 24 * 60 * 60)
-              local file = "${journalDir}" .. date .. ".org"
-              vim.cmd('e ' .. file)
-              vim.cmd('normal! G')
-            end
-          '';
-          desc = "Open tomorrow's journal";
-          nargs = 0;
+            '';
+            desc = "Open yesterday's journal";
+            nargs = 0;
+          };
+          "OrgJournalNext" = {
+            command = lib.nixvim.mkRaw ''
+              function(opts)
+                local current_file = vim.fn.expand("%:p")
+                local year, month, day = current_file:match(vim.fn.expand("${journalDir}") .. "(%d%d%d%d)-(%d%d)-(%d%d).org")
+                if not year or not month or not day then
+                  print("Current file is not a valid journal file")
+                  return
+                end
+                local date = os.date("%Y-%m-%d", os.time({ year = tonumber(year), month = tonumber(month), day = tonumber(day) }) + 24 * 60 * 60)
+                local file = "${journalDir}" .. date .. ".org"
+                vim.cmd('e ' .. file)
+                vim.cmd('normal! G')
+              end
+            '';
+            desc = "Open tomorrow's journal";
+            nargs = 0;
+          };
         };
-      };
-  };
+    };
 }
