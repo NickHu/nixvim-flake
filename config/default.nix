@@ -1013,8 +1013,13 @@
         gitsigns.enable = true;
         rustaceanvim = {
           enable = true;
-          settings.tools = {
-            enable_clippy = true;
+          settings = {
+            server.default_settings."rust-analyzer" = {
+              files.excludeDirs = [ ".direnv" ];
+            };
+            tools = {
+              enable_clippy = true;
+            };
           };
         };
         flash = {
