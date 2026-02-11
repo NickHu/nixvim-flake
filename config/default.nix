@@ -1181,7 +1181,22 @@
           enable = true;
           mockDevIcons = true;
           modules = {
-            ai = { };
+            ai = {
+              custom_textobjects =
+                lib.mapAttrs
+                  (
+                    name: value:
+                    lib.nixvim.mkRaw ''
+                      require('mini.ai').gen_spec.treesitter({ a = '@${value}.outer', i = '@${value}.inner' })
+                    ''
+                  )
+                  {
+                    C = "call";
+                    c = "comment";
+                    f = "function";
+                    s = "statement";
+                  };
+            };
             align = { };
             basics = {
               options = {
