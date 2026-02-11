@@ -39,22 +39,6 @@
         "type": "github"
       }
     },
-    "multicursor-nvim": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1769989647,
-        "narHash": "sha256-f4z11N1ThP0gtxEwVbR7OkHA3G1DH6SYW7I4j8/SarA=",
-        "owner": "jake-stewart",
-        "repo": "multicursor.nvim",
-        "rev": "630dd29dd696bc977cb81d7dd2fa6bb280f60fc4",
-        "type": "github"
-      },
-      "original": {
-        "owner": "jake-stewart",
-        "repo": "multicursor.nvim",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1770380644,
@@ -109,14 +93,12 @@
     "root": {
       "inputs": {
         "flake-parts": "flake-parts",
-        "multicursor-nvim": "multicursor-nvim",
         "nixpkgs": [
           "nixvim",
           "nixpkgs"
         ],
         "nixvim": "nixvim",
         "tree-sitter-forester": "tree-sitter-forester",
-        "treewalker-nvim": "treewalker-nvim",
         "unicode-latex": "unicode-latex",
         "vim-texabbrev": "vim-texabbrev"
       }
@@ -150,22 +132,6 @@
         "owner": "jetjinser",
         "ref": "regrammar",
         "repo": "tree-sitter-forester",
-        "type": "github"
-      }
-    },
-    "treewalker-nvim": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1766892367,
-        "narHash": "sha256-no0GhR12ryvDRGhcB8P+YA1sCi8qbiESnczr7rJl6gA=",
-        "owner": "aaronik",
-        "repo": "treewalker.nvim",
-        "rev": "3d5148e160ed9728b3275d37d06ea028cef5f43b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "aaronik",
-        "repo": "treewalker.nvim",
         "type": "github"
       }
     },

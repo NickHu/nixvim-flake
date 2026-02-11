@@ -14,20 +14,12 @@
       url = "github:jetjinser/tree-sitter-forester/regrammar";
       flake = false;
     };
-    multicursor-nvim = {
-      url = "github:jake-stewart/multicursor.nvim";
-      flake = false;
-    };
     vim-texabbrev = {
       url = "github:78g/vim-texabbrev";
       flake = false;
     };
     unicode-latex = {
       url = "github:ViktorQvarfordt/unicode-latex";
-      flake = false;
-    };
-    treewalker-nvim = {
-      url = "github:aaronik/treewalker.nvim";
       flake = false;
     };
   };
@@ -45,11 +37,6 @@
         };
         vimPlugins = prev.vimPlugins.extend (
           final': prev': {
-            multicursor-nvim = final.vimUtils.buildVimPlugin {
-              pname = "multicursor.nvim";
-              version = "unstable-${inputs.multicursor-nvim.lastModifiedDate}";
-              src = inputs.multicursor-nvim;
-            };
             vim-texabbrev =
               (final.vimUtils.buildVimPlugin {
                 pname = "vim-texabbrev";
@@ -63,11 +50,6 @@
                     };
                   }
                 );
-            treewalker-nvim = final.vimUtils.buildVimPlugin {
-              pname = "treewalker.nvim";
-              version = "unstable-${inputs.treewalker-nvim.lastModifiedDate}";
-              src = inputs.treewalker-nvim;
-            };
           }
         );
       };
