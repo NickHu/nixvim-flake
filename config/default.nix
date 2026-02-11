@@ -251,7 +251,7 @@
         }
       ];
     extraPackages = with pkgs; [
-      nixfmt-rfc-style
+      nixfmt
       ocamlPackages.ocp-indent
       ocamlformat
     ];
@@ -1278,34 +1278,16 @@
           grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars ++ [
             pkgs.tree-sitter-grammars.tree-sitter-forester
           ];
-          folding = true;
-          settings = {
-            highlight = {
-              enable = true;
-              disable = [ "latex" ]; # use vimtex
-            };
-            incremental_selection = {
-              enable = true;
-              keymaps = {
-                init_selection = "<C-Space>";
-                node_incremental = "<C-Space>";
-                node_decremental = "<BS>";
-              };
-            };
-            indent.enable = true;
-          };
+          folding.enable = true;
+          highlight.enable = true;
+          indent.enable = true;
         };
         treesitter-context = {
           enable = true;
           settings.max_lines = 3;
         };
-        treesitter-refactor = {
+        treesitter-textobjects = {
           enable = true;
-          settings = {
-            highlightDefinitions.enable = true;
-            navigation.enable = true;
-            smartRename.enable = true;
-          };
         };
         typescript-tools.enable = true;
         vim-matchup = {
