@@ -35,6 +35,24 @@
             src = inputs.tree-sitter-forester;
           };
         };
+        neovim-unwrapped = prev.neovim-unwrapped // {
+          lua = prev.neovim-unwrapped.lua // {
+            pkgs = prev.neovim-unwrapped.lua.pkgs.overrideScope (
+              finalLuaPackages: prevLuaPackages: {
+                tree-sitter-orgmode = prevLuaPackages.tree-sitter-orgmode.overrideAttrs (
+                  finalAttrs: previousAttrs: {
+                    patches = (previousAttrs.patches or [ ]) ++ [
+                      (final.fetchpatch2 {
+                        url = "https://github.com/nvim-orgmode/tree-sitter-org/pull/6.patch";
+                        sha256 = "sha256-E8VNvJ3WCi18TjBC6n4Z0eQ5yQv44ng/AZRQ1m7f2qs=";
+                      })
+                    ];
+                  }
+                );
+              }
+            );
+          };
+        };
         vimPlugins = prev.vimPlugins.extend (
           final': prev': {
             vim-texabbrev =
