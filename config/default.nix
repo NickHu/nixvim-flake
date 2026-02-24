@@ -1201,7 +1201,10 @@
         orgmode = {
           enable = true;
           settings = {
-            org_agenda_files = "~/Dropbox/forest/org/**/*";
+            org_agenda_files = [
+              "~/Dropbox/forest/org/**/*"
+              "~/.local/state/orgmode-google-fuse/google/**/*"
+            ];
             org_default_notes_file = "~/Dropbox/forest/org/refile.org";
             org_capture_templates = {
               j = {
