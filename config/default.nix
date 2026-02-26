@@ -180,6 +180,25 @@
       autoCmd = [
         {
           event = "User";
+          pattern = "BlinkCmpMenuOpen";
+          callback = lib.nixvim.mkRaw ''
+            function()
+              require("copilot.suggestion").dismiss()
+              vim.b.copilot_suggestion_hidden = true
+            end
+          '';
+        }
+        {
+          event = "User";
+          pattern = "BlinkCmpMenuClose";
+          callback = lib.nixvim.mkRaw ''
+            function()
+              vim.b.copilot_suggestion_hidden = false
+            end
+          '';
+        }
+        {
+          event = "User";
           group = "lualine_augroup";
           pattern = "LspProgressStatusUpdated";
           callback = lib.nixvim.mkRaw ''
