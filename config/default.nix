@@ -948,6 +948,13 @@
         blink-cmp = {
           enable = true;
           settings = {
+            enabled = lib.nixvim.mkRaw ''
+              function()
+                return
+                  not vim.tbl_contains({ "prompt", "nofile" }, vim.bo.buftype)
+                  and vim.b.completion ~= false
+              end
+            '';
             completion = {
               documentation.auto_show = true;
               ghost_text.enabled = true;
