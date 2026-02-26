@@ -89,9 +89,16 @@
         let
           nixvimLib = inputs.nixvim.lib.${system};
           nixvim' = inputs'.nixvim.legacyPackages;
-          nvim = (nixvim'.makeNixvimWithModule { module = import ./config; }).extend {
-            nixpkgs.overlays = [ overlay ];
-          };
+          nvim =
+            (nixvim'.makeNixvimWithModule {
+              module = import ./config;
+              extraSpecialArgs = {
+                calendar = "default";
+              };
+            }).extend
+              {
+                nixpkgs.overlays = [ overlay ];
+              };
         in
         {
           checks = {

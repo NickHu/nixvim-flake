@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  calendar,
   ...
 }:
 {
@@ -198,6 +199,26 @@
             config = stripNewlines ''
               lua require("scissors").setup({
                 snippetDir = "~/Dropbox/nixvim-flake/snippets",
+              })
+            '';
+          }
+          {
+            plugin = org-roam-nvim;
+            config = stripNewlines ''
+              lua require("org-roam").setup({
+                directory = "~/Dropbox/roam",
+                extensions = {
+                  dailies = {
+                    directory = "journal",
+                    templates = {
+                      d = {
+                        description = "default",
+                        template = "* %U %?",
+                        target = "%<%Y-%m-%d>.org",
+                      },
+                    },
+                  },
+                },
               })
             '';
           }
@@ -844,33 +865,6 @@
           }
           {
             mode = "n";
-            key = "<leader>ojo";
-            action = "<Cmd>OrgJournal<CR>";
-            options = {
-              silent = true;
-              desc = "open journal (today)";
-            };
-          }
-          {
-            mode = "n";
-            key = "<leader>ojp";
-            action = "<Cmd>OrgJournalPrev<CR>";
-            options = {
-              silent = true;
-              desc = "open journal (yesterday)";
-            };
-          }
-          {
-            mode = "n";
-            key = "<leader>ojn";
-            action = "<Cmd>OrgJournalNext<CR>";
-            options = {
-              silent = true;
-              desc = "open journal (tomorrow)";
-            };
-          }
-          {
-            mode = "n";
             key = "<Tab>";
             action = "<Tab>";
             options = {
@@ -1200,36 +1194,35 @@
         };
         orgmode = {
           enable = true;
-          settings = {
-            org_agenda_files = [
-              "~/Dropbox/forest/org/**/*"
-              "~/.local/state/orgmode-google-fuse/google/**/*"
-            ];
-            org_default_notes_file = "~/Dropbox/forest/org/refile.org";
-            org_capture_templates = {
-              j = {
-                description = "Journal";
-                template = "** %<%H:%M> %?";
-                target = "~/Dropbox/forest/org/journal/%<%Y-%m-%d>.org";
-                datetree = {
-                  tree_type = "custom";
-                  tree = [
-                    {
-                      format = "%A %d/%m/%Y";
-                      pattern = "^.*(%d%d)/(%d%d)/(%d%d%d%d)$";
-                      order = [
-                        3
-                        2
-                        1
-                      ];
-                    }
-                  ];
+          settings =
+            let
+              orgmode-google-fuse-mount = "~/.local/state/orgmode-google-fuse/google";
+            in
+            {
+              org_agenda_files = [
+                "${orgmode-google-fuse-mount}/**/*"
+              ];
+              org_default_notes_file = "~/Dropbox/roam/refile.org";
+              org_capture_templates = {
+                c = {
+                  description = "Google Calendar";
+                  template = ''
+                    * %?
+                    %^T--%^T
+                  '';
+                  target = "${orgmode-google-fuse-mount}/calendars/${calendar}.org";
+                };
+                t = {
+                  description = "Google Task (inbox)";
+                  template = ''
+                    * TODO %?
+                  '';
+                  target = "${orgmode-google-fuse-mount}/tasks/Inbox.org";
                 };
               };
+              org_startup_indented = true;
+              ui.input.use_vim_ui = true;
             };
-            org_startup_indented = true;
-            ui.input.use_vim_ui = true;
-          };
         };
         rainbow-delimiters.enable = true;
         snacks = {
@@ -1349,81 +1342,29 @@
             mc.feedkeys(mode == TERM_CODES.CTRL_V and "h" or "H", { remap = true })
         end
       '';
-      userCommands =
-        let
-          journalDir = "~/Dropbox/forest/org/journal/";
-        in
-        {
-          "LuaSnipEdit" = {
-            command = "lua require('luasnip.loaders').edit_snippet_files()";
-            desc = "Edit Snippets";
-          };
-          "FormatDisable" = {
-            bang = true;
-            command = ''
-              if <bang>v:true
-                let g:disable_autoformat = v:true
-              else
-                let b:disable_autoformat = v:true
-              endif
-            '';
-            desc = "Disable autoformat-on-save";
-          };
-          "FormatEnable" = {
-            command = ''
-              let b:disable_autoformat = v:false
-              let g:disable_autoformat = v:false
-            '';
-            desc = "Re-enable autoformat-on-save";
-          };
-          "OrgJournal" = {
-            command = lib.nixvim.mkRaw ''
-              function(opts)
-                local date = os.date("%Y-%m-%d")
-                local file = "${journalDir}" .. date .. ".org"
-                vim.cmd('e ' .. file)
-                vim.cmd('normal! G')
-              end
-            '';
-            desc = "Open today's journal";
-            nargs = 0;
-          };
-          "OrgJournalPrev" = {
-            command = lib.nixvim.mkRaw ''
-              function(opts)
-                local current_file = vim.fn.expand("%:p")
-                local year, month, day = current_file:match(vim.fn.expand("${journalDir}") .. "(%d%d%d%d)-(%d%d)-(%d%d).org")
-                if not year or not month or not day then
-                  print("Current file is not a valid journal file")
-                  return
-                end
-                local date = os.date("%Y-%m-%d", os.time({ year = tonumber(year), month = tonumber(month), day = tonumber(day) }) - 24 * 60 * 60)
-                local file = "${journalDir}" .. date .. ".org"
-                vim.cmd('e ' .. file)
-                vim.cmd('normal! G')
-              end
-            '';
-            desc = "Open yesterday's journal";
-            nargs = 0;
-          };
-          "OrgJournalNext" = {
-            command = lib.nixvim.mkRaw ''
-              function(opts)
-                local current_file = vim.fn.expand("%:p")
-                local year, month, day = current_file:match(vim.fn.expand("${journalDir}") .. "(%d%d%d%d)-(%d%d)-(%d%d).org")
-                if not year or not month or not day then
-                  print("Current file is not a valid journal file")
-                  return
-                end
-                local date = os.date("%Y-%m-%d", os.time({ year = tonumber(year), month = tonumber(month), day = tonumber(day) }) + 24 * 60 * 60)
-                local file = "${journalDir}" .. date .. ".org"
-                vim.cmd('e ' .. file)
-                vim.cmd('normal! G')
-              end
-            '';
-            desc = "Open tomorrow's journal";
-            nargs = 0;
-          };
+      userCommands = {
+        "LuaSnipEdit" = {
+          command = "lua require('luasnip.loaders').edit_snippet_files()";
+          desc = "Edit Snippets";
         };
+        "FormatDisable" = {
+          bang = true;
+          command = ''
+            if <bang>v:true
+              let g:disable_autoformat = v:true
+            else
+              let b:disable_autoformat = v:true
+            endif
+          '';
+          desc = "Disable autoformat-on-save";
+        };
+        "FormatEnable" = {
+          command = ''
+            let b:disable_autoformat = v:false
+            let g:disable_autoformat = v:false
+          '';
+          desc = "Re-enable autoformat-on-save";
+        };
+      };
     };
 }
