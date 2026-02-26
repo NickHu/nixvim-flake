@@ -1,7 +1,8 @@
 {
+  calendar,
+  config,
   lib,
   pkgs,
-  calendar,
   ...
 }:
 {
@@ -1312,7 +1313,7 @@
         vim-surround.enable = true;
         treesitter = {
           enable = true;
-          grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars ++ [
+          grammarPackages = config.plugins.treesitter.package.allGrammars ++ [
             pkgs.tree-sitter-grammars.tree-sitter-forester
           ];
           folding.enable = true;
