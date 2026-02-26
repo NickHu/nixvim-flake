@@ -170,6 +170,9 @@
             vim.cmd("TexAbbrevExtra")
             require('zotcite.config').init() -- zotcite is a ftplugin
           '';
+          opts = {
+            conceallevel = 2;
+          };
         };
       };
       filetype = {
