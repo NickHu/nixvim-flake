@@ -141,9 +141,34 @@
               };
             }
           ];
+          userCommands = builtins.listToAttrs (
+            map
+              (x: {
+                name = "Z${x}";
+                value = {
+                  command = lib.nixvim.mkRaw ''
+                    function()
+                      local seek = require('zotcite.seek')
+                      seek.refs("", function(ref)
+                        if not ref then return end
+                        vim.api.nvim_put({ref.value.${x}}, 'c', true, true)
+                      end)
+                    end
+                  '';
+                  desc = "Insert Zotero item ${x} at cursor";
+                  nargs = 0;
+                };
+              })
+              [
+                "display"
+                "title"
+              ]
+          );
+
           extraConfigLua = ''
             vim.cmd("TexAbbrev")
             vim.cmd("TexAbbrevExtra")
+            require('zotcite.config').init() -- zotcite is a ftplugin
           '';
         };
       };
@@ -285,6 +310,7 @@
         nixfmt
         ocamlPackages.ocp-indent
         ocamlformat
+        sqlite # for zotcite
       ];
       lsp = {
         inlayHints.enable = true;
@@ -1306,6 +1332,15 @@
             };
           };
           texlivePackage = null; # don't install texlive at all
+        };
+        zotcite = {
+          enable = true;
+          settings = {
+            filetypes = [
+              "tex"
+              "org"
+            ];
+          };
         };
       };
       extraConfigLuaPre = ''
