@@ -255,6 +255,28 @@
             config = stripNewlines ''
               lua require("org-roam").setup({
                 directory = "~/Dropbox/roam",
+                templates = {
+                  d = {
+                    description = "default",
+                    template = "%?",
+                    target = "%<%Y%m%d%H%M%S>-%[slug].org",
+                  },
+                  p = {
+                    description = "person",
+                    template = "#+FILETAGS: :person:",
+                    target = "person/%<%Y%m%d%H%M%S>-%[slug].org",
+                  },
+                  r = {
+                    description = "reference",
+                    template = "#+FILETAGS: :reference:",
+                    target = "reference/%<%Y%m%d%H%M%S>-%[slug].org",
+                  },
+                  j = {
+                    description = "project",
+                    template = "#+FILETAGS: :project:\n%?",
+                    target = "project/%<%Y%m%d%H%M%S>-%[slug].org",
+                  },
+                },
                 extensions = {
                   dailies = {
                     directory = "journal",
