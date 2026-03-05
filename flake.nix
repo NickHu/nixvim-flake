@@ -68,6 +68,69 @@
                     };
                   }
                 );
+            snacks-nvim = prev'.snacks-nvim.overrideAttrs (
+              finalAttrs: previousAttrs: {
+                patches = (previousAttrs.patches or [ ]) ++ [
+                  (builtins.toFile "0001-image-use-lualatex-instead-of-pdflatex.patch" ''
+                    From c652007a29f3363ad75e07bc502972ef1fbff8b1 Mon Sep 17 00:00:00 2001
+                    From: Nick Hu <me@nickhu.co.uk>
+                    Date: Thu, 5 Mar 2026 12:10:26 +0000
+                    Subject: [PATCH] image: use lualatex instead of pdflatex
+
+                    ---
+                     lua/snacks/image/convert.lua | 2 +-
+                     lua/snacks/image/init.lua    | 6 +++---
+                     2 files changed, 4 insertions(+), 4 deletions(-)
+
+                    diff --git a/lua/snacks/image/convert.lua b/lua/snacks/image/convert.lua
+                    index e2aaa44e..281e31f6 100644
+                    --- a/lua/snacks/image/convert.lua
+                    +++ b/lua/snacks/image/convert.lua
+                    @@ -99,7 +99,7 @@ local commands = {
+                             args = { "-Z", "continue-on-errors", "--outdir", "{cache}", "{src}" },
+                           },
+                           {
+                    -        cmd = "pdflatex",
+                    +        cmd = "lualatex",
+                             cwd = "{dirname}",
+                             args = { "-output-directory={cache}", "-interaction=nonstopmode", "{src}" },
+                           },
+                    diff --git a/lua/snacks/image/init.lua b/lua/snacks/image/init.lua
+                    index 038016e1..d1d114a9 100644
+                    --- a/lua/snacks/image/init.lua
+                    +++ b/lua/snacks/image/init.lua
+                    @@ -129,7 +129,7 @@ local defaults = {
+                         ---@type table<string,snacks.image.args>
+                         magick = {
+                           default = { "{src}[0]", "-scale", "1920x1080>" }, -- default for raster images
+                    -      vector = { "-density", 192, "{src}[{page}]" }, -- used by vector images like svg
+                    +      vector = { "-density", 192, "{src}[{page}]" },    -- used by vector images like svg
+                           math = { "-density", 192, "{src}[{page}]", "-trim" },
+                           pdf = { "-density", 192, "{src}[{page}]", "-background", "white", "-alpha", "remove", "-trim" },
+                         },
+                    @@ -352,14 +352,14 @@ function M.health()
+                         Snacks.health.warn("`gs` is required to render PDF files")
+                       end
+                     
+                    -  if Snacks.health.have_tool({ "tectonic", "pdflatex" }) then
+                    +  if Snacks.health.have_tool({ "tectonic", "lualatex" }) then
+                         if langs.latex then
+                           Snacks.health.ok("LaTeX math equations are supported")
+                         else
+                           Snacks.health.warn("The `latex` treesitter parser is required to render LaTeX math expressions")
+                         end
+                       else
+                    -    Snacks.health.warn("`tectonic` or `pdflatex` is required to render LaTeX math expressions")
+                    +    Snacks.health.warn("`tectonic` or `lualatex` is required to render LaTeX math expressions")
+                       end
+                     
+                       if Snacks.health.have_tool("mmdc") then
+                    -- 
+                    2.53.0
+                  '')
+                ];
+              }
+            );
           }
         );
       };
