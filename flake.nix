@@ -37,6 +37,16 @@
         };
         vimPlugins = prev.vimPlugins.extend (
           final': prev': {
+            org-roam-nvim = prev'.org-roam-nvim.overrideAttrs (
+              finalAttrs: previousAttrs: {
+                patches = (previousAttrs.patches or [ ]) ++ [
+                  (builtins.fetchurl {
+                    url = "https://github.com/chipsenkbeil/org-roam.nvim/commit/0be640feb6d78a1539cda7456d76f343f8cea5ea.patch";
+                    sha256 = "sha256:0i1whi08cfymna11afwhs3wcl5k8q96d6s7hhi1ma8lz000l7bm6";
+                  })
+                ];
+              }
+            );
             vim-texabbrev =
               (final.vimUtils.buildVimPlugin {
                 pname = "vim-texabbrev";
