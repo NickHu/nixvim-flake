@@ -56,7 +56,22 @@
                 (
                   finalAttrs: previousAttrs: {
                     passthru = previousAttrs.passthru // {
-                      latex-unicode = builtins.fromJSON (builtins.readFile "${inputs.unicode-latex}/latex-unicode.json");
+                      latex-unicode =
+                        builtins.fromJSON (builtins.readFile "${inputs.unicode-latex}/latex-unicode.json")
+                        // {
+                          # S
+                          "\\circ" = "∘";
+                          "\\emptyset" = "∅";
+                          # eth
+                          "\\gets" = "←";
+                          "\\land" = "∧";
+                          "\\lor" = "∨";
+                          "\\neq" = "≠";
+                          "\\ngeqq" = "≱";
+                          "\\nleqq" = "≰";
+                          "\\owns" = "∋";
+                          "\\triangle" = "∆";
+                        };
                     };
                   }
                 );
