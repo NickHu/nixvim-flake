@@ -9,6 +9,10 @@
   inputs = {
     nixvim.url = "github:nix-community/nixvim";
     nixpkgs.follows = "nixvim/nixpkgs";
+    cornelis = {
+      url = "github:agda/cornelis";
+      inputs.nixpkgs.follows = "nixvim/nixpkgs";
+    };
     flake-parts.url = "github:hercules-ci/flake-parts";
     tree-sitter-forester = {
       url = "github:jetjinser/tree-sitter-forester/regrammar";
@@ -141,10 +145,14 @@
           }
         );
       };
+      overlays = [
+        overlay
+        inputs.cornelis.overlays.cornelis
+      ];
     in
     flake-parts.lib.mkFlake { inherit inputs; } {
       flake = {
-        overlays.default = overlay;
+        overlays.default = inputs.nixpkgs.lib.composeManyExtensions overlays;
       };
       systems = [
         "x86_64-linux"
@@ -167,7 +175,7 @@
               };
             }).extend
               {
-                nixpkgs.overlays = [ overlay ];
+                nixpkgs.overlays = overlays;
               };
         in
         {

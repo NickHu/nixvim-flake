@@ -1165,6 +1165,7 @@
         cornelis = {
           enable = true;
           settings = {
+            use_global_binary = 1;
             agda_prefix = "<C-k>";
           };
         };
