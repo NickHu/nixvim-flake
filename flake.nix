@@ -9,6 +9,10 @@
   inputs = {
     nixvim.url = "github:nix-community/nixvim";
     nixpkgs.follows = "nixvim/nixpkgs";
+    cornelis = {
+      url = "github:agda/cornelis";
+      inputs.nixpkgs.follows = "nixvim/nixpkgs";
+    };
     flake-parts.url = "github:hercules-ci/flake-parts";
     tree-sitter-forester = {
       url = "github:jetjinser/tree-sitter-forester/regrammar";
@@ -37,6 +41,16 @@
         };
         vimPlugins = prev.vimPlugins.extend (
           final': prev': {
+            cornelis = prev'.cornelis.overrideAttrs (
+              finalAttrs: previousAttrs: {
+                postInstall = ''
+                  substituteInPlace $out/ftplugin/agda.vim \
+                    --subst-var-by CORNELIS "${
+                      inputs.cornelis.packages.${final.stdenv.hostPlatform.system}.cornelis.bin
+                    }/bin/cornelis"
+                '';
+              }
+            );
             org-roam-nvim = prev'.org-roam-nvim.overrideAttrs (
               finalAttrs: previousAttrs: {
                 patches = (previousAttrs.patches or [ ]) ++ [

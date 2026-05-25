@@ -1164,6 +1164,7 @@
         };
         cornelis = {
           enable = true;
+          package = pkgs.vimPlugins.cornelis;
           settings = {
             agda_prefix = "<C-k>";
           };
