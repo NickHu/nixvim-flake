@@ -1312,9 +1312,23 @@
             explorer.enabled = true;
             image = {
               enabled = true;
+              convert = {
+                magick.math = [
+                  "-density"
+                  192
+                  "-background"
+                  "white"
+                  "{src}[{page}]"
+                  "-flatten"
+                  "-trim"
+                  "+repage"
+                ];
+                notify = true;
+              };
               math.latex.tpl = ''
                 \documentclass[preview,border=0pt,varwidth,12pt]{standalone}
                 \usepackage{''${packages}}
+                \usepackage{unicode-math}
                 ''${header}
                 \begin{document}
                 { \''${font_size} \selectfont
@@ -1396,6 +1410,33 @@
           };
         };
       };
+      extraConfigLua = ''
+        -- snacks.image only builds its LaTeX preamble from lines between its
+        -- own `snacks: header start`/`end` markers.  In org buffers, also feed
+        -- it the `#+LATEX_HEADER:` / `#+LATEX_HEADER_EXTRA:` directives, so
+        -- inline previews see the same macros the org exporter would use.
+        do
+          local doc = require("snacks.image.doc")
+          local get_header = doc.get_header
+          function doc.get_header(buf)
+            local header = get_header(buf)
+            if vim.bo[buf].filetype ~= "org" then
+              return header
+            end
+            local org = doc._cache(buf, "org_latex_header", function()
+              local lines = {}
+              for _, line in ipairs(vim.api.nvim_buf_get_lines(buf, 0, -1, false)) do
+                local key, value = line:match("^%s*#%+(%S-):%s*(.*)$")
+                if key and key:lower():find("^latex_header") then
+                  lines[#lines + 1] = value
+                end
+              end
+              return table.concat(lines, "\n")
+            end)
+            return org ~= "" and (org .. "\n" .. header) or header
+          end
+        end
+      '';
       extraConfigLuaPre = ''
         -- profiling
         if vim.env.PROF then
