@@ -10,11 +10,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1783011712,
-        "narHash": "sha256-yHDIywQsMBvOQgskb6kPSTkPlT2ryew0OJ801SXISKE=",
+        "lastModified": 1784925254,
+        "narHash": "sha256-OQlTqhs7ZwLbiby5v96upm2xQqQWLKqRMzoDynnM1BQ=",
         "owner": "agda",
         "repo": "cornelis",
-        "rev": "8edf62df75de69066d49baadb1e83bde64a9d617",
+        "rev": "cddeac119a2fb3ecb093a28e35426b014c0963dd",
         "type": "github"
       },
       "original": {
