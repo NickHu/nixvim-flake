@@ -1326,11 +1326,11 @@
               math.latex.tpl = ''
                 \documentclass[preview,border=0pt,varwidth,12pt]{standalone}
                 \usepackage{''${packages}}
-                \usepackage{unicode-math}
+                \usepackage[mathrm=sym]{unicode-math}
+                \setmathfont{STIX Two Math}
                 ''${header}
                 \begin{document}
-                { \''${font_size} \selectfont
-                  \color[HTML]{''${color}}
+                { \''${font_size}
                 ''${content}}
                 \end{document}
               '';
