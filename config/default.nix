@@ -1324,7 +1324,7 @@
                 notify = true;
               };
               math.latex.tpl = ''
-                \documentclass[preview,border=0pt,varwidth,12pt]{standalone}
+                \documentclass[crop,border=0pt,12pt]{standalone}
                 \usepackage{''${packages}}
                 \usepackage[mathrm=sym]{unicode-math}
                 \setmathfont{STIX Two Math}
@@ -1432,6 +1432,30 @@
               return table.concat(lines, "\n")
             end)
             return org ~= "" and (org .. "\n" .. header) or header
+          end
+        end
+
+        -- snacks.image throws away whatever delimiters a math expression came
+        -- with and rewraps every one of them in \[ \], inline ones included.
+        -- The standalone class in crop mode is restricted horizontal mode,
+        -- where display math is illegal, so hand it \begin{math} instead --
+        -- which snacks passes through untouched, because it only rewraps what
+        -- does not already start with \begin -- and keep the display look for
+        -- what really was a \[ \] or $$ block by adding \displaystyle.
+        do
+          local doc = require("snacks.image.doc")
+          local latex = doc.transforms.latex
+          function doc.transforms.latex(img, ctx)
+            if img.content and img.ext == "math.tex" then
+              local expr = vim.trim(img.content)
+              local display = expr:find("^%$%$") or expr:find("^\\%[")
+              expr = expr:gsub("^%$+`?", ""):gsub("`?%$+$", "")
+              expr = expr:gsub("^\\[%[%(]", ""):gsub("\\[%]%)]$", "")
+              if not expr:find("^\\begin") then
+                img.content = ("\\begin{math}%s%s\\end{math}"):format(display and "\\displaystyle " or "", expr)
+              end
+            end
+            latex(img, ctx)
           end
         end
       '';
