@@ -96,6 +96,22 @@
         "type": "github"
       }
     },
+    "math-symbols": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1601939628,
+        "narHash": "sha256-oz91amyG2PTVmLFoCT8hW1Jv+u4MymYFh1nCRebwUH0=",
+        "owner": "kawabata",
+        "repo": "math-symbols",
+        "rev": "091b81cb40ceaff97614999ffe85b572ace182f0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kawabata",
+        "repo": "math-symbols",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1784555310,
@@ -151,14 +167,13 @@
       "inputs": {
         "cornelis": "cornelis",
         "flake-parts": "flake-parts",
+        "math-symbols": "math-symbols",
         "nixpkgs": [
           "nixvim",
           "nixpkgs"
         ],
         "nixvim": "nixvim",
-        "tree-sitter-forester": "tree-sitter-forester",
-        "unicode-latex": "unicode-latex",
-        "vim-texabbrev": "vim-texabbrev"
+        "tree-sitter-forester": "tree-sitter-forester"
       }
     },
     "systems": {
@@ -206,38 +221,6 @@
         "owner": "jetjinser",
         "ref": "regrammar",
         "repo": "tree-sitter-forester",
-        "type": "github"
-      }
-    },
-    "unicode-latex": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1574463287,
-        "narHash": "sha256-3Zq+cR877qdXF7YPA/hRPB32KGJRAUaYP0SyVZyhIOs=",
-        "owner": "ViktorQvarfordt",
-        "repo": "unicode-latex",
-        "rev": "07e197af90dd351b4347c72d12af177caae8c090",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ViktorQvarfordt",
-        "repo": "unicode-latex",
-        "type": "github"
-      }
-    },
-    "vim-texabbrev": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1698360572,
-        "narHash": "sha256-dE+JvPNtuPhilvH3aasPaSiwll+Q9JVL7uuwlIV2dbY=",
-        "owner": "78g",
-        "repo": "vim-texabbrev",
-        "rev": "747a3b22796139e545c573ef10f8296fcdc6bfca",
-        "type": "github"
-      },
-      "original": {
-        "owner": "78g",
-        "repo": "vim-texabbrev",
         "type": "github"
       }
     }

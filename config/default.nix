@@ -90,6 +90,9 @@
               command = "call vimtex#toc#refresh()";
             }
           ];
+          extraConfigLua = ''
+            require('texunicode').attach({ enabled = false })
+          '';
           opts = {
             conceallevel = 2;
           };
@@ -167,8 +170,7 @@
           );
 
           extraConfigLua = ''
-            vim.cmd("TexAbbrev")
-            vim.cmd("TexAbbrevExtra")
+            require('texunicode').attach()
             require('zotcite.config').init() -- zotcite is a ftplugin
           '';
           opts = {
@@ -316,40 +318,9 @@
             '';
           }
           {
-            plugin = vim-texabbrev;
-            config = ''
-              let g:texabbrev_table = [
-                \ ${
-                  lib.strings.concatMapAttrsStringSep ",\n  \\ " (
-                    n: v:
-                    "['${builtins.replaceStrings [ "\\" ] [ "" ] n}', '${
-                      builtins.replaceStrings [ "⎪" "|" ] [ "\\⎪" "\\|" ] v
-                    }']"
-                  ) (lib.filterAttrs (n: v: builtins.substring 0 1 n == "\\") vim-texabbrev.passthru.latex-unicode)
-                } ]
-              let g:texabbrev_table_extra = [
-                \ ${
-                  lib.strings.concatMapAttrsStringSep ",\n  \\ " (n: v: "['${n}', '${v}']") (
-                    lib.filterAttrs (n: v: !(builtins.substring 0 1 n == "\\")) vim-texabbrev.passthru.latex-unicode
-                  )
-                } ]
-              func s:TexAbbrevExtra()
-                for pair in g:texabbrev_table_extra
-                  silent execute "abbrev <buffer> ".pair[0]." ".pair[1]
-                endfor
-              endfun
-              func s:TexUnabbrevExtra()
-                for pair in g:texabbrev_table_extra
-                  silent! execute "unabbrev <buffer> ".pair[0]
-                endfor
-              endfun
-              command TexAbbrevExtra call s:TexAbbrevExtra()
-              command TexUnabbrevExtra call s:TexUnabbrevExtra()
-            '';
-          }
-          {
             plugin = treewalker-nvim;
           }
+          texunicode
         ];
       extraPackages = with pkgs; [
         nixfmt

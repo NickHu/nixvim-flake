@@ -18,12 +18,9 @@
       url = "github:jetjinser/tree-sitter-forester/regrammar";
       flake = false;
     };
-    vim-texabbrev = {
-      url = "github:78g/vim-texabbrev";
-      flake = false;
-    };
-    unicode-latex = {
-      url = "github:ViktorQvarfordt/unicode-latex";
+    # Mirror of Günter Milde's unimathsymbols.txt (LPPL)
+    math-symbols = {
+      url = "github:kawabata/math-symbols";
       flake = false;
     };
   };
@@ -51,34 +48,18 @@
                 '';
               }
             );
-            vim-texabbrev =
-              (final.vimUtils.buildVimPlugin {
-                pname = "vim-texabbrev";
-                version = "unstable-${inputs.vim-texabbrev.lastModifiedDate}";
-                src = inputs.vim-texabbrev;
-              }).overrideAttrs
-                (
-                  finalAttrs: previousAttrs: {
-                    passthru = previousAttrs.passthru // {
-                      latex-unicode =
-                        builtins.fromJSON (builtins.readFile "${inputs.unicode-latex}/latex-unicode.json")
-                        // {
-                          # S
-                          "\\circ" = "∘";
-                          "\\emptyset" = "∅";
-                          # eth
-                          "\\gets" = "←";
-                          "\\land" = "∧";
-                          "\\lor" = "∨";
-                          "\\neq" = "≠";
-                          "\\ngeqq" = "≱";
-                          "\\nleqq" = "≰";
-                          "\\owns" = "∋";
-                          "\\triangle" = "∆";
-                        };
-                    };
-                  }
-                );
+            texunicode =
+              final.runCommandLocal "texunicode"
+                {
+                  nativeBuildInputs = [ final.neovim-unwrapped ];
+                }
+                ''
+                  install -Dm444 ${./lua/texunicode/init.lua} $out/lua/texunicode/init.lua
+                  HOME=$TMPDIR nvim --clean --headless -u NONE \
+                    -l ${./lua/texunicode/generate.lua} \
+                    ${inputs.math-symbols}/unimathsymbols.txt \
+                    $out/lua/texunicode/table.json
+                '';
             snacks-nvim = prev'.snacks-nvim.overrideAttrs (
               finalAttrs: previousAttrs: {
                 patches = (previousAttrs.patches or [ ]) ++ [
