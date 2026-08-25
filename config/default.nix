@@ -1299,6 +1299,33 @@
                   target = "${orgmode-google-fuse-mount}/tasks/Inbox.org";
                 };
               };
+              org_custom_exports = {
+                p = {
+                  label = "Export to PDF format";
+                  action = lib.nixvim.mkRaw ''
+                    function(exporter)
+                      local tmp = vim.fn.tempname() .. '.org'
+                      local f = assert(io.open(tmp, "w"))
+                      local function get_current_org_headline_contents()
+                        local position = require("orgmode.api").current():get_closest_headline().position
+                        local lines = vim.api.nvim_buf_get_lines(
+                          0,
+                          position.start_line - 1,
+                          position.end_line,
+                          true
+                        )
+                        return table.concat(lines, "\n")
+                      end
+                      f:write(get_current_org_headline_contents())
+                      f:close()
+
+                      local target = '/tmp/export.pdf'
+                      local command = { 'pandoc', tmp, '--pdf-engine=lualatex', '-o', target }
+                      return exporter(command, target)
+                    end
+                  '';
+                };
+              };
               org_startup_indented = true;
               ui.input.use_vim_ui = true;
             };
